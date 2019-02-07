@@ -73,14 +73,14 @@ private double[] calcOutput()
 
     for(int x = 0; x < inputNodes.size; x++)
     {
-        activations[x] = inputNodes.get(x.getActivation);
+        activations[x] = inputNodes.getActivation(x);
         oldactivations[x] = activations[x];
     }
     
     for(int x = 0; x < inputNodes.size; x ++)
     {
         double curactivation = activations[x]; 
-activations[x] =  hiddenNodes.get(x.activationFunc(oldactivations));
+        activations[x] =  hiddenNodes.get(inputNodes[x].activationFunc(oldactivations));
     }
     
     oldactivations = activations;
@@ -88,7 +88,7 @@ activations[x] =  hiddenNodes.get(x.activationFunc(oldactivations));
     for(int x = 0; x < hiddenNodes.size; x++)
     {
         double curavtivation = activations[x];
-        activations[x] = outputNodes.get(x.activationFunc(oldactivations));
+        activations[x] = outputNodes.get(outputNodes.get(hiddenNodes[x].activationFunc(oldactivations)));
     }
 
     return activations;
