@@ -11,42 +11,53 @@ public class IntialNetwork
     Node[] inputNodes;
     Node[] hiddenNodes;
     Node[] outputNodes;
-    Node[] decisions;
-    int numOfInputs = 0;
-    int numOfOutputs = 0;
 
-     public void Initial_Network()
+    double[] decisions;
+
+    int numOfInputs;
+    int numOfOutputs;  
+    double learningRate;  
+
+    String finaloutput;
+
+public IntialNetwork()
+    {
+        numOfInputs = 0;
+        numOfOutputs = 0;
+        learningRate = 0.0;    
+
+        finaloutput = new String(" ");
+
+        makingRays(0, 0);
+    }
+
+    public IntialNetwork(int newInputs, int newOutputs)
+    {
+        this();
+
+        //assigning nodes for ray objects
+        assigningNodes(curLayer);
+    
+    
+        //creating weights
+        //creating hidden layer weights 
+        creatingWeights(inputNodes.size, hiddenNodes);
+        //creating output layer weights
+        creatingWeights(hiddenNodes.size, outputNodes);
+    }
+
+    private void makingRays(int newnewInputs, int newOutputs)
     {
         //creating input Nodes ray
         inputNodes = new Node[numOfInputs];
         outputNodes = new Node[numOfOutputs];
 
         //determining hidden Nodes based on num of outputs and inputs
-        hiddenNodesNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2);
+        hiddenNodesNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
 
 
         //creating final deicisions ray
-        Decisions = new Node[outputNodes.size];
-    }
-
-    public void Initial_Network(int newInputs, int newOutputs)
-    {
-        numOfInputs = newInputs;
-        numOfOutputs = Outputs;
-    
-        //creating rays
-        this();
-
-        //assigning nodes for ray objects
-        assigningNodes(curLayer);
-
-
-        //creating weights
-            //creating hidden layer weights 
-            creatingWeights(inputNodes.size(), hiddenNodes);
-            //creating output layer weights
-            creatingWeights(hiddenNodes.size(), outputNodes);
-
+        decisions = new double[outputNodes.size];
     }
     private void assigningNodes(Node[] curLayer)
     {
@@ -73,14 +84,14 @@ private double[] calcOutput()
 
     for(int x = 0; x < inputNodes.size; x++)
     {
-        activations[x] = inputNodes.getActivation(x);
+        activations[x] = inputNodes[x]getActivation(x);
         oldactivations[x] = activations[x];
     }
     
     for(int x = 0; x < inputNodes.size; x ++)
     {
         double curactivation = activations[x]; 
-        activations[x] =  hiddenNodes.get(inputNodes[x].activationFunc(oldactivations));
+        activations[x] =  hiddenNodes[x].get(inputNodes[x].activationFunc(oldactivations));
     }
     
     oldactivations = activations;
@@ -88,7 +99,7 @@ private double[] calcOutput()
     for(int x = 0; x < hiddenNodes.size; x++)
     {
         double curavtivation = activations[x];
-        activations[x] = outputNodes.get(outputNodes.get(hiddenNodes[x].activationFunc(oldactivations)));
+        activations[x] = outputNodes[x].get(outputNodes.get(hiddenNodes[x].activationFunc(oldactivations)));
     }
 
     return activations;

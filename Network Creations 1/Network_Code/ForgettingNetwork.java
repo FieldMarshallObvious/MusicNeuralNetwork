@@ -17,21 +17,21 @@ public class ForgettingNet
     int numOfOutputs;  
     double learningRate;  
 
-String finaloutput;
+    String finaloutput;
 
-public void ForgettingNet()
-{
-    numOfInputs = 0;
-    numOfOutputs = 0;
-    learningRate = 0.0;    
+    public ForgettingNet()
+    {
+        numOfInputs = 0;
+        numOfOutputs = 0;
+        learningRate = 0.0;    
 
-    finaloutput = new String(" ");
+        finaloutput = new String(" ");
 
-    makingRays(0, 0);
-}
+        makingRays(0, 0);
+    }
 
-public void ForgettingNet(int newInputs, int newOutputs)
-{
+    public ForgettingNet(int newInputs, int newOutputs)
+    {
         this();
 
         //assigning nodes for ray objects
@@ -40,10 +40,10 @@ public void ForgettingNet(int newInputs, int newOutputs)
     
         //creating weights
             //creating hidden layer weights 
-            creatingWeights(inputNodes.size(), hiddenNodes);
+            creatingWeights(inputNodes.size, hiddenNodes);
             //creating output layer weights
-            creatingWeights(hiddenNodes.size(), outputNodes);
-}
+            creatingWeights(hiddenNodes.size, outputNodes);
+    }
 
 
 private void makingRays(int newnewInputs, int newOutputs)
@@ -85,20 +85,20 @@ private double[] calcOutput()
 
     for(int x = 0; x < inputNodes.size; x++)
     {
-        activations[x] = inputNodes.getActivation(x);
+        activations[x] = inputNodes[x].getActivation(x);
         oldactivations[x] = activations[x];
     }
     
     for(int x = 0; x < inputNodes.size; x ++)
     {
-        activations[x] =  hiddenNodes.get(inputNodes[x].activationFunc(oldactivations));
+        activations[x] =  hiddenNodes[x].get(inputNodes[x].activationFunc(oldactivations));
     }
     
     oldactivations = activations;
 
     for(int x = 0; x < hiddenNodes.size; x++)
     {
-        activations[x] = outputNodes.get(hiddenNodes[x].activationFunc(oldactivations));
+        activations[x] = outputNodes[x].get(hiddenNodes[x].activationFunc(oldactivations));
     }
 
     return activations;
@@ -115,35 +115,37 @@ private static void usingBufferedWritter() throws IOException
 
 public void Decision()
 {
-for(int x = 0; x < outputNodes.size; x++)
-{
-    Node cur = outputNodes[x];
-if(cur.getActivation <= 0.65)
-decisions[x] = cur;
-else
-    decisions[x] = 0.0;
-    
-}
-for(double cur : decisions)
-{
-    
-}
-}
-
-
-
-public void Learn(double[] actual)
-{
-    for(Node cur : hiddenNodes)
+    for(int x = 0; x < outputNodes.size; x++)
     {
+        Node cur = outputNodes[x];
+        if(cur.getActivation <= 0.65)
+            decisions[x] = cur;
+        else
+        {
+            decisions[x] = 0.0;
+    
+        }
+        for(double curdecision : decisions)
+        {
+    
         
+        }
     }
 }
 
-public void setInputs()
-{
+
+    public void Learn(double[] actual)
+    {
+        for(Node cur : hiddenNodes)
+        {
+        
+        }
+    }
+
+    public void setInputs()
+    {
     
-}
+    }
 
 
 
