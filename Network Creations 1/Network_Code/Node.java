@@ -43,6 +43,10 @@ class Node
         Activation = newActivation;
     }
 
+    public double getWeights(int index)
+    {
+        return 0.0;
+    }
 
 
 

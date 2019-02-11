@@ -85,7 +85,7 @@ public class DNA_Class
 					WeightDiff = 
 						LearningRate * 
 						curLayer[j].SignalError*Node[k].Output +
-						(curLayer[j] - nextLayer[j]);
+						(curLayer[j].getWeight() - nextLayer[j].getWeight);
 
 					// Update weight between node j and k
 					curLayer[j].setWeights();
