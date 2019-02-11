@@ -19,40 +19,39 @@ String finaloutput = new String(" ");
 
 public void ForgettingNet()
 {
-    //creating input Nodes ray
-inputNodes = new Node[numOfInputs];
-outputNodes = new Node[numOfOutputs];
-
-//determining hidden Nodes based on num of outputs and inputs
-hiddenNodesNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
-
-
-//creating final deicisions ray
-decisions = new double[outputNodes.size];
+    
 }
 
 public void ForgettingNet(int newInputs, int newOutputs)
 {
-//setting size of num of Nodes
-    numOfInputs = newInputs;
-    numOfOutputs = Outputs;
+        //creating rays
+        this();
+
+        //assigning nodes for ray objects
+        assigningNodes(curLayer);
     
-//creating rays
-    this();
-
-    //assigning nodes for ray objects
-    assigningNodes(curLayer);
-
-
-    //creating weights
-        //creating hidden layer weights 
-        creatingWeights(inputNodes.size(), hiddenNodes);
-        //creating output layer weights
-        creatingWeights(hiddenNodes.size(), outputNodes);
+    
+        //creating weights
+            //creating hidden layer weights 
+            creatingWeights(inputNodes.size(), hiddenNodes);
+            //creating output layer weights
+            creatingWeights(hiddenNodes.size(), outputNodes);
 }
 
 
+private void makingRays(int newnewInputs, int newOutputs)
+{
+    //creating input Nodes ray
+    inputNodes = new Node[numOfInputs];
+    outputNodes = new Node[numOfOutputs];
 
+    //determining hidden Nodes based on num of outputs and inputs
+    hiddenNodesNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
+
+
+    //creating final deicisions ray
+    decisions = new double[outputNodes.size];
+}
 
 private void assigningNodes(Node[] curLayer)
 {
