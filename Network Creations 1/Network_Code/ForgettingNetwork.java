@@ -10,21 +10,28 @@ public class ForgettingNet
     Node[] inputNodes;
     Node[] hiddenNodes;
     Node[] outputNodes;
+
     double[] decisions;
 
-int numOfInputs = 0;
-Int numOfOutputs = 0;    
+    int numOfInputs;
+    int numOfOutputs;  
+    double learningRate;  
 
-String finaloutput = new String(" ");
+String finaloutput;
 
 public void ForgettingNet()
 {
-    
+    numOfInputs = 0;
+    numOfOutputs = 0;
+    learningRate = 0.0;    
+
+    finaloutput = new String(" ");
+
+    makingRays(0, 0);
 }
 
 public void ForgettingNet(int newInputs, int newOutputs)
 {
-        //creating rays
         this();
 
         //assigning nodes for ray objects
@@ -125,9 +132,12 @@ for(double cur : decisions)
 
 
 
-public void Learn()
+public void Learn(double[] actual)
 {
-
+    for(Node cur : hiddenNodes)
+    {
+        
+    }
 }
 
 public void setInputs()
