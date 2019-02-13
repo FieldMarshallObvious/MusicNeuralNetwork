@@ -89,7 +89,7 @@ public interface DNA
 						(curLayer[j].getWeight() - nextLayer[j].getWeight);
 
 					// Update weight between node j and k
-					curLayer[j].setWeights();
+					curLayer[j].setWeights(curLayer[k].indexOf(), curLayer[k].getWeights(k) + curLayer[k].WeightDiff(k));
 
 					nextLayer.setWeights();
 				}
@@ -97,37 +97,40 @@ public interface DNA
 		}
 	}
 
-	default void CalculateSignalErrors() 
+	default double CalculateSignalErrors(Node[] Layers, double[][] ExpectedOutput) 
 	{
 		int i,j,k,OutputLayer;
+		OutputLayer = 2;
 		double Sum;
 
 		OutputLayer = NumberOfLayers-1;
 
 	       	// Calculate all output signal error
-		for (i = 0; i < Layer[OutputLayer].Node.length; i++) 
-			Layer[OutputLayer].Node[i].SignalError 
+		for (i = 0; i < Layers[OutputLayer].length; i++) 
+			Layers[OutputLayer].get(i).SignalError 
 				= (ExpectedOutput[SampleNumber][i] - 
-					Layer[OutputLayer].Node[i].Output) * 
-					Layer[OutputLayer].Node[i].Output * 
-					(1-Layer[OutputLayer].Node[i].Output);
+					Layers[OutputLayer].get(i).getActivation()) * 
+					Layers[OutputLayer].get(i).getActivation() * 
+					(1-Layers[OutputLayer].get(i).getActivation());
 
 	       	// Calculate signal error for all nodes in the hidden layer
 		// (back propagate the errors)
-		for (i = NumberOfLayers-2; i > 0; i--) {
-			for (j = 0; j < Layer[i].Node.length; j++) {
+		for (i = NumberOfLayers-2; i > 0; i--) 
+		{
+			for (j = 0; j < Layers[i].length; j++) {
 				Sum = 0;
 
-				for (k = 0; k < Layer[i+1].Node.length; k++)
-					Sum = Sum + Layer[i+1].Node[k].Weight[j] * 
-						Layer[i+1].Node[k].SignalError;
+				for (k = 0; k < Layers[i+1].Node.length; k++)
+					Sum = Sum + Layers[i+1].Node[k].Weight[j] * 
+						Layers[i+1].Node[k].SignalError;
 
-				Layer[i].Node[j].SignalError 
-					= Layer[i].Node[j].Output*(1 - 
-						Layer[i].Node[j].Output)*Sum;
+					Layers[i].get(i).SignalError 
+					= Layers[i].get(j).getActivation()*(1 - 
+						Layers[i].get(j).getActivation())*Sum;
 			}
 		}
 
+		return sum;
 	}
 
 }
