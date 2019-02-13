@@ -1,5 +1,5 @@
 
-public interface DNA_Class
+public interface DNA
 {
 	
 	default double cost_Func(double prediction, int actual)
