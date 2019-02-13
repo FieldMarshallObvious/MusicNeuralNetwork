@@ -1,14 +1,15 @@
 
-public class DNA_Class
+public interface DNA_Class
 {
-	public double cost_Func(double prediction, int actual)
+	
+	default double cost_Func(double prediction, int actual)
 	{
 		double output = 0.0;
 		output = pow((prediction - actual), 2);
 			return output;
 	}
 
-	public double sigmoidFunction(double prediction)
+	default double sigmoidFunction(double prediction)
 	{
 		double raised = pow(10, (-1 * prediction);
 		double output = (1)/(1 + raised));
@@ -16,7 +17,7 @@ public class DNA_Class
 	}
 
 
-	public double[] linearRegressionFunc (double Bias, double weight, int numNuerons, double activation, double learningRate, int actual)
+	default double[] linearRegressionFunc (double Bias, double weight, int numNuerons, double activation, double learningRate, int actual)
 	{
 		double[] output = new double[2];
 		int epochs = 0;
@@ -34,7 +35,7 @@ public class DNA_Class
 	}
 
 	 // Calculate the node activations
-	 public void FeedForward(Node[] Layers)
+	 default void FeedForward(Node[] Layers)
 	 {
 
 		// Since no weights contribute to the output 
@@ -57,7 +58,7 @@ public class DNA_Class
 
 	} 
 
-	private void BackPropagateError(Node[] curLayer, Node[] nextLayer) 
+	default void BackPropagateError(Node[] curLayer, Node[] nextLayer) 
 	{
 		double WeightDiff;
 
@@ -96,6 +97,38 @@ public class DNA_Class
 		}
 	}
 
+	default void CalculateSignalErrors() 
+	{
+		int i,j,k,OutputLayer;
+		double Sum;
+
+		OutputLayer = NumberOfLayers-1;
+
+	       	// Calculate all output signal error
+		for (i = 0; i < Layer[OutputLayer].Node.length; i++) 
+			Layer[OutputLayer].Node[i].SignalError 
+				= (ExpectedOutput[SampleNumber][i] - 
+					Layer[OutputLayer].Node[i].Output) * 
+					Layer[OutputLayer].Node[i].Output * 
+					(1-Layer[OutputLayer].Node[i].Output);
+
+	       	// Calculate signal error for all nodes in the hidden layer
+		// (back propagate the errors)
+		for (i = NumberOfLayers-2; i > 0; i--) {
+			for (j = 0; j < Layer[i].Node.length; j++) {
+				Sum = 0;
+
+				for (k = 0; k < Layer[i+1].Node.length; k++)
+					Sum = Sum + Layer[i+1].Node[k].Weight[j] * 
+						Layer[i+1].Node[k].SignalError;
+
+				Layer[i].Node[j].SignalError 
+					= Layer[i].Node[j].Output*(1 - 
+						Layer[i].Node[j].Output)*Sum;
+			}
+		}
+
+	}
 
 }
 
