@@ -60,6 +60,7 @@ public interface DNA
 
 	default void BackPropagateError(Node[] curLayer, Node[] nextLayer) 
 	{
+		//NOTE: Consider passing array of all layers
 		double WeightDiff;
 
 		// Update Weights
@@ -85,13 +86,13 @@ public interface DNA
 					// Calculate weight difference between node j and k
 					WeightDiff = 
 						LearningRate * 
-						curLayer[j].SignalError*Node[k].Output +
+						curLayer[j].SignalError*Node[k].Output + //NOTE: Logic here needs to be fixed
 						(curLayer[j].getWeight() - nextLayer[j].getWeight);
 
 					// Update weight between node j and k
-					curLayer[j].setWeights(curLayer[k].indexOf(), curLayer[k].getWeights(k) + curLayer[k].WeightDiff(k));
+					curLayer[k].setWeights(curLayer.get(j).SignalError*Layer[i-1].get(k).getActivation + curLayer.get[j].WeightDiff[k]);
 
-					nextLayer.setWeights();
+					nextLayer[k].setWeights(curLayer[k].indexOf(), curLayer[k].getWeights(k) + curLayer[k].WeightDiff(k));
 				}
 			}
 		}
