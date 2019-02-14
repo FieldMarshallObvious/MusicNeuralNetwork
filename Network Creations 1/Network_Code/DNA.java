@@ -11,8 +11,8 @@ public interface DNA
 
 	default double sigmoidFunction(double prediction)
 	{
-		double raised = pow(10, (-1 * prediction);
-		double output = (1)/(1 + raised));
+		double raised = pow(10, (-1 * prediction));
+		double output = (1)/(1 + raised);
 		return output;
 	}
 
@@ -133,6 +133,64 @@ public interface DNA
 
 		return sum;
 	}
+
+	default double CalculateOverallError(Node[][] layersNodes ,double[][] actual) 
+	{
+
+		int i,j;
+
+		double OverallError = 0;
+       	
+		for (i = 0; i < NumberOfSamples; i++)
+			for (j = 0; j < layersNodes[NumberOfLayers-1].Node.length; j++) {
+           			OverallError = 
+					OverallError + 
+					0.5*( Math.pow(layersNodes[i][j].getActivation() - 
+						ActualOutput[i][j],2) );
+		}
+
+		return OverallError;
+	}
+
+	public  BackPropagation(int NumberOfNodes[], double InputSamples[][], double OutputSamples[][], double LearnRate, double Moment, double MinError, long MaxIter) 
+	{
+
+		int i,j;
+
+		// Initiate variables
+		NumberOfSamples = InputSamples.length;
+		MinimumError = MinError;
+		LearningRate = LearnRate;
+		Momentum = Moment;
+		NumberOfLayers = NumberOfNodes.length;
+		MaximumNumberOfIterations = MaxIter;
+
+		// Create network layers
+		Layer = new LAYER[NumberOfLayers];
+
+		// Assign the number of node to the input layer
+		Layer[0] = new LAYER(NumberOfNodes[0],NumberOfNodes[0]);
+
+		// Assign number of nodes to each layer
+		for (i = 1; i < NumberOfLayers; i++) 
+			Layer[i] = new LAYER(NumberOfNodes[i],NumberOfNodes[i-1]);
+
+			Input = new double[NumberOfSamples][Layer[0].Node.length];
+			ExpectedOutput = new double[NumberOfSamples][Layer[NumberOfLayers-1].Node.length];
+			ActualOutput = new double[NumberOfSamples][Layer[NumberOfLayers-1].Node.length];
+
+		// Assign input set
+		for (i = 0; i < NumberOfSamples; i++)
+			for (j = 0; j < Layer[0].Node.length; j++)
+				Input[i][j] = InputSamples[i][j];
+
+		// Assign output set
+		for (i = 0; i < NumberOfSamples; i++)
+			for (j = 0; j < Layer[NumberOfLayers-1].Node.length; j++)
+				ExpectedOutput[i][j] = OutputSamples[i][j];
+}
+
+
 
 }
 
