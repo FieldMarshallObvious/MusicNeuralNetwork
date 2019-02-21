@@ -42,26 +42,32 @@ class Node
     {
         Activation = newActivation;
     }
-
+    //Will return the weights that are on each node
     public double getWeights(int index)
     {
-        return 0.0;
+        return weights(index);
     }
 
 
 
-public void setBias(double newBias)
-{
-    Δbias = bias - newBias;
-    bias = newBias;
-}
-
-public double activationFunc(double[]activations)
+    public void setBias(double newBias)
     {
-        for(int x = 0; x < weights.length; x++)
-        {
-            activation += weights.get(x)*acivations[x] + bias;
-        }
-        return activation;
-}
+        Δbias = bias - newBias;
+        bias = newBias;
+    }
+
+    public double activationFunc(double[]activations)
+    {
+            for(int x = 0; x < weights.length; x++)
+            {
+                activation += weights.get(x)*acivations[x] + bias;
+            }
+            return activation;
+    }
+    //this method should read in note values, calculate the difference between them
+    // and then return that value as a double for further use
+    public static void deltaMidiCompare()
+    {
+        
+    }
 }
