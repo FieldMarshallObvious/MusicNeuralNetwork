@@ -1,13 +1,11 @@
-import MidiConvert;
-import Node;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class IntialNetwork
+public class IntialNetwork implements DNA
 {
+    Node[] layers = new Node[3];
     Node[] inputNodes;
     Node[] hiddenNodes;
     Node[] outputNodes;
@@ -36,14 +34,14 @@ public IntialNetwork()
         this();
 
         //assigning nodes for ray objects
-        assigningNodes(curLayer);
+        Node.assigningNodes(curLayer);
     
     
         //creating weights
         //creating hidden layer weights 
-        creatingWeights(inputNodes.size, hiddenNodes);
+        Node.creatingWeights(inputNodes.size, hiddenNodes);
         //creating output layer weights
-        creatingWeights(hiddenNodes.size, outputNodes);
+        Node.creatingWeights(hiddenNodes.size, outputNodes);
     }
 
     private void makingRays(int newnewInputs, int newOutputs)
@@ -84,7 +82,7 @@ private double[] calcOutput()
 
     for(int x = 0; x < inputNodes.size; x++)
     {
-        activations[x] = inputNodes[x]getActivation(x);
+        activations[x] = inputNodes[x].getActivation(x);
         oldactivations[x] = activations[x];
     }
     
@@ -99,28 +97,29 @@ private double[] calcOutput()
     for(int x = 0; x < hiddenNodes.size; x++)
     {
         double curavtivation = activations[x];
-        activations[x] = outputNodes[x].get(outputNodes.get(hiddenNodes[x].activationFunc(oldactivations)));
+        activations[x] = outputNodes[x].get(hiddenNodes[x].activationFunc(oldactivations));
     }
 
     return activations;
 }
 
-private static void usingBufferedWritter() throws IOException
-{
-    String fileContent = "<output text>";
+    private static void usingBufferedWritter() throws IOException
+    {
+        String fileContent = "<output text>";
      
-    BufferedWriter writer = new BufferedWriter(new FileWriter("<output file>"));
-    writer.write(fileContent);
-    writer.close();
-}
+        BufferedWriter writer = new BufferedWriter(new FileWriter("<output file>"));
+        writer.write(fileContent);
+        writer.close();
+    }
     
     public void writeOutputs()
     {
         usingBufferedWritter();
     }
-    public void training_Nodes()
+    public void training_Nodes(double[] ExpectedOutput)
     {
-        
+        this.CalculateSignalErrors(Layers, ExpectedOutput);
+        this.BackPropagateError(hiddenNodes, outputNodes);
     }
 
 }

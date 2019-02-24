@@ -1,11 +1,11 @@
-
+import java.math.*;
 public interface DNA
 {
 	
 	default double cost_Func(double prediction, int actual)
 	{
 		double output = 0.0;
-		output = pow((prediction - actual), 2);
+		output = Math.pow((prediction - actual), 2);
 			return output;
 	}
 
@@ -17,7 +17,7 @@ public interface DNA
 	}
 
 
-	default double[] linearRegressionFunc (double Bias, double weight, int numNuerons, double activation, double learningRate, int actual)
+	default double[] linearRegressionFunc (double bias, double weight, int numNuerons, double activation, double learningRate, int actual)
 	{
 		double[] output = new double[2];
 		int epochs = 0;
@@ -25,9 +25,9 @@ public interface DNA
 
 		while(epochs < numNuerons)
 		{
-			error = cost_Func(prediction, actual);
+			error = cost_Func(actual, actual);
 			output[0] = weight - learningRate * 2 * (error/numNuerons);
-			output[1] = bias - learningRate * 2 * ((error*actual)/NumNuerons);
+			output[1] = bias - learningRate * 2 * ((error*actual)/numNuerons);
 			
 		}
 		
@@ -42,18 +42,20 @@ public interface DNA
 		// vector from the input layer,
 		// assign the input vector from the input layer 
 		// to all the node in the first hidden layer
-           	for (int i = 0; i < Layers[0].Node.length; i++)
-				Layer[0].Node[i].Output = Layer[0].Input[i];
+		for (int i = 0; i < Layers[0].getNumNeurons; i++)
+		{
+			Layers[0].Node[i].Output = Layers[0].Input[i];
+		}
 
-		Layer[1].Input = Layer[0].Input;
+		Layers[1].Input = Layers[0].Input;
 		for (int i = 1; i < NumberOfLayers; i++) 
 		{
-			Layer[i].FeedForward();
+			Layers[i].FeedForward();
 
 			// Unless we have reached the last layer, assign the layer i's output vector
 			// to the (i+1) layer's input vector
 			if (i != NumberOfLayers-1)
-				Layer[i+1].Input = Layer[i].OutputVector();
+				Layers[i+1].Input = Layers[i].OutputVector();
 		}
 
 	} 
@@ -65,11 +67,11 @@ public interface DNA
 
 		// Update Weights
 		
-		for (i = NumberOfLayers-1; i > 0; i--) 
+		for (i = 2-1; i > 0; i--) 
 		{
 		
 			for (j = 0; j < curLayer.length; j++) {
-				/*
+				
 				// Calculate Bias weight difference to node j
 				curLayer[j].ThresholdDiff 
 					= LearningRate * 
@@ -79,7 +81,7 @@ public interface DNA
 				// Update Bias weight to node j
 				curLayer[j].Threshold = 
 					curLayer[j].Threshold + 
-					curLayer[j].ThresholdDiff;*/
+					curLayer[j].ThresholdDiff;
 
 				// Update Weights
 				for (k = 0; k < nextLayer.length; k++) {
@@ -87,7 +89,7 @@ public interface DNA
 					WeightDiff = 
 						LearningRate * 
 						curLayer[j].SignalError*Node[k].Output + //NOTE: Logic here needs to be fixed
-						(curLayer[j].getWeight() - nextLayer[j].getWeight);
+						(curLayer[j].getWeight() - nextLayer[k].getWeight);
 
 					// Update weight between node j and k
 					curLayer[k].setWeights(curLayer.get(j).SignalError*Layer[i-1].get(k).getActivation + curLayer.get[j].WeightDiff[k]);
@@ -142,6 +144,7 @@ public interface DNA
 		double OverallError = 0;
        	
 		for (i = 0; i < NumberOfSamples; i++)
+		{
 			for (j = 0; j < layersNodes[NumberOfLayers-1].Node.length; j++) {
            			OverallError = 
 					OverallError + 
@@ -152,43 +155,8 @@ public interface DNA
 		return OverallError;
 	}
 
-	public  BackPropagation(int NumberOfNodes[], double InputSamples[][], double OutputSamples[][], double LearnRate, double Moment, double MinError, long MaxIter) 
-	{
+	}
 
-		int i,j;
-
-		// Initiate variables
-		NumberOfSamples = InputSamples.length;
-		MinimumError = MinError;
-		LearningRate = LearnRate;
-		Momentum = Moment;
-		NumberOfLayers = NumberOfNodes.length;
-		MaximumNumberOfIterations = MaxIter;
-
-		// Create network layers
-		Layer = new LAYER[NumberOfLayers];
-
-		// Assign the number of node to the input layer
-		Layer[0] = new LAYER(NumberOfNodes[0],NumberOfNodes[0]);
-
-		// Assign number of nodes to each layer
-		for (i = 1; i < NumberOfLayers; i++) 
-			Layer[i] = new LAYER(NumberOfNodes[i],NumberOfNodes[i-1]);
-
-			Input = new double[NumberOfSamples][Layer[0].Node.length];
-			ExpectedOutput = new double[NumberOfSamples][Layer[NumberOfLayers-1].Node.length];
-			ActualOutput = new double[NumberOfSamples][Layer[NumberOfLayers-1].Node.length];
-
-		// Assign input set
-		for (i = 0; i < NumberOfSamples; i++)
-			for (j = 0; j < Layer[0].Node.length; j++)
-				Input[i][j] = InputSamples[i][j];
-
-		// Assign output set
-		for (i = 0; i < NumberOfSamples; i++)
-			for (j = 0; j < Layer[NumberOfLayers-1].Node.length; j++)
-				ExpectedOutput[i][j] = OutputSamples[i][j];
-}
 
 
 
