@@ -10,6 +10,8 @@ class Node
     double bias;
     double Δbias;
     
+    double signalError;
+
     public Node()
     {
         weights = new ArrayList<Double>();
@@ -42,17 +44,27 @@ class Node
     {
         activation = newActivation;
     }
+
+    public void setBias(double newBias)
+    {
+        Δbias = bias - newBias;
+        bias = newBias;
+    }
+
     //Will return the weights that are on each node
     public double getWeights(int index)
     {
         return weights.get(index);
     }
 
-
-    public void setBias(double newBias)
+    public double getBias()
     {
-        Δbias = bias - newBias;
-        bias = newBias;
+        return bias;
+    }
+
+    public double getActivation()
+    {
+        return activation;
     }
 
     public double activationFunc(double[]activations)

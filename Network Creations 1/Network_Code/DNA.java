@@ -11,7 +11,7 @@ public interface DNA
 
 	default double sigmoidFunction(double prediction)
 	{
-		double raised = pow(10, (-1 * prediction));
+		double raised = Math.pow(10, (-1 * prediction));
 		double output = (1)/(1 + raised);
 		return output;
 	}
@@ -33,7 +33,8 @@ public interface DNA
 		
 		return output;
 	}
-
+	//Consider removing
+	/*
 	 // Calculate the node activations
 	 default void FeedForward(Node[] Layers)
 	 {
@@ -58,84 +59,84 @@ public interface DNA
 				Layers[i+1].Input = Layers[i].OutputVector();
 		}
 
-	} 
+	} */
 
-	default void BackPropagateError(Node[] curLayer, Node[] nextLayer) 
+	default void BackPropagateError(Node[] inputLayer, Node[] curLayer, double signalErrorCur, Node[] nextLayer, double signalErrorNext,double LearningRate, double Momentum) 
 	{
 		//NOTE: Consider passing array of all layers
-		double WeightDiff;
+		double WeightDiff = 0.0; 
 
 		// Update Weights
 		
-		for (i = 2-1; i > 0; i--) 
+		for (int i = 2-1; i > 0; i--) 
 		{
 		
-			for (j = 0; j < curLayer.length; j++) {
+			for (int j = 0; j < curLayer.length; j++) 
+			{
 				
 				// Calculate Bias weight difference to node j
-				curLayer[j].ThresholdDiff 
-					= LearningRate * 
-					nextLayer[j].SignalError + 
-					Momentum*Node[j].ThresholdDiff;
+				double ThresholdDiff = LearningRate * 
+					signalErrorNext + 
+					Momentum*nextLayer[j].getBias();
 
 				// Update Bias weight to node j
-				curLayer[j].Threshold = 
-					curLayer[j].Threshold + 
-					curLayer[j].ThresholdDiff;
+				curLayer[j].setBias( 
+					curLayer[j].getBias() + 
+					ThresholdDiff);
 
 				// Update Weights
-				for (k = 0; k < nextLayer.length; k++) {
+				for (int k = 0; k < nextLayer.length; k++) 
+				{
 					// Calculate weight difference between node j and k
 					WeightDiff = 
 						LearningRate * 
-						curLayer[j].SignalError*Node[k].Output + //NOTE: Logic here needs to be fixed
-						(curLayer[j].getWeight() - nextLayer[k].getWeight);
+						signalErrorCur*curLayer[k].getActivation() + //NOTE: Logic here needs to be fixed
+						(curLayer[j].getWeights(k) - nextLayer[k].getWeights(k));
 
 					// Update weight between node j and k
-					curLayer[k].setWeights(curLayer.get(j).SignalError*Layer[i-1].get(k).getActivation + curLayer.get[j].WeightDiff[k]);
+					curLayer[k].setWeights(k, signalErrorCur*inputLayer[k].getActivation() + WeightDiff);
 
-					nextLayer[k].setWeights(curLayer[k].indexOf(), curLayer[k].getWeights(k) + curLayer[k].WeightDiff(k));
+					nextLayer[k].setWeights(k, curLayer[k].getWeights(k) + WeightDiff);
 				}
 			}
 		}
 	}
 
-	default double CalculateSignalErrors(Node[] Layers, double[][] ExpectedOutput) 
+	default double CalculateSignalErrors(Node[]inputLayer ,Node[] outputLayer, double[][] ExpectedOutput) 
 	{
 		int i,j,k,OutputLayer;
 		OutputLayer = 2;
 		double Sum;
 
-		OutputLayer = NumberOfLayers-1;
-
 	       	// Calculate all output signal error
-		for (i = 0; i < Layers[OutputLayer].length; i++) 
-			Layers[OutputLayer].get(i).SignalError 
+		for (i = 0; i < outputLayer.length; i++) 
+			outputLayer[i].SignalError 
 				= (ExpectedOutput[SampleNumber][i] - 
-					Layers[OutputLayer].get(i).getActivation()) * 
-					Layers[OutputLayer].get(i).getActivation() * 
-					(1-Layers[OutputLayer].get(i).getActivation());
+					layers[OutputLayer].get(i).getActivation()) * 
+					layers[OutputLayer].get(i).getActivation() * 
+					(1-layers[OutputLayer].get(i).getActivation());
 
 	       	// Calculate signal error for all nodes in the hidden layer
 		// (back propagate the errors)
 		for (i = NumberOfLayers-2; i > 0; i--) 
 		{
-			for (j = 0; j < Layers[i].length; j++) {
+			for (j = 0; j < layers[i].length; j++) {
 				Sum = 0;
 
-				for (k = 0; k < Layers[i+1].Node.length; k++)
-					Sum = Sum + Layers[i+1].Node[k].Weight[j] * 
-						Layers[i+1].Node[k].SignalError;
+				for (k = 0; k < layers[i+1].Node.length; k++)
+					Sum = Sum + layers[i+1].Node[k].Weight[j] * 
+						layers[i+1].Node[k].SignalError;
 
-					Layers[i].get(i).SignalError 
-					= Layers[i].get(j).getActivation()*(1 - 
-						Layers[i].get(j).getActivation())*Sum;
+					layers[i].get(i).SignalError 
+					= layers[i].get(j).getActivation()*(1 - 
+						layers[i].get(j).getActivation())*Sum;
 			}
 		}
 
 		return sum;
 	}
 
+	/*
 	default double CalculateOverallError(Node[][] layersNodes ,double[][] actual) 
 	{
 
@@ -156,7 +157,7 @@ public interface DNA
 	}
 
 	}
-
+*/
 
 
 
