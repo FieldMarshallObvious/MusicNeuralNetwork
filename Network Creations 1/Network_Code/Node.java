@@ -77,8 +77,18 @@ class Node
     }
     //this method should read in note values, calculate the difference between them
     // and then return that value as a double for further use
-    public static void deltaMidiCompare()
+    public double deltaMidiCompare(double noteOne, double noteTwo)
     {
+        double delta = (noteOne - noteTwo);
+        return delta;
+    }
+
+    public String toString()
+    {
+        String nodeInfo = "";
         
+        nodeInfo = "Node Info: \n" + "Biases: " + bias + "\nCurrent Weights: " + weights.toString;
+
+        return nodeInfo;
     }
 }
