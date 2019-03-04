@@ -102,38 +102,42 @@ public interface DNA
 		}
 	}
 
-	default double CalculateSignalErrors(Node[]inputLayer ,Node[] outputLayer, double[][] ExpectedOutput) 
+	default double CalculateSignalErrors(Node[]inputLayer, Node[] outputLayer, double[][] ExpectedOutput, int SampleNumber) 
 	{
 		int i,j,k,OutputLayer;
-		OutputLayer = 2;
+		
 		double Sum;
+		double signalErrorCur;
+
 
 	       	// Calculate all output signal error
 		for (i = 0; i < outputLayer.length; i++) 
 			outputLayer[i].SignalError 
 				= (ExpectedOutput[SampleNumber][i] - 
-					layers[OutputLayer].get(i).getActivation()) * 
-					layers[OutputLayer].get(i).getActivation() * 
-					(1-layers[OutputLayer].get(i).getActivation());
+					outputLayer(i).getActivation() * 
+					outputLayer(i).getActivation() * 
+					(1-outputLayer(i).getActivation()));
 
 	       	// Calculate signal error for all nodes in the hidden layer
 		// (back propagate the errors)
-		for (i = NumberOfLayers-2; i > 0; i--) 
+
+		for (j = 0; j < inputLayer.length; j++) 
 		{
-			for (j = 0; j < layers[i].length; j++) {
-				Sum = 0;
+			Sum = 0;
 
-				for (k = 0; k < layers[i+1].Node.length; k++)
-					Sum = Sum + layers[i+1].Node[k].Weight[j] * 
-						layers[i+1].Node[k].SignalError;
+			for (k = 0; k < layers[i+1].Node.length; k++)
+			{
+				Sum = Sum + layers[i+1].Node[k].Weight[j] * 
+					layers[i+1].Node[k].SignalError;
 
-					layers[i].get(i).SignalError 
-					= layers[i].get(j).getActivation()*(1 - 
-						layers[i].get(j).getActivation())*Sum;
+				layers[i].get(i).SignalError 
+				= layers[i].get(j).getActivation()*(1 - 
+					layers[i].get(j).getActivation())*Sum;
 			}
-		}
+		
 
 		return sum;
+		}
 	}
 
 	/*
