@@ -12,6 +12,7 @@ class Node
     
     double signalError;
 
+    //Constructor Methods
     public Node()
     {
         weights = new ArrayList<Double>();
@@ -25,6 +26,7 @@ class Node
         bias  = inputBias;
     }
 
+    //Setting methods
     public void setWeights(int numneurons)
     {
         for(int x = 0; x < numneurons; x++)
@@ -33,7 +35,7 @@ class Node
             weights.add(randnum);
         }
     }
-    
+
     public void setWeights(int index, double newWeight)
     {
         Δweights.set(index, weights.get(index) - newWeight);
@@ -51,22 +53,12 @@ class Node
         bias = newBias;
     }
 
-    //Will return the weights that are on each node
-    public double getWeights(int index)
+    public void setSignalError(double newSignalError)
     {
-        return weights.get(index);
+        signalError = newSignalError;
     }
 
-    public double getBias()
-    {
-        return bias;
-    }
-
-    public double getActivation()
-    {
-        return activation;
-    }
-
+    //Activation functions
     public double activationFunc(double[]activations)
     {
             for(int x = 0; x < weights.size(); x++)
@@ -83,11 +75,39 @@ class Node
         return delta;
     }
 
+     //Return methods 
+     public double getWeights(int index)
+     {
+         return weights.get(index);
+     }
+ 
+     public double getBias()
+     {
+         return bias;
+     }
+ 
+     public double getActivation()
+     {
+         return activation;
+     }
+ 
+     public double getSignalError()
+     {
+         return signalError;
+     }
     public String toString()
     {
         String nodeInfo = "";
         
-        nodeInfo = "Node Info: \n" + "Biases: " + bias + "\nCurrent Weights: " + weights.toString;
+        nodeInfo = "Node Info: \n" + "Biases: " + bias + "\nCurrent Weights: ";
+        nodeInfo += "[";
+        for(int x = 0; x < weights.size(); x++)
+        {
+            nodeInfo += weights.get(x);
+            if(x < weights.size() - 1)
+                nodeInfo += ", ";
+        }
+        nodeInfo += "]";
 
         return nodeInfo;
     }
