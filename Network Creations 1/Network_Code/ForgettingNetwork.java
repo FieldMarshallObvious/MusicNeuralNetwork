@@ -123,10 +123,11 @@ private double[] calcOutput()
     {
         usingBufferedWritter();
     }
-    public void training_Nodes(double[] ExpectedOutput)
+    public void training_Nodes(double[] ExpectedOutput, double learningRate, double Momentum)
     {
         //REALLY IN NEED OF FIXING
-        this.CalculateSignalErrors(layers, outputNodes, ExpectedOutput);
-        //this.BackPropagateError(hiddenNodes, outputNodes);
+        double sigSum = this.CalculateSignalErrors(layers, outputNodes, ExpectedOutput);
+        this.BackPropagateError(inputNodes,hiddenNodes, outputNodes, learningRate, Momentum);
+        System.out.println("There is an error of " + sigSum);
     }
 }
