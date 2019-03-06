@@ -123,7 +123,7 @@ private double[] calcOutput()
     }
     public void training_Nodes(double[] ExpectedOutput)
     {
-        //NREALLY IN NEED OF FIXING
+        //REALLY IN NEED OF FIXING
         this.CalculateSignalErrors(layers, outputNodes, ExpectedOutput);
         //this.BackPropagateError(hiddenNodes, outputNodes);
     }

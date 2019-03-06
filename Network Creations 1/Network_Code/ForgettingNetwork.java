@@ -5,21 +5,22 @@ import java.io.IOException;
 
 
 
-public class ForgettingNet
+public class ForgettingNetwork implements DNA
 {
-    Node[] inputNodes;
-    Node[] hiddenNodes;
-    Node[] outputNodes;
+    private Node[] layers = new Node[3];
+    private Node[] inputNodes;
+    private Node[] hiddenNodes;
+    private Node[] outputNodes;
 
-    double[] decisions;
+    private double[] decisions;
 
-    int numOfInputs;
-    int numOfOutputs;  
-    double learningRate;  
+    private int numOfInputs;
+    private int numOfOutputs;  
+    private double learningRate;  
 
-    String finaloutput;
+    private String finaloutput;
 
-    public ForgettingNet()
+    public ForgettingNetwork()
     {
         numOfInputs = 0;
         numOfOutputs = 0;
@@ -30,44 +31,47 @@ public class ForgettingNet
         makingRays(0, 0);
     }
 
-    public ForgettingNet(int newInputs, int newOutputs)
+    public ForgettingNetwork(int newInputs, int newOutputs)
     {
         this();
 
         //assigning nodes for ray objects
-        assigningNodes(curLayer);
+        assigningNodes(inputNodes);
+        assigningNodes(hiddenNodes);
+        assigningNodes(outputNodes);
+
+
     
     
         //creating weights
-            //creating hidden layer weights 
-            creatingWeights(inputNodes.size, hiddenNodes);
-            //creating output layer weights
-            creatingWeights(hiddenNodes.size, outputNodes);
+        //creating hidden layer weights 
+        creatingWeights(inputNodes.length, hiddenNodes);
+        //creating output layer weights
+        creatingWeights(hiddenNodes.length, outputNodes);
     }
 
-
-private void makingRays(int newnewInputs, int newOutputs)
-{
-    //creating input Nodes ray
-    inputNodes = new Node[numOfInputs];
-    outputNodes = new Node[numOfOutputs];
-
-    //determining hidden Nodes based on num of outputs and inputs
-    hiddenNodesNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
-
-
-    //creating final deicisions ray
-    decisions = new double[outputNodes.size];
-}
-
-private void assigningNodes(Node[] curLayer)
-{
-    for(int x = 0; x < curLayer.size; x++)
+    private void makingRays(int newnewInputs, int newOutputs)
     {
-        Node curNode = new Node();
-        Node[x] = curNode;
+        //creating input Nodes ray
+        inputNodes = new Node[numOfInputs];
+        outputNodes = new Node[numOfOutputs];
+
+        //determining hidden Nodes based on num of outputs and inputs
+        hiddenNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
+
+
+        //creating final deicisions ray
+        decisions = new double[outputNodes.length];
     }
-}
+
+    private void assigningNodes(Node[] curLayer)
+    {
+        for(int x = 0; x < curLayer.length; x++)
+        {
+            Node curNode = new Node();
+            curLayer[x] = curNode;
+        }
+    }
 
 private void creatingWeights(int previousLayerSize, Node[] curLayer)
 {
@@ -79,74 +83,50 @@ private void creatingWeights(int previousLayerSize, Node[] curLayer)
 
 private double[] calcOutput()
 {
-    double[] activations = new double[inputNodes.size];
+    double[] activations = new double[inputNodes.length];
     double[] oldactivations = activations;
 
 
-    for(int x = 0; x < inputNodes.size; x++)
+    for(int x = 0; x < inputNodes.length; x++)
     {
-        activations[x] = inputNodes[x].getActivation(x);
+        activations[x] = inputNodes[x].getActivation();
         oldactivations[x] = activations[x];
     }
     
-    for(int x = 0; x < inputNodes.size; x ++)
+    for(int x = 0; x < inputNodes.length; x ++)
     {
-        activations[x] =  hiddenNodes[x].get(inputNodes[x].activationFunc(oldactivations));
+        double curactivation =  hiddenNodes[x].activationFunc(oldactivations); 
+        activations[x] = curactivation;
     }
     
     oldactivations = activations;
 
-    for(int x = 0; x < hiddenNodes.size; x++)
+    for(int x = 0; x < hiddenNodes.length; x++)
     {
-        activations[x] = outputNodes[x].get(hiddenNodes[x].activationFunc(oldactivations));
+        double curavtivation = outputNodes[x].activationFunc(oldactivations);
+        activations[x] = curavtivation;
     }
 
     return activations;
 }
 
-private static void usingBufferedWritter() throws IOException
-{
-    String fileContent = "<output character>";
+    private static void usingBufferedWritter() throws IOException
+    {
+        String fileContent = "<output text>";
      
-    BufferedWriter writer = new BufferedWriter(new FileWriter("<output file>"));
-    writer.write(fileContent);
-    writer.close();
-}
-
-public void Decision()
-{
-    for(int x = 0; x < outputNodes.size; x++)
-    {
-        Node cur = outputNodes[x];
-        if(cur.getActivation <= 0.65)
-            decisions[x] = cur;
-        else
-        {
-            decisions[x] = 0.0;
-    
-        }
-        for(double curdecision : decisions)
-        {
-    
-        
-        }
+        BufferedWriter writer = new BufferedWriter(new FileWriter("<output file>"));
+        writer.write(fileContent);
+        writer.close();
     }
-}
-
-
-    public void Learn(double[] actual)
-    {
-        for(Node cur : hiddenNodes)
-        {
-        
-        }
-    }
-
-    public void setInputs()
-    {
     
+    public void writeOutputs() throws IOException
+    {
+        usingBufferedWritter();
     }
-
-
-
+    public void training_Nodes(double[] ExpectedOutput)
+    {
+        //REALLY IN NEED OF FIXING
+        this.CalculateSignalErrors(layers, outputNodes, ExpectedOutput);
+        //this.BackPropagateError(hiddenNodes, outputNodes);
+    }
 }
