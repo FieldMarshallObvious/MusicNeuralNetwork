@@ -3,14 +3,14 @@ import java.util.ArrayList;
 
 class Node
 {
-    ArrayList<Double> weights;
-    ArrayList<Double> Δweights;    
+    private ArrayList<Double> weights;
+    private ArrayList<Double> Δweights;    
 
-    double activation;
-    double bias;
-    double Δbias;
+    private double activation;
+    private double bias;
+    private double Δbias;
     
-    double signalError;
+    private double signalError;
 
     //Constructor Methods
     public Node()
@@ -59,7 +59,7 @@ class Node
     }
 
     //Activation functions
-    public double activationFunc(double[]activations)
+    public double activationFunc(double[] activations)
     {
             for(int x = 0; x < weights.size(); x++)
             {
@@ -67,6 +67,17 @@ class Node
             }
             return activation;
     }
+
+     //Return methods 
+     public double getWeights(int index){return weights.get(index);}
+ 
+     public double getBias(){return bias;}
+ 
+     public double getActivation(){ return activation;}
+ 
+     public double getSignalError(){ return signalError;}
+
+
     //this method should read in note values, calculate the difference between them
     // and then return that value as a double for further use
     public double deltaMidiCompare(double noteOne, double noteTwo)
@@ -75,28 +86,8 @@ class Node
         return delta;
     }
 
-     //Return methods 
-     public double getWeights(int index)
+     public String toString()
      {
-         return weights.get(index);
-     }
- 
-     public double getBias()
-     {
-         return bias;
-     }
- 
-     public double getActivation()
-     {
-         return activation;
-     }
- 
-     public double getSignalError()
-     {
-         return signalError;
-     }
-    public String toString()
-    {
         String nodeInfo = "";
         
         nodeInfo = "Node Info: \n" + "Biases: " + bias + "\nCurrent Weights: ";
@@ -110,5 +101,5 @@ class Node
         nodeInfo += "]";
 
         return nodeInfo;
-    }
+     }
 }

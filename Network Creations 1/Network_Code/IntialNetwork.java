@@ -34,14 +34,18 @@ public IntialNetwork()
         this();
 
         //assigning nodes for ray objects
-        Node.assigningNodes(curLayer);
+        assigningNodes(inputNodes);
+        assigningNodes(hiddenNodes);
+        assigningNodes(outputNodes);
+
+
     
     
         //creating weights
         //creating hidden layer weights 
-        Node.creatingWeights(inputNodes.size, hiddenNodes);
+        creatingWeights(inputNodes.length, hiddenNodes);
         //creating output layer weights
-        Node.creatingWeights(hiddenNodes.size, outputNodes);
+        creatingWeights(hiddenNodes.length, outputNodes);
     }
 
     private void makingRays(int newnewInputs, int newOutputs)
@@ -51,18 +55,19 @@ public IntialNetwork()
         outputNodes = new Node[numOfOutputs];
 
         //determining hidden Nodes based on num of outputs and inputs
-        hiddenNodesNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
+        hiddenNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
 
 
         //creating final deicisions ray
-        decisions = new double[outputNodes.size];
+        decisions = new double[outputNodes.length];
     }
+
     private void assigningNodes(Node[] curLayer)
     {
-        for(int x = 0; x < curLayer.size; x++)
+        for(int x = 0; x < curLayer.length; x++)
         {
             Node curNode = new Node();
-            Node[x] = curNode;
+            curLayer[x] = curNode;
         }
     }
 
@@ -76,28 +81,28 @@ private void creatingWeights(int previousLayerSize, Node[] curLayer)
 
 private double[] calcOutput()
 {
-    double[] activations = new double[inputNodes.size];
+    double[] activations = new double[inputNodes.length];
     double[] oldactivations = activations;
 
 
-    for(int x = 0; x < inputNodes.size; x++)
+    for(int x = 0; x < inputNodes.length; x++)
     {
-        activations[x] = inputNodes[x].getActivation(x);
+        activations[x] = inputNodes[x].getActivation();
         oldactivations[x] = activations[x];
     }
     
-    for(int x = 0; x < inputNodes.size; x ++)
+    for(int x = 0; x < inputNodes.length; x ++)
     {
-        double curactivation = activations[x]; 
-        activations[x] =  hiddenNodes[x].get(inputNodes[x].activationFunc(oldactivations));
+        double curactivation =  hiddenNodes[x].activationFunc(oldactivations); 
+        activations[x] = curactivation;
     }
     
     oldactivations = activations;
 
-    for(int x = 0; x < hiddenNodes.size; x++)
+    for(int x = 0; x < hiddenNodes.length; x++)
     {
-        double curavtivation = activations[x];
-        activations[x] = outputNodes[x].get(hiddenNodes[x].activationFunc(oldactivations));
+        double curavtivation = outputNodes[x].activationFunc(oldactivations);
+        activations[x] = curavtivation;
     }
 
     return activations;
@@ -112,14 +117,15 @@ private double[] calcOutput()
         writer.close();
     }
     
-    public void writeOutputs()
+    public void writeOutputs() throws IOException
     {
         usingBufferedWritter();
     }
     public void training_Nodes(double[] ExpectedOutput)
     {
-        this.CalculateSignalErrors(Layers, ExpectedOutput);
-        this.BackPropagateError(hiddenNodes, outputNodes);
+        //NREALLY IN NEED OF FIXING
+        this.CalculateSignalErrors(layers, outputNodes, ExpectedOutput);
+        //this.BackPropagateError(hiddenNodes, outputNodes);
     }
 
 }
