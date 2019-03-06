@@ -61,27 +61,23 @@ public interface DNA
 
 	} */
 
-	default void BackPropagateError(Node[] inputLayer, Node[] curLayer, double signalErrorCur, Node[] nextLayer, double signalErrorNext,double LearningRate, double Momentum) 
+	default void BackPropagateError(Node[] inputLayer, Node[] curLayer, Node[] nextLayer, double LearningRate, double Momentum) 
 	{
 		//NOTE: Consider passing array of all layers
 		double WeightDiff = 0.0; 
 
 		// Update Weights
 		
-		for (int i = 2-1; i > 0; i--) 
+		for (int j = 0; j < curLayer.length; j++) 
 		{
-		
-			for (int j = 0; j < curLayer.length; j++) 
-			{
 				
-				// Calculate Bias weight difference to node j
-				double ThresholdDiff = LearningRate * 
-					signalErrorNext + 
+			// Calculate Bias weight difference to node j
+			double ThresholdDiff = LearningRate * 
+					nextLayer[j].getSignalError() + 
 					Momentum*nextLayer[j].getBias();
 
-				// Update Bias weight to node j
-				curLayer[j].setBias( 
-					curLayer[j].getBias() + 
+				// Update Bias weight to node j				curLayer[j].setBias( 
+					curLayer[j].setActivation(curLayer[j].getBias() + 
 					ThresholdDiff);
 
 				// Update Weights
@@ -90,16 +86,15 @@ public interface DNA
 					// Calculate weight difference between node j and k
 					WeightDiff = 
 						LearningRate * 
-						signalErrorCur*curLayer[k].getActivation() + //NOTE: Logic here needs to be fixed
-						(curLayer[j].getWeights(k) - nextLayer[k].getWeights(k));
+						curLayer[k].getActivation()*curLayer[k].getActivation() + //NOTE: Logic here needs to be fixed
+						(curLayer[k].getWeights(k) - nextLayer[k].getWeights(k));
 
 					// Update weight between node j and k
-					curLayer[k].setWeights(k, signalErrorCur*inputLayer[k].getActivation() + WeightDiff);
+					curLayer[k].setWeights(k, curLayer[k].getActivation()*inputLayer[k].getActivation() + WeightDiff);
 
 					nextLayer[k].setWeights(k, curLayer[k].getWeights(k) + WeightDiff);
 				}
 			}
-		}
 	}
 
 	default double CalculateSignalErrors(Node[]inputLayer ,Node[] outputLayer, double[] ExpectedOutput) 
