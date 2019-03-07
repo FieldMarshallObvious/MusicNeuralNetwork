@@ -18,7 +18,7 @@ public class SelectionNetwork implements DNA
 
     String finaloutput;
 
-public SelectionNetwork()
+    public SelectionNetwork()
     {
         numOfInputs = 0;
         numOfOutputs = 0;
