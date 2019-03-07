@@ -82,7 +82,7 @@ private void creatingWeights(int previousLayerSize, Node[] curLayer)
     }
 }
 
-private double[] calcOutput()
+public double[] calcOutput()
 {
     double[] activations = new double[inputNodes.length];
     double[] oldactivations = activations;

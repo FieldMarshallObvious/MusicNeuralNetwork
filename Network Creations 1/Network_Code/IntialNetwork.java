@@ -18,7 +18,7 @@ public class IntialNetwork implements DNA
 
     String finaloutput;
 
-public IntialNetwork()
+    public IntialNetwork()
     {
         numOfInputs = 0;
         numOfOutputs = 0;
@@ -72,42 +72,42 @@ public IntialNetwork()
         }
     }
 
-private void creatingWeights(int previousLayerSize, Node[] curLayer)
-{
-    for(Node curNode : curLayer)
+    private void creatingWeights(int previousLayerSize, Node[] curLayer)
     {
-        curNode.setWeights(previousLayerSize);
+        for(Node curNode : curLayer)
+        {
+            curNode.setWeights(previousLayerSize);
+        }
     }
-}
 
-private double[] calcOutput()
-{
-    double[] activations = new double[inputNodes.length];
-    double[] oldactivations = activations;
-
-
-    for(int x = 0; x < inputNodes.length; x++)
+    public double[] calcOutput()
     {
-        activations[x] = inputNodes[x].getActivation();
-        oldactivations[x] = activations[x];
-    }
+        double[] activations = new double[inputNodes.length];
+        double[] oldactivations = activations;
+
+
+        for(int x = 0; x < inputNodes.length; x++)
+        {
+            activations[x] = inputNodes[x].getActivation();
+            oldactivations[x] = activations[x];
+        }
     
-    for(int x = 0; x < inputNodes.length; x ++)
-    {
-        double curactivation =  hiddenNodes[x].activationFunc(oldactivations); 
-        activations[x] = curactivation;
-    }
+        for(int x = 0; x < inputNodes.length; x ++)
+        {
+            double curactivation =  hiddenNodes[x].activationFunc(oldactivations); 
+            activations[x] = curactivation;
+        }
     
-    oldactivations = activations;
+        oldactivations = activations;
 
-    for(int x = 0; x < hiddenNodes.length; x++)
-    {
-        double curavtivation = outputNodes[x].activationFunc(oldactivations);
-        activations[x] = curavtivation;
-    }
+        for(int x = 0; x < hiddenNodes.length; x++)
+        {
+            double curavtivation = outputNodes[x].activationFunc(oldactivations);
+            activations[x] = curavtivation;
+        }
 
-    return activations;
-}
+        return activations;
+    }  
 
     private static void usingBufferedWritter() throws IOException
     {
