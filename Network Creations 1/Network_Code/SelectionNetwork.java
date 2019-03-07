@@ -127,7 +127,7 @@ public double[] calcOutput()
         //REALLY IN NEED OF FIXING
         double sigSum = this.CalculateSignalErrors(layers, outputNodes, ExpectedOutput);
         this.BackPropagateError(inputNodes,hiddenNodes, outputNodes, learningRate, Momentum);
-        System.out.println("There is an error of " + sigSum);
+        System.out.print(sigSum);
     }
 
 }

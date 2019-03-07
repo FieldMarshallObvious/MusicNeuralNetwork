@@ -33,9 +33,25 @@ public class Brain
 
 			selectNet.calcOutput();
 			selectNet.writeOutputs();
+
+			System.out.print("Epoch: " + e);
+
+			System.out.println();
+			System.out.print("Initial Network Error: ");
+			initNet.training_Nodes(getExpectedOutput("<input file>", dataSize), learningRate, Momentum);
+
+			System.out.println();
+			System.out.print("Forgetting Network Error: ");
+			forgettingNet.training_Nodes(getExpectedOutput("<input file>", dataSize), learningRate, Momentum);
+
+			System.out.println();
+			System.out.print("Selection Network Error: ");
+			selectNet.training_Nodes(getExpectedOutput("<input file>", dataSize), learningRate, Momentum);
+
+			System.out.println();
 		}
 
-		initNet.training_Nodes(getExpectedOutput("<input file>", dataSize), learningRate, Momentum);
+
 
 	}
 
