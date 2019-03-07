@@ -29,9 +29,10 @@ public class SelectionNetwork implements DNA
         makingRays(0, 0);
     }
 
-    public SelectionNetwork(int newInputs, int newOutputs)
+    public SelectionNetwork(int newInputs, int newOutputs, double inputLearningRate)
     {
         this();
+        learningRate = inputLearningRate;
 
         //assigning nodes for ray objects
         assigningNodes(inputNodes);
@@ -79,7 +80,7 @@ private void creatingWeights(int previousLayerSize, Node[] curLayer)
     }
 }
 
-private double[] calcOutput()
+public double[] calcOutput()
 {
     double[] activations = new double[inputNodes.length];
     double[] oldactivations = activations;

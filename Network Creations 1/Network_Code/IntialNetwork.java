@@ -29,9 +29,10 @@ public IntialNetwork()
         makingRays(0, 0);
     }
 
-    public IntialNetwork(int newInputs, int newOutputs)
+    public IntialNetwork(int newInputs, int newOutputs, double inputLearningRate)
     {
         this();
+        learningRate = inputLearningRate;
 
         //assigning nodes for ray objects
         assigningNodes(inputNodes);

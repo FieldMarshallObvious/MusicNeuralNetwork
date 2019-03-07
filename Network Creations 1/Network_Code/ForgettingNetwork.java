@@ -31,9 +31,10 @@ public class ForgettingNetwork implements DNA
         makingRays(0, 0);
     }
 
-    public ForgettingNetwork(int newInputs, int newOutputs)
+    public ForgettingNetwork(int newInputs, int newOutputs, double inputLearningRate)
     {
         this();
+        learningRate = inputLearningRate;
 
         //assigning nodes for ray objects
         assigningNodes(inputNodes);
