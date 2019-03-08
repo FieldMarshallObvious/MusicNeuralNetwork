@@ -2,6 +2,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class SelectionNetwork implements DNA
 {
@@ -109,12 +111,12 @@ public double[] calcOutput()
     return activations;
 }
 
-    private static void usingBufferedWritter() throws IOException
+    private void usingBufferedWritter() throws IOException
     {
-        String fileContent = "<output text>";
+        String fileContent = "";
      
         BufferedWriter writer = new BufferedWriter(new FileWriter("<output file>"));
-        writer.write(fileContent);
+        writer.write(finaloutput);
         writer.close();
     }
     

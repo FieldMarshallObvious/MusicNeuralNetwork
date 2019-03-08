@@ -2,6 +2,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class IntialNetwork implements DNA
 {
@@ -109,9 +111,9 @@ public class IntialNetwork implements DNA
         return activations;
     }  
 
-    private static void usingBufferedWritter() throws IOException
+    private void usingBufferedWritter() throws IOException
     {
-        String fileContent = "<output text>";
+        String fileContent = finaloutput;
      
         BufferedWriter writer = new BufferedWriter(new FileWriter("<output file>"));
         writer.write(fileContent);
@@ -120,6 +122,26 @@ public class IntialNetwork implements DNA
     
     public void writeOutputs() throws IOException
     {
+        int x = 0;
+        ArrayList<Double> preDecisions = new ArrayList<Double>();
+        
+        for(Node cur: outputNodes)
+        {
+            double curOutput = this.sigmoidFunction(cur.getActivation());
+            preDecisions.add(curOutput);
+        }
+        double max = Collections.max(preDecisions);
+
+        for(double cur: preDecisions)
+        {
+            if(cur >= max/2)
+            {
+                finaloutput+= cur;
+                finaloutput+= "\n";
+                x++;
+            }
+        }
+        
         usingBufferedWritter();
     }
     public void training_Nodes(double[] ExpectedOutput, double learningRate, double Momentum)
