@@ -120,8 +120,22 @@ public double[] calcOutput()
         writer.close();
     }
     
+    public void settingInputs(double[] inputs)
+    {
+        
+    }
+    
     public void writeOutputs() throws IOException
     {
+        int x = 0;
+        ArrayList<Double> preDecisions = new ArrayList<Double>();
+        
+        for(Node cur: outputNodes)
+        {
+            double curOutput = this.sigmoidFunction(cur.getActivation());
+            preDecisions.add(curOutput);
+        }        
+        finaloutput = String.valueOf(Collections.max(preDecisions));
         usingBufferedWritter();
     }
     public void training_Nodes(double[] ExpectedOutput, double learningRate, double Momentum)

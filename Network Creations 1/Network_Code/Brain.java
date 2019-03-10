@@ -25,12 +25,15 @@ public class Brain
 
 		for(int e = 0; e <= epochs; e++)
 		{
+			initNet.settingInputs((setInputs("<input file>", 88)));
 			initNet.calcOutput();
 			initNet.writeOutputs();
-
+			
+			forgettingNet.settingInputs((setInputs("<output file>", 44)));
 			forgettingNet.calcOutput();
 			forgettingNet.writeOutputs();
 
+			selectNet.settingInputs((setInputs("<output file>", 22)));
 			selectNet.calcOutput();
 			selectNet.writeOutputs();
 
@@ -51,6 +54,7 @@ public class Brain
 			System.out.println();
 		}
 
+		//Once reachers final itteration implement piano use
 
 
 	}
@@ -61,17 +65,32 @@ public class Brain
 
 		double[] output = new double[dataSize];
 
-		Scanner expectedDataReaderScanner = new Scanner(new File(fileLocation));
+		Scanner expectedDataScanner = new Scanner(new File(fileLocation));
 		
-		while(expectedDataReaderScanner.hasNext())
+		while(expectedDataScanner.hasNext())
 		{
 			x++;
-			output[x] = Double.valueOf(expectedDataReaderScanner.nextLine());
+			output[x] = Double.valueOf(expectedDataScanner.nextLine());
 		}
 
 		return output;
 	}
 
+	private static double[] setInputs(String filelocation, int dataSize) throws FileNotFoundException
+	{
+		int x = 0;
+		double[] output = new double[dataSize];
+
+		Scanner inputDataScanner = new Scanner(new File(filelocation));
+
+		while(inputDataScanner.hasNext())
+		{
+			x++;
+			output[x] = Double.valueOf(inputDataScanner.nextLine());
+		}
+
+		return output;
+	}
 	private static int dataSize(String fileLocation) throws FileNotFoundException
 	{
 		int output = 0;

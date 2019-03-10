@@ -2,6 +2,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 
@@ -110,6 +112,10 @@ public double[] calcOutput()
 
     return activations;
 }
+    public void settingInputs(double[] inputs)
+    {
+    
+    }
 
     private static void usingBufferedWritter() throws IOException
     {
@@ -122,6 +128,25 @@ public double[] calcOutput()
     
     public void writeOutputs() throws IOException
     {
+        int x = 0;
+        ArrayList<Double> preDecisions = new ArrayList<Double>();
+        
+        for(Node cur: outputNodes)
+        {
+            double curOutput = this.sigmoidFunction(cur.getActivation());
+            preDecisions.add(curOutput);
+        }
+        double max = Collections.max(preDecisions);
+
+        for(double cur: preDecisions)
+        {
+            if(cur >= max/2)
+            {
+                finaloutput+= cur;
+                finaloutput+= "\n";
+                x++;
+            }
+        }
         usingBufferedWritter();
     }
     public void training_Nodes(double[] ExpectedOutput, double learningRate, double Momentum)
