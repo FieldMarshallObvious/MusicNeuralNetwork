@@ -53,37 +53,7 @@ public class ForgettingNetwork implements DNA
         creatingWeights(hiddenNodes.length, outputNodes);
     }
 
-    private void makingRays(int newnewInputs, int newOutputs)
-    {
-        //creating input Nodes ray
-        inputNodes = new Node[numOfInputs];
-        outputNodes = new Node[numOfOutputs];
-
-        //determining hidden Nodes based on num of outputs and inputs
-        hiddenNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
-
-
-        //creating final deicisions ray
-        decisions = new double[outputNodes.length];
-    }
-
-    private void assigningNodes(Node[] curLayer)
-    {
-        for(int x = 0; x < curLayer.length; x++)
-        {
-            Node curNode = new Node();
-            curLayer[x] = curNode;
-        }
-    }
-
-private void creatingWeights(int previousLayerSize, Node[] curLayer)
-{
-    for(Node curNode : curLayer)
-    {
-        curNode.setWeights(previousLayerSize);
-    }
-}
-
+   
 public double[] calcOutput()
 {
     double[] activations = new double[inputNodes.length];
@@ -117,15 +87,6 @@ public double[] calcOutput()
     
     }
 
-    private static void usingBufferedWritter() throws IOException
-    {
-        String fileContent = "<output text>";
-     
-        BufferedWriter writer = new BufferedWriter(new FileWriter("<output file>"));
-        writer.write(fileContent);
-        writer.close();
-    }
-    
     public void writeOutputs() throws IOException
     {
         int x = 0;
@@ -156,4 +117,45 @@ public double[] calcOutput()
         this.BackPropagateError(inputNodes,hiddenNodes, outputNodes, learningRate, Momentum);
         System.out.print(sigSum);
     }
+
+    private void makingRays(int newnewInputs, int newOutputs)
+    {
+        //creating input Nodes ray
+        inputNodes = new Node[numOfInputs];
+        outputNodes = new Node[numOfOutputs];
+
+        //determining hidden Nodes based on num of outputs and inputs
+        hiddenNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
+
+
+        //creating final deicisions ray
+        decisions = new double[outputNodes.length];
+    }
+
+    private void assigningNodes(Node[] curLayer)
+    {
+        for(int x = 0; x < curLayer.length; x++)
+        {
+            Node curNode = new Node();
+            curLayer[x] = curNode;
+        }
+    }
+
+    private void creatingWeights(int previousLayerSize, Node[] curLayer)
+    {
+        for(Node curNode : curLayer)
+        {
+            curNode.setWeights(previousLayerSize);
+        }
+    }
+
+    private static void usingBufferedWritter() throws IOException
+    {
+        String fileContent = "<output text>";
+     
+        BufferedWriter writer = new BufferedWriter(new FileWriter("<output file>"));
+        writer.write(fileContent);
+        writer.close();
+    }
+    
 }

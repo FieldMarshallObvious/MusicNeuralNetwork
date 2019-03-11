@@ -113,6 +113,11 @@ public class IntialNetwork implements DNA
         System.out.print(sigSum);
     }
 
+    public void settingInputs(double[] inputs)
+    {
+        
+    }
+    
     private void makingRays(int newnewInputs, int newOutputs)
     {
         //creating input Nodes ray
@@ -144,10 +149,6 @@ public class IntialNetwork implements DNA
         }
     }
 
-    public void settingInputs(double[] inputs)
-    {
-        
-    }
     private void usingBufferedWritter() throws IOException
     {
         String fileContent = finaloutput;

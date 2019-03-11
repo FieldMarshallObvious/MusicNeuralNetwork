@@ -33,34 +33,7 @@ public interface DNA
 		
 		return output;
 	}
-	//Consider removing
-	/*
-	 // Calculate the node activations
-	 default void FeedForward(Node[] Layers)
-	 {
-
-		// Since no weights contribute to the output 
-		// vector from the input layer,
-		// assign the input vector from the input layer 
-		// to all the node in the first hidden layer
-		for (int i = 0; i < Layers[0].getNumNeurons; i++)
-		{
-			Layers[0].Node[i].Output = Layers[0].Input[i];
-		}
-
-		Layers[1].Input = Layers[0].Input;
-		for (int i = 1; i < NumberOfLayers; i++) 
-		{
-			Layers[i].FeedForward();
-
-			// Unless we have reached the last layer, assign the layer i's output vector
-			// to the (i+1) layer's input vector
-			if (i != NumberOfLayers-1)
-				Layers[i+1].Input = Layers[i].OutputVector();
-		}
-
-	} */
-
+	
 	default void BackPropagateError(Node[] inputLayer, Node[] curLayer, Node[] nextLayer, double LearningRate, double Momentum) 
 	{
 		//NOTE: Consider passing array of all layers
@@ -132,6 +105,35 @@ public interface DNA
 
 		return Sum;
 	}
+
+	//Consider removing
+	/*
+	 // Calculate the node activations
+	 default void FeedForward(Node[] Layers)
+	 {
+
+		// Since no weights contribute to the output 
+		// vector from the input layer,
+		// assign the input vector from the input layer 
+		// to all the node in the first hidden layer
+		for (int i = 0; i < Layers[0].getNumNeurons; i++)
+		{
+			Layers[0].Node[i].Output = Layers[0].Input[i];
+		}
+
+		Layers[1].Input = Layers[0].Input;
+		for (int i = 1; i < NumberOfLayers; i++) 
+		{
+			Layers[i].FeedForward();
+
+			// Unless we have reached the last layer, assign the layer i's output vector
+			// to the (i+1) layer's input vector
+			if (i != NumberOfLayers-1)
+				Layers[i+1].Input = Layers[i].OutputVector();
+		}
+
+	} */
+
 
 	/*
 	default double CalculateOverallError(Node[][] layersNodes ,double[][] actual) 

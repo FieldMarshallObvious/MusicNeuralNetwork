@@ -51,6 +51,60 @@ public class SelectionNetwork implements DNA
         creatingWeights(hiddenNodes.length, outputNodes);
     }
 
+    public void settingInputs(double[] inputs)
+    {
+        
+    }
+    
+    public double[] calcOutput()
+    {
+        double[] activations = new double[inputNodes.length];
+        double[] oldactivations = activations;
+
+
+        for(int x = 0; x < inputNodes.length; x++)
+        {
+            activations[x] = inputNodes[x].getActivation();
+            oldactivations[x] = activations[x];
+        }
+    
+        for(int x = 0; x < inputNodes.length; x ++)
+        {
+            double curactivation =  hiddenNodes[x].activationFunc(oldactivations); 
+            activations[x] = curactivation;
+        }
+    
+        oldactivations = activations;
+
+        for(int x = 0; x < hiddenNodes.length; x++)
+        {
+            double curavtivation = outputNodes[x].activationFunc(oldactivations);
+            activations[x] = curavtivation;
+        }
+
+        return activations;
+    }
+
+    public void writeOutputs() throws IOException
+    {
+        ArrayList<Double> preDecisions = new ArrayList<Double>();
+        
+        for(Node cur: outputNodes)
+        {
+            double curOutput = this.sigmoidFunction(cur.getActivation());
+            preDecisions.add(curOutput);
+        }        
+        finaloutput = String.valueOf(Collections.max(preDecisions));
+        usingBufferedWritter();
+    }
+    public void training_Nodes(double[] ExpectedOutput, double learningRate, double Momentum)
+    {
+        //REALLY IN NEED OF FIXING
+        double sigSum = this.CalculateSignalErrors(layers, outputNodes, ExpectedOutput);
+        this.BackPropagateError(inputNodes,hiddenNodes, outputNodes, learningRate, Momentum);
+        System.out.print(sigSum);
+    }
+
     private void makingRays(int newnewInputs, int newOutputs)
     {
         //creating input Nodes ray
@@ -74,42 +128,15 @@ public class SelectionNetwork implements DNA
         }
     }
 
-private void creatingWeights(int previousLayerSize, Node[] curLayer)
-{
-    for(Node curNode : curLayer)
+    private void creatingWeights(int previousLayerSize, Node[] curLayer)
     {
-        curNode.setWeights(previousLayerSize);
+        for(Node curNode : curLayer)
+        {
+            curNode.setWeights(previousLayerSize);
+        }   
     }
-}
 
-public double[] calcOutput()
-{
-    double[] activations = new double[inputNodes.length];
-    double[] oldactivations = activations;
-
-
-    for(int x = 0; x < inputNodes.length; x++)
-    {
-        activations[x] = inputNodes[x].getActivation();
-        oldactivations[x] = activations[x];
-    }
     
-    for(int x = 0; x < inputNodes.length; x ++)
-    {
-        double curactivation =  hiddenNodes[x].activationFunc(oldactivations); 
-        activations[x] = curactivation;
-    }
-    
-    oldactivations = activations;
-
-    for(int x = 0; x < hiddenNodes.length; x++)
-    {
-        double curavtivation = outputNodes[x].activationFunc(oldactivations);
-        activations[x] = curavtivation;
-    }
-
-    return activations;
-}
 
     private void usingBufferedWritter() throws IOException
     {
@@ -119,31 +146,4 @@ public double[] calcOutput()
         writer.write(finaloutput);
         writer.close();
     }
-    
-    public void settingInputs(double[] inputs)
-    {
-        
-    }
-    
-    public void writeOutputs() throws IOException
-    {
-        int x = 0;
-        ArrayList<Double> preDecisions = new ArrayList<Double>();
-        
-        for(Node cur: outputNodes)
-        {
-            double curOutput = this.sigmoidFunction(cur.getActivation());
-            preDecisions.add(curOutput);
-        }        
-        finaloutput = String.valueOf(Collections.max(preDecisions));
-        usingBufferedWritter();
-    }
-    public void training_Nodes(double[] ExpectedOutput, double learningRate, double Momentum)
-    {
-        //REALLY IN NEED OF FIXING
-        double sigSum = this.CalculateSignalErrors(layers, outputNodes, ExpectedOutput);
-        this.BackPropagateError(inputNodes,hiddenNodes, outputNodes, learningRate, Momentum);
-        System.out.print(sigSum);
-    }
-
 }
