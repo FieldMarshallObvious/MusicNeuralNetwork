@@ -31,7 +31,7 @@ class Node
     {
         for(int x = 0; x < numneurons; x++)
         {
-            double randnum = Math.random();
+            double randnum = Math.random() * 5;
             weights.add(randnum);
         }
     }
@@ -71,6 +71,7 @@ class Node
             for(int x = 0; x < weights.size(); x++)
             {
                 activation += weights.get(x)*activations[x] + bias;
+                System.out.println("Activation of cur Node: " + activation);
             }
             return activation;
     }

@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Brain",
+            "request": "launch",
+            "mainClass": "Brain",
+            "projectName": "MusicNeuralNetwork_f7c07765"
+        }
+    ]
+}

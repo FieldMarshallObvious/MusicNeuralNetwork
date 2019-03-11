@@ -36,6 +36,9 @@ public class IntialNetwork implements DNA
         this();
         learningRate = inputLearningRate;
 
+        //creating rays
+        makingRays(newInputs, newOutputs);
+
         //assigning nodes for ray objects
         assigningNodes(inputNodes);
         assigningNodes(hiddenNodes);
@@ -52,9 +55,8 @@ public class IntialNetwork implements DNA
 
     public double[] calcOutput()
     {
-        double[] activations = new double[inputNodes.length];
+        double[] activations = new double[hiddenNodes.length];
         double[] oldactivations = activations;
-
 
         for(int x = 0; x < inputNodes.length; x++)
         {
@@ -70,10 +72,11 @@ public class IntialNetwork implements DNA
     
         oldactivations = activations;
 
-        for(int x = 0; x < hiddenNodes.length; x++)
+        for(int x = 0; x < outputNodes.length; x++)
         {
             double curavtivation = outputNodes[x].activationFunc(oldactivations);
             activations[x] = curavtivation;
+            System.out.println(outputNodes[x].getActivation());
         }
 
         return activations;
@@ -85,10 +88,14 @@ public class IntialNetwork implements DNA
         int x = 0;
         ArrayList<Double> preDecisions = new ArrayList<Double>();
         
+        System.out.println("Out of the loop" + preDecisions.get(x));
+
         for(Node cur: outputNodes)
         {
+            x++;
             double curOutput = this.sigmoidFunction(cur.getActivation());
             preDecisions.add(curOutput);
+            System.out.println("In the for loop " + preDecisions.get(x));
         }
         double max = Collections.max(preDecisions);
 
@@ -124,12 +131,15 @@ public class IntialNetwork implements DNA
     private void makingRays(int newnewInputs, int newOutputs)
     {
         //creating input Nodes ray
-        inputNodes = new Node[numOfInputs];
-        outputNodes = new Node[numOfOutputs];
+        inputNodes = new Node[newnewInputs];
+        outputNodes = new Node[newOutputs];
 
+        System.out.println("Number of input Nodes " + inputNodes.length);
+        System.out.println("Number of output Nodes " + outputNodes.length);
         //determining hidden Nodes based on num of outputs and inputs
-        hiddenNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
+        hiddenNodes = new Node[((newnewInputs + newOutputs)/2) + ((newnewInputs + newOutputs)/2)];
 
+        System.out.println("Number of hidden Nodes " + hiddenNodes.length);
 
         //creating final deicisions ray
         decisions = new double[outputNodes.length];

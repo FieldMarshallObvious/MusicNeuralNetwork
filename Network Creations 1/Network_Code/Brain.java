@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 //import DryWetMidi;
+import java.io.PrintWriter;
 
 
 //currently not quite sure how to work with midi files in this so this is essentially just the psuedo code
@@ -18,24 +19,33 @@ public class Brain
 		int epochs = 1000;
 		int dataSize = dataSize("<input file>");
 
-		IntialNetwork initNet = new IntialNetwork(88, 88, learningRate);
+		IntialNetwork initNet = new IntialNetwork(89, 88, learningRate);
 		ForgettingNetwork forgettingNet = new ForgettingNetwork(44, 44, learningRate);
 		SelectionNetwork selectNet = new SelectionNetwork(22, 22, learningRate);
+
+		PrintWriter pwIn = new PrintWriter("<input file>");
+		PrintWriter pwOut = new PrintWriter("<output file>");
 
 
 		for(int e = 0; e <= epochs; e++)
 		{
-			initNet.settingInputs((setInputs("<input file>", 88)));
+			initNet.settingInputs((setInputs("<input file>", 89)));
 			initNet.calcOutput();
 			initNet.writeOutputs();
 			
 			forgettingNet.settingInputs((setInputs("<output file>", 44)));
 			forgettingNet.calcOutput();
+			//clearing old outputs
+			pwOut.close();
+
 			forgettingNet.writeOutputs();
 
 			selectNet.settingInputs((setInputs("<output file>", 22)));
+			//clearing old outputs
+			pwOut.close();
 			selectNet.calcOutput();
 			selectNet.writeOutputs();
+			
 
 			System.out.print("Epoch: " + e);
 
