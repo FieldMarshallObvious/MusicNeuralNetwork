@@ -115,9 +115,12 @@ public class IntialNetwork implements DNA
 
     public void settingInputs(double[] inputs)
     {
-        
+        for(int x = 0; x < inputNodes.length; x++)
+        {
+            inputNodes[x].setActivation(inputs[x]);
+        }
     }
-    
+
     private void makingRays(int newnewInputs, int newOutputs)
     {
         //creating input Nodes ray

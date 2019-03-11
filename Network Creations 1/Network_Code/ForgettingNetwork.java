@@ -54,37 +54,40 @@ public class ForgettingNetwork implements DNA
     }
 
    
-public double[] calcOutput()
-{
-    double[] activations = new double[inputNodes.length];
-    double[] oldactivations = activations;
-
-
-    for(int x = 0; x < inputNodes.length; x++)
+    public double[] calcOutput()
     {
-        activations[x] = inputNodes[x].getActivation();
-        oldactivations[x] = activations[x];
-    }
+        double[] activations = new double[inputNodes.length];
+        double[] oldactivations = activations;
+
+
+        for(int x = 0; x < inputNodes.length; x++)
+        {
+            activations[x] = inputNodes[x].getActivation();
+            oldactivations[x] = activations[x];
+        }
     
-    for(int x = 0; x < inputNodes.length; x ++)
-    {
-        double curactivation =  hiddenNodes[x].activationFunc(oldactivations); 
-        activations[x] = curactivation;
-    }
+        for(int x = 0; x < inputNodes.length; x ++)
+        {
+            double curactivation =  hiddenNodes[x].activationFunc(oldactivations); 
+            activations[x] = curactivation;
+        }
     
-    oldactivations = activations;
+        oldactivations = activations;
 
-    for(int x = 0; x < hiddenNodes.length; x++)
-    {
-        double curavtivation = outputNodes[x].activationFunc(oldactivations);
-        activations[x] = curavtivation;
+        for(int x = 0; x < hiddenNodes.length; x++)
+        {
+            double curavtivation = outputNodes[x].activationFunc(oldactivations);
+            activations[x] = curavtivation;
+        }
+
+        return activations;
     }
-
-    return activations;
-}
     public void settingInputs(double[] inputs)
     {
-    
+        for(int x = 0; x < inputNodes.length; x++)
+        {
+            inputNodes[x].setActivation(inputs[x]);
+        }
     }
 
     public void writeOutputs() throws IOException

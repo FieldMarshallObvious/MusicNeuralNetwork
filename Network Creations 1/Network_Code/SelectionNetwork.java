@@ -53,9 +53,12 @@ public class SelectionNetwork implements DNA
 
     public void settingInputs(double[] inputs)
     {
-        
+        for(int x = 0; x < inputNodes.length; x++)
+        {
+            inputNodes[x].setActivation(inputs[x]);
+        }
     }
-    
+
     public double[] calcOutput()
     {
         double[] activations = new double[inputNodes.length];
