@@ -72,9 +72,6 @@ class Node
             for(int x = 0; x < weights.size(); x++)
             {
                 activation += weights.get(x)*activations[x] + bias;
-                System.out.println("The input activation is " +activations[x]);
-                System.out.println("The Weight of node [x] is " + weights.get(x));
-                System.out.println("Activation of cur Node: " + activation);
             }
             return activation;
     }

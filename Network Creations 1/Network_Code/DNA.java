@@ -4,16 +4,14 @@ public interface DNA
 	
 	default double cost_Func(double prediction, int actual)
 	{
-		double output = 0.0;
-		output = Math.pow((prediction - actual), 2);
+			double output = 0.0;
+			output = Math.pow(Math.E, (prediction - actual));
 			return output;
 	}
 
 	default double sigmoidFunction(double prediction)
 	{
-		double raised = Math.pow(10, (-1 * prediction));
-		double output = (1)/(1 + raised);
-		return output;
+		return 1 / (1 + Math.exp(-prediction));
 	}
 
 

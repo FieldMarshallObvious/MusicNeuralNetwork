@@ -60,13 +60,15 @@ public class IntialNetwork implements DNA
 
         for(int x = 0; x < inputNodes.length; x++)
         {
-            activations[x] = inputNodes[x].getActivation();
+            activations[x] = sigmoidFunction(inputNodes[x].getActivation());
+            System.out.println("The input activation for input node " + x + " is: " + activations[x]);
             oldactivations[x] = activations[x];
         }
     
         for(int x = 0; x < inputNodes.length; x ++)
         {
-            double curactivation =  hiddenNodes[x].activationFunc(oldactivations); 
+            double curactivation =  sigmoidFunction(hiddenNodes[x].activationFunc(oldactivations));
+            System.out.println("The activation for hidden node " + x + " is: " + activations[x]); 
             activations[x] = curactivation;
         }
     
@@ -74,7 +76,8 @@ public class IntialNetwork implements DNA
 
         for(int x = 0; x < outputNodes.length; x++)
         {
-            double curavtivation = outputNodes[x].activationFunc(oldactivations);
+            double curavtivation = sigmoidFunction(outputNodes[x].activationFunc(oldactivations));
+            System.out.println("The activition for output node " + x + " is: " + activations[x]);
             activations[x] = curavtivation;
             System.out.println(outputNodes[x].getActivation());
         }
@@ -134,12 +137,10 @@ public class IntialNetwork implements DNA
         inputNodes = new Node[newnewInputs];
         outputNodes = new Node[newOutputs];
 
-        System.out.println("Number of input Nodes " + inputNodes.length);
-        System.out.println("Number of output Nodes " + outputNodes.length);
+       
         //determining hidden Nodes based on num of outputs and inputs
         hiddenNodes = new Node[((newnewInputs + newOutputs)/2) + ((newnewInputs + newOutputs)/2)];
 
-        System.out.println("Number of hidden Nodes " + hiddenNodes.length);
 
         //creating final deicisions ray
         decisions = new double[outputNodes.length];

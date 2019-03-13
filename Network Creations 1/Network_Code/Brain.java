@@ -17,41 +17,40 @@ public class Brain
 		double Momentum = 0.5;
 
 		int epochs = 1000;
-		int dataSize = dataSize("<input file>");
+		int dataSize = dataSize("inputfile.dat");
 
-		IntialNetwork initNet = new IntialNetwork(89, 88, learningRate);
-		ForgettingNetwork forgettingNet = new ForgettingNetwork(44, 44, learningRate);
-		SelectionNetwork selectNet = new SelectionNetwork(22, 22, learningRate);
+		IntialNetwork initNet = new IntialNetwork(dataSize, dataSize-1, learningRate);
+		ForgettingNetwork forgettingNet = new ForgettingNetwork(dataSize/2, (dataSize/2) - 1, learningRate);
+		SelectionNetwork selectNet = new SelectionNetwork(dataSize/4, (dataSize/2) - 1, learningRate);
 
-		PrintWriter pwIn = new PrintWriter("<input file>");
-		PrintWriter pwOut = new PrintWriter("<output file>");
+		
 
 
 		for(int e = 0; e <= epochs; e++)
 		{
-			initNet.settingInputs((setInputs("<input file>", 89)));
+			initNet.settingInputs((setInputs("inputfile.dat", 89)));
 			initNet.calcOutput();
 			initNet.writeOutputs();
 			
-			forgettingNet.settingInputs((setInputs("<output file>", 44)));
+			forgettingNet.settingInputs((setInputs("outputfile.dat", 44)));
 			forgettingNet.calcOutput();
 			//clearing old outputs
-			pwOut.close();
+			//pwOut.close();
 
 			forgettingNet.writeOutputs();
 
-			selectNet.settingInputs((setInputs("<output file>", 22)));
+			selectNet.settingInputs((setInputs("outputfile.dat", 22)));
 			//clearing old outputs
-			pwOut.close();
+			//pwOut.close();
 			selectNet.calcOutput();
 			selectNet.writeOutputs();
-			
+
 
 			System.out.print("Epoch: " + e);
 
 			System.out.println();
 			System.out.print("Initial Network Error: ");
-			initNet.training_Nodes(getExpectedOutput("<input file>", dataSize), learningRate, Momentum);
+			initNet.training_Nodes(getExpectedOutput("input file.txt", dataSize), learningRate, Momentum);
 
 			System.out.println();
 			System.out.print("Forgetting Network Error: ");
@@ -93,24 +92,41 @@ public class Brain
 
 		Scanner inputDataScanner = new Scanner(new File(filelocation));
 
+		System.out.println("The first line in the data is ");
 		while(inputDataScanner.hasNext())
 		{
 			x++;
 			output[x] = Double.valueOf(inputDataScanner.nextLine());
+			System.out.println("Next line is" + output[x]);
 		}
+		inputDataScanner.close();
 
 		return output;
 	}
 	private static int dataSize(String fileLocation) throws FileNotFoundException
 	{
 		int output = 0;
-		Scanner inputDataReadeScanner = new Scanner(new File(fileLocation));
-		while(inputDataReadeScanner.hasNext())
+		Scanner inputDataReadScanner = new Scanner(new File(fileLocation));
+		try
 		{
-			inputDataReadeScanner.nextLine();
-			output+=1;
+			System.out.println("About to enter dataSize loop");
+			//System.out.println("First line in data " + inputDataReadScanner.nextLine());
+			while(inputDataReadScanner.hasNext())
+			{
+				inputDataReadScanner.nextLine();
+				output+=1;
+				System.out.println("Inside dataSize loop");
+			}
+			inputDataReadScanner.close();
+		
+			return output;
 		}
-		return output;
+		catch(Exception e)
+		{
+			System.out.println("Houston we have a problem!");
+			System.out.println("We have a failure due to " + e.getClass().getSimpleName());
+			return 0;
+		}
 	}
 	/*
 	public static void ConvertMidiToText(string midiFilePath, string textFilePath)
