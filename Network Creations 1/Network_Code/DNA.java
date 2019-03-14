@@ -11,7 +11,7 @@ public interface DNA
 
 	default double sigmoidFunction(double prediction)
 	{
-		return 1 / (1 + Math.exp(-prediction));
+		return (((Math.sqrt(Math.PI))/2)*prediction);
 	}
 
 

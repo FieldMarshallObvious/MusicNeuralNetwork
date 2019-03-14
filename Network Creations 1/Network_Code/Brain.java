@@ -92,12 +92,10 @@ public class Brain
 
 		Scanner inputDataScanner = new Scanner(new File(filelocation));
 
-		System.out.println("The first line in the data is ");
 		while(inputDataScanner.hasNext())
 		{
 			x++;
 			output[x] = Double.valueOf(inputDataScanner.nextLine());
-			System.out.println("Next line is" + output[x]);
 		}
 		inputDataScanner.close();
 
@@ -109,13 +107,11 @@ public class Brain
 		Scanner inputDataReadScanner = new Scanner(new File(fileLocation));
 		try
 		{
-			System.out.println("About to enter dataSize loop");
 			//System.out.println("First line in data " + inputDataReadScanner.nextLine());
 			while(inputDataReadScanner.hasNext())
 			{
 				inputDataReadScanner.nextLine();
 				output+=1;
-				System.out.println("Inside dataSize loop");
 			}
 			inputDataReadScanner.close();
 		
@@ -128,18 +124,4 @@ public class Brain
 			return 0;
 		}
 	}
-	/*
-	public static void ConvertMidiToText(string midiFilePath, string textFilePath)
-	{
- 		   var midiFile = MidiFile.Read(midiFilePath);
-
-  		  File.WriteAllLines(textFilePath, midiFile.GetNotes()
-            .Select(n => $"{n.NoteNumber} {n.Time} {n.Length}"));
-	}
-
-	public String readMidiText(string textFilePath)
-	{
-
-	}*/
-
 }

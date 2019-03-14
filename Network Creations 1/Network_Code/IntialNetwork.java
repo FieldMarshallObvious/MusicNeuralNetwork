@@ -68,7 +68,7 @@ public class IntialNetwork implements DNA
         for(int x = 0; x < inputNodes.length; x ++)
         {
             double curactivation =  sigmoidFunction(hiddenNodes[x].activationFunc(oldactivations));
-            System.out.println("The activation for hidden node " + x + " is: " + activations[x]); 
+            System.out.println("The activation for hidden node " + x + " is: " + curactivation); 
             activations[x] = curactivation;
         }
     
@@ -91,14 +91,11 @@ public class IntialNetwork implements DNA
         int x = 0;
         ArrayList<Double> preDecisions = new ArrayList<Double>();
         
-        System.out.println("Out of the loop" + preDecisions.get(x));
-
         for(Node cur: outputNodes)
         {
             x++;
             double curOutput = this.sigmoidFunction(cur.getActivation());
             preDecisions.add(curOutput);
-            System.out.println("In the for loop " + preDecisions.get(x));
         }
         double max = Collections.max(preDecisions);
 

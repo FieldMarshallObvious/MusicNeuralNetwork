@@ -31,7 +31,7 @@ class Node
     {
         for(int x = 0; x < numneurons; x++)
         {
-            double randnum = Math.random() * (100 - 5);
+            double randnum = Math.random() * (10 - 0.1);
             //System.out.println("This weight is " + randnum);
             weights.add(randnum);
         }
