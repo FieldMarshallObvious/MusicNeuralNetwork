@@ -61,14 +61,12 @@ public class IntialNetwork implements DNA
         for(int x = 0; x < inputNodes.length; x++)
         {
             activations[x] = sigmoidFunction(inputNodes[x].getActivation());
-            System.out.println("The input activation for input node " + x + " is: " + activations[x]);
             oldactivations[x] = activations[x];
         }
     
         for(int x = 0; x < inputNodes.length; x ++)
         {
             double curactivation =  sigmoidFunction(hiddenNodes[x].activationFunc(oldactivations));
-            System.out.println("The activation for hidden node " + x + " is: " + curactivation); 
             activations[x] = curactivation;
         }
     
@@ -77,9 +75,7 @@ public class IntialNetwork implements DNA
         for(int x = 0; x < outputNodes.length; x++)
         {
             double curavtivation = sigmoidFunction(outputNodes[x].activationFunc(oldactivations));
-            System.out.println("The activition for output node " + x + " is: " + activations[x]);
             activations[x] = curavtivation;
-            System.out.println(outputNodes[x].getActivation());
         }
 
         return activations;
@@ -97,10 +93,12 @@ public class IntialNetwork implements DNA
             double curOutput = this.sigmoidFunction(cur.getActivation());
             preDecisions.add(curOutput);
         }
+
         double max = Collections.max(preDecisions);
 
         for(double cur: preDecisions)
         {
+
             if(cur >= max/2)
             {
                 finaloutput+= cur;
@@ -164,7 +162,7 @@ public class IntialNetwork implements DNA
     {
         String fileContent = finaloutput;
      
-        BufferedWriter writer = new BufferedWriter(new FileWriter("<output file>"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("outputfile.dat"));
         writer.write(fileContent);
         writer.close();
     }
