@@ -28,18 +28,21 @@ public class Brain
 
 		for(int e = 0; e <= epochs; e++)
 		{
+			System.out.println("Entering Input Network");
 			initNet.settingInputs((setInputs("inputfile.dat", 89)));
 			initNet.calcOutput();
 			initNet.writeOutputs();
 			
-			forgettingNet.settingInputs((setInputs("outputfile.dat", 44)));
+			System.out.println("Entering Forgetting Network");
+			forgettingNet.settingInputs((setInputs("outputfile.dat", 88)));
 			forgettingNet.calcOutput();
 			//clearing old outputs
 			//pwOut.close();
 
 			forgettingNet.writeOutputs();
 
-			selectNet.settingInputs((setInputs("outputfile.dat", 22)));
+			System.out.println("Entering Selection Network");
+			selectNet.settingInputs((setInputs("outputfile.dat", 88)));
 			//clearing old outputs
 			//pwOut.close();
 			selectNet.calcOutput();

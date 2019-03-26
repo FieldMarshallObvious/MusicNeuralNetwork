@@ -4,6 +4,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
+
+import com.sun.source.tree.BinaryTree;
 
 public class IntialNetwork implements DNA
 {
@@ -86,6 +89,7 @@ public class IntialNetwork implements DNA
     {
         int x = 0;
         ArrayList<Double> preDecisions = new ArrayList<Double>();
+        ArrayList<double[]> organizedDecisions;
         
         for(Node cur: outputNodes)
         {
@@ -94,19 +98,36 @@ public class IntialNetwork implements DNA
             preDecisions.add(curOutput);
         }
 
-        double max = Collections.max(preDecisions);
+        x = 0;
 
+        organizedDecisions = new ArrayList<>(preDecisions.size());
+        
         for(double cur: preDecisions)
         {
+            x++;
+            double[] currentDecision = new double[2];
+            currentDecision[0] = Double.valueOf(x);
+            currentDecision[1] = cur;
 
-            if(cur >= max/2)
+            for(int y = 0; y < organizedDecisions.size(); y++)
             {
-                finaloutput+= cur;
-                finaloutput+= "\n";
-                x++;
+                System.out.println("Inside the loop");
+                if(cur < organizedDecisions.get(y)[1])
+                {
+                    organizedDecisions.set(y, currentDecision);
+                    break;
+                }
             }
         }
+
+        for(int y = 0; y < (organizedDecisions.size())/2; y++)
+        {
+            preDecisions.set(Integer.valueOf(String.valueOf(organizedDecisions.get(y)[0])), 0.0);
+        }
         
+        finaloutput = preDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
+        System.out.println("Final output of intital network \n" + finaloutput);
+
         usingBufferedWritter();
     }
 

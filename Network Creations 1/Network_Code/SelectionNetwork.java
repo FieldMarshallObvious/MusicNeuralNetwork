@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class SelectionNetwork implements DNA
 {
@@ -90,14 +91,43 @@ public class SelectionNetwork implements DNA
 
     public void writeOutputs() throws IOException
     {
+        int x = 0;
         ArrayList<Double> preDecisions = new ArrayList<Double>();
+        ArrayList<double[]> organizedDecisions = new ArrayList<double[]>();
         
         for(Node cur: outputNodes)
         {
+            x++;
             double curOutput = this.sigmoidFunction(cur.getActivation());
             preDecisions.add(curOutput);
-        }        
-        finaloutput = String.valueOf(Collections.max(preDecisions));
+        }
+
+        x = 0;
+
+        for(double cur: preDecisions)
+        {
+            x++;
+            double[] currentDecision = new double[2];
+            currentDecision[0] = Double.valueOf(x);
+            currentDecision[1] = cur;
+
+            for(int y = 0; y < organizedDecisions.size(); y++)
+            {
+                if(cur < organizedDecisions.get(y)[1])
+                {
+                    organizedDecisions.set(y, currentDecision);
+                    break;
+                }
+            }
+        }
+
+        for(int y = 0; y < (organizedDecisions.size())/2; y++)
+        {
+            preDecisions.set(Integer.valueOf(String.valueOf(organizedDecisions.get(y)[0])), 0.0);
+        }
+
+        finaloutput = preDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
+
         usingBufferedWritter();
     }
     public void training_Nodes(double[] ExpectedOutput, double learningRate, double Momentum)
