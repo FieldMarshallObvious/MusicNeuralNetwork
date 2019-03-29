@@ -3,7 +3,9 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.sun.source.tree.BinaryTree;
@@ -87,10 +89,12 @@ public class IntialNetwork implements DNA
     
     public void writeOutputs() throws IOException
     {
+        System.out.println("outputting decisions");
         int x = 0;
         ArrayList<Double> preDecisions = new ArrayList<Double>();
-        ArrayList<double[]> organizedDecisions;
+        ArrayList<double[]> organizedDecisions = new ArrayList<double[]>();
         
+        //Getting outputs for nodes
         for(Node cur: outputNodes)
         {
             x++;
@@ -100,8 +104,16 @@ public class IntialNetwork implements DNA
 
         x = 0;
 
-        organizedDecisions = new ArrayList<>(preDecisions.size());
         
+        //Giving organized list size
+        for(int y = 0; y < preDecisions.size(); y++)
+        {
+            double[] nullDecision = {-1, -1};
+            organizedDecisions.add(nullDecision);
+        }
+        
+
+        //Sorting node outputs from lowest to highest
         for(double cur: preDecisions)
         {
             x++;
@@ -111,20 +123,28 @@ public class IntialNetwork implements DNA
 
             for(int y = 0; y < organizedDecisions.size(); y++)
             {
-                System.out.println("Inside the loop");
-                if(cur < organizedDecisions.get(y)[1])
+              
+                if(cur < organizedDecisions.get(y)[1] || y == organizedDecisions.size() - 1)
                 {
+                    System.out.println("Added a Node");
+
+                    double[] reciever = organizedDecisions.get(y);
                     organizedDecisions.set(y, currentDecision);
+                    organizedDecisions.set(y-1, reciever);
+
                     break;
                 }
+
             }
         }
 
+        //Sets lower half to outputs to zero
         for(int y = 0; y < (organizedDecisions.size())/2; y++)
         {
             preDecisions.set(Integer.valueOf(String.valueOf(organizedDecisions.get(y)[0])), 0.0);
         }
         
+        //Converts output to String, to allow it to outputed by buffer
         finaloutput = preDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
         System.out.println("Final output of intital network \n" + finaloutput);
 
