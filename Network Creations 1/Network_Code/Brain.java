@@ -12,12 +12,17 @@ public class Brain
 {
 	//Note: need to write handeling logic for Exception  
 	public static void main(String[] args) throws IOException
-	{ 
+	{
+		
+		String inputfile = "/Users/noahdelangel/Desktop/School/Portfolio Project/MusicNeuralNetwork/Network Creations 1/Network_Code/inputfile.dat";
+		String outputfile = "/Users/noahdelangel/Desktop/School/Portfolio Project/MusicNeuralNetwork/Network Creations 1/Network_Code/outputfile.dat";
+		String expectedfile = "/Users/noahdelangel/Desktop/School/Portfolio Project/MusicNeuralNetwork/Network Creations 1/Network_Code/excpected.dat";
+
 		double learningRate = 0.3;
 		double Momentum = 0.5;
 
 		int epochs = 1000;
-		int dataSize = dataSize("inputfile.dat");
+		int dataSize = dataSize(inputfile);
 
 		IntialNetwork initNet = new IntialNetwork(dataSize, dataSize-1, learningRate);
 		ForgettingNetwork forgettingNet = new ForgettingNetwork(dataSize/2, (dataSize/2) - 1, learningRate);
@@ -29,12 +34,12 @@ public class Brain
 		for(int e = 0; e <= epochs; e++)
 		{
 			System.out.println("Entering Input Network");
-			initNet.settingInputs((setInputs("inputfile.dat", 89)));
+			initNet.settingInputs((setInputs(inputfile, 89)));
 			initNet.calcOutput();
 			initNet.writeOutputs();
 			
 			System.out.println("Entering Forgetting Network");
-			forgettingNet.settingInputs((setInputs("outputfile.dat", 88)));
+			forgettingNet.settingInputs((setInputs(outputfile, 88)));
 			forgettingNet.calcOutput();
 			//clearing old outputs
 			//pwOut.close();
@@ -42,7 +47,7 @@ public class Brain
 			forgettingNet.writeOutputs();
 
 			System.out.println("Entering Selection Network");
-			selectNet.settingInputs((setInputs("outputfile.dat", 88)));
+			selectNet.settingInputs((setInputs(outputfile, 88)));
 			//clearing old outputs
 			//pwOut.close();
 			selectNet.calcOutput();
@@ -53,15 +58,15 @@ public class Brain
 
 			System.out.println();
 			System.out.print("Initial Network Error: ");
-			initNet.training_Nodes(getExpectedOutput("input file.txt", dataSize), learningRate, Momentum);
+			initNet.training_Nodes(getExpectedOutput(expectedfile, dataSize), learningRate, Momentum);
 
 			System.out.println();
 			System.out.print("Forgetting Network Error: ");
-			forgettingNet.training_Nodes(getExpectedOutput("<input file>", dataSize), learningRate, Momentum);
+			forgettingNet.training_Nodes(getExpectedOutput(expectedfile, dataSize), learningRate, Momentum);
 
 			System.out.println();
 			System.out.print("Selection Network Error: ");
-			selectNet.training_Nodes(getExpectedOutput("<input file>", dataSize), learningRate, Momentum);
+			selectNet.training_Nodes(getExpectedOutput(expectedfile, dataSize), learningRate, Momentum);
 
 			System.out.println();
 		}

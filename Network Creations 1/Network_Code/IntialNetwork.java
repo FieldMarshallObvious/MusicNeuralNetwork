@@ -89,72 +89,10 @@ public class IntialNetwork implements DNA
     
     public void writeOutputs() throws IOException
     {
-        System.out.println("outputting decisions");
-        int x = 0;
-        ArrayList<Double> preDecisions = new ArrayList<Double>();
-        ArrayList<double[]> organizedDecisions = new ArrayList<double[]>();
-        
-        //Getting outputs for nodes
-        for(Node cur: outputNodes)
-        {
-            x++;
-            double curOutput = this.sigmoidFunction(cur.getActivation());
-            preDecisions.add(curOutput);
-        }
+        ArrayList<Double> netDecisions = this.selectDecisions(2, outputNodes);
 
-        x = 0;
+        finaloutput = netDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
 
-        
-        //Giving organized list size
-        for(int y = 0; y < preDecisions.size(); y++)
-        {
-            double[] nullDecision = {-1, -1};
-            organizedDecisions.add(nullDecision);
-        }
-        
-
-        //Sorting node outputs from lowest to highest
-        for(double cur: preDecisions)
-        {
-            x++;
-            double[] currentDecision = new double[2];
-            currentDecision[0] = Double.valueOf(x);
-            currentDecision[1] = cur;
-
-            for(int y = 0; y < organizedDecisions.size(); y++)
-            {
-              
-                if(cur < organizedDecisions.get(y)[1] || y == organizedDecisions.size() - 1)
-                {
-                    System.out.println("Added a Node");
-
-                    double[] reciever = organizedDecisions.get(y);
-                    organizedDecisions.set(y, currentDecision);
-                    organizedDecisions.set(y-1, reciever);
-
-                    break;
-                }
-
-            }
-        }
-
-        for(double[] cur : organizedDecisions)
-        {
-            System.out.println("The current in the organized list is: " + cur[0]);
-            if(cur[0] == 2 || cur[0] == 3 )
-                System.out.println("Found key: " + cur[0]);
-        }
-
-        //Sets lower half to outputs to zero
-        for(int y = 0; y < (organizedDecisions.size())/2; y++)
-        {
-            System.out.println("The curret key is: " + organizedDecisions.get(y)[0] + "\n" + "The current value is: " + organizedDecisions.get(y)[1]);
-            preDecisions.set(((int)organizedDecisions.get(y)[0]) - 1, 0.0);
-        }
-        
-        //Converts output to String, to allow it to outputed by buffer
-        finaloutput = preDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
-        System.out.println("Final output of intital network \n" + finaloutput);
 
         usingBufferedWritter();
     }

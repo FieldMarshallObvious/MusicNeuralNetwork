@@ -3,9 +3,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-import com.sun.xml.internal.org.jvnet.staxex.Base64Data;
-
-public class MidiNote
+public class midiNote
 {
     private double note;
     private double note2;

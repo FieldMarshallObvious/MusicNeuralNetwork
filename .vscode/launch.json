@@ -2,7 +2,7 @@
     "configurations": [
         {
             "type": "java",
-            "name": "CodeLens (Launch) - Brain",
+            "name": "Brain debug config",
             "request": "launch",
             "mainClass": "Brain",
             "projectName": "MusicNeuralNetwork_f7c07765"
