@@ -138,10 +138,18 @@ public class IntialNetwork implements DNA
             }
         }
 
+        for(double[] cur : organizedDecisions)
+        {
+            System.out.println("The current in the organized list is: " + cur[0]);
+            if(cur[0] == 2 || cur[0] == 3 )
+                System.out.println("Found key: " + cur[0]);
+        }
+
         //Sets lower half to outputs to zero
         for(int y = 0; y < (organizedDecisions.size())/2; y++)
         {
-            preDecisions.set(Integer.valueOf(String.valueOf(organizedDecisions.get(y)[0])), 0.0);
+            System.out.println("The curret key is: " + organizedDecisions.get(y)[0] + "\n" + "The current value is: " + organizedDecisions.get(y)[1]);
+            preDecisions.set(((int)organizedDecisions.get(y)[0]) - 1, 0.0);
         }
         
         //Converts output to String, to allow it to outputed by buffer

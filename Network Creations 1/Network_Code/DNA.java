@@ -1,4 +1,5 @@
 import java.math.*;
+import java.util.ArrayList;
 public interface DNA
 {
 	
@@ -14,7 +15,45 @@ public interface DNA
 		return 1 / (Math.sqrt(1 + prediction));
 	}
 
+	default ArrayList<Double> selectDecisions(int divisor, Node[] outputNodes)
+	{
+		int x = 0;
+        ArrayList<Double> preDecisions = new ArrayList<Double>();
+        ArrayList<double[]> organizedDecisions = new ArrayList<double[]>();
+        
+        for(Node cur: outputNodes)
+        {
+            x++;
+            double curOutput = this.sigmoidFunction(cur.getActivation());
+            preDecisions.add(curOutput);
+        }
 
+        x = 0;
+
+        for(double cur: preDecisions)
+        {
+            x++;
+            double[] currentDecision = new double[2];
+            currentDecision[0] = Double.valueOf(x);
+            currentDecision[1] = cur;
+
+            for(int y = 0; y < organizedDecisions.size(); y++)
+            {
+                if(cur < organizedDecisions.get(y)[1])
+                {
+                    organizedDecisions.set(y, currentDecision);
+                    break;
+                }
+            }
+        }
+
+        for(int y = 0; y < (organizedDecisions.size())/divisor; y++)
+        {
+            preDecisions.set(Integer.valueOf(String.valueOf(organizedDecisions.get(y)[0])), 0.0);
+		}
+		
+		return preDecisions;
+	}
 	default double[] linearRegressionFunc (double bias, double weight, int numNuerons, double activation, double learningRate, int actual)
 	{
 		double[] output = new double[2];
