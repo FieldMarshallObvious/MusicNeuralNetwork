@@ -35,19 +35,18 @@ public class Brain
 		{
 			System.out.println("Entering Input Network");
 			initNet.settingInputs((setInputs(inputfile, 89)));
-			initNet.calcOutput();
 			initNet.writeOutputs();
 			
 			System.out.println("Entering Forgetting Network");
-			forgettingNet.settingInputs((setInputs(outputfile, 88)));
-			forgettingNet.calcOutput();
+			forgettingNet.settingInputs((setInputs(outputfile, 89)));
+			forgettingNet.writeOutputs();
 			//clearing old outputs
 			//pwOut.close();
 
 			forgettingNet.writeOutputs();
 
 			System.out.println("Entering Selection Network");
-			selectNet.settingInputs((setInputs(outputfile, 88)));
+			selectNet.settingInputs((setInputs(outputfile, 89)));
 			//clearing old outputs
 			//pwOut.close();
 			selectNet.calcOutput();

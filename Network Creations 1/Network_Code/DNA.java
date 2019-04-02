@@ -15,31 +15,21 @@ public interface DNA
 		return 1 / (Math.sqrt(1 + prediction));
 	}
 
-	default ArrayList<Double> selectDecisions(int divisor, Node[] outputNodes)
+	default ArrayList<Double> selectDecisions(int divisor, double[] outputNodes)
 	{
 		System.out.println("outputting decisions");
         int x = 0;
         ArrayList<Double> preDecisions = new ArrayList<Double>();
         ArrayList<double[]> organizedDecisions = new ArrayList<double[]>();
         
-        //Getting outputs for nodes
-        for(Node cur: outputNodes)
+        //Getting outputs for nodes and setting size for organized list
+        for(double cur: outputNodes)
         {
-            x++;
-            double curOutput = this.sigmoidFunction(cur.getActivation());
-            preDecisions.add(curOutput);
-        }
-
-        x = 0;
-
-        
-        //Giving organized list size
-        for(int y = 0; y < preDecisions.size(); y++)
-        {
-            double[] nullDecision = {-1, -1};
+			preDecisions.add(cur);
+			double[] nullDecision = {-1, -1};
             organizedDecisions.add(nullDecision);
         }
-        
+
 
         //Sorting node outputs from lowest to highest
         for(double cur: preDecisions)
@@ -54,11 +44,15 @@ public interface DNA
               
                 if(cur < organizedDecisions.get(y)[1] || y == organizedDecisions.size() - 1)
                 {
-                    System.out.println("Added a Node");
+                    System.out.println("Added Node with a key of: " + currentDecision[0] +"\n with a value of: " + currentDecision[1]);
 
-                    double[] reciever = organizedDecisions.get(y);
-                    organizedDecisions.set(y, currentDecision);
-                    organizedDecisions.set(y-1, reciever);
+					for(; y > 0; y-=2)
+					{
+						double[] next = organizedDecisions.get(y);
+						organizedDecisions.set(y, currentDecision);
+						organizedDecisions.set(y-1, next);
+						currentDecision = next;	
+					}
 
                     break;
                 }
@@ -78,7 +72,8 @@ public interface DNA
         {
             System.out.println("The curret key is: " + organizedDecisions.get(y)[0] + "\n" + "The current value is: " + organizedDecisions.get(y)[1]);
             preDecisions.set(((int)organizedDecisions.get(y)[0]) - 1, 0.0);
-        }
+		}
+		
 		return preDecisions;
 	}
 	default double[] linearRegressionFunc (double bias, double weight, int numNuerons, double activation, double learningRate, int actual)

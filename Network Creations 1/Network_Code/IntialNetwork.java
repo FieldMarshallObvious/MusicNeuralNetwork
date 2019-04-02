@@ -63,20 +63,25 @@ public class IntialNetwork implements DNA
         double[] activations = new double[hiddenNodes.length];
         double[] oldactivations = activations;
 
+        //Creates list of input node activations
         for(int x = 0; x < inputNodes.length; x++)
         {
-            activations[x] = sigmoidFunction(inputNodes[x].getActivation());
-            oldactivations[x] = activations[x];
+          activations[x] = sigmoidFunction(inputNodes[x].getActivation());
+          oldactivations[x] = activations[x];    
         }
     
+        //Creates list of hidden node activations
         for(int x = 0; x < inputNodes.length; x ++)
         {
             double curactivation =  sigmoidFunction(hiddenNodes[x].activationFunc(oldactivations));
             activations[x] = curactivation;
         }
     
+        //Sets input node activations to hidden node activations;
         oldactivations = activations;
+        activations = new double[outputNodes.length];
 
+        //Creates list of output nodes activations
         for(int x = 0; x < outputNodes.length; x++)
         {
             double curavtivation = sigmoidFunction(outputNodes[x].activationFunc(oldactivations));
@@ -89,7 +94,7 @@ public class IntialNetwork implements DNA
     
     public void writeOutputs() throws IOException
     {
-        ArrayList<Double> netDecisions = this.selectDecisions(2, outputNodes);
+        ArrayList<Double> netDecisions = this.selectDecisions(2, this.calcOutput());
 
         finaloutput = netDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
 

@@ -93,7 +93,7 @@ public class ForgettingNetwork implements DNA
 
     public void writeOutputs() throws IOException
     {
-        ArrayList<Double> netDecisions = this.selectDecisions(2, outputNodes);
+        ArrayList<Double> netDecisions = this.selectDecisions(2, this.calcOutput());
 
         finaloutput = netDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
 
