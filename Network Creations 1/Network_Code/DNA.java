@@ -71,21 +71,12 @@ public interface DNA
         //Sets lower half to outputs to zero
         for(int x = 0; x < (organizedDecisions.size())/2; x++)
         {
-            System.out.println("The curret key is: " + organizedDecisions.get(x)[0] + "\n" + "The current value is: " + organizedDecisions.get(x)[1]);
-            preDecisions.set(((int)organizedDecisions.get(x)[0]), 0.0);
-		}
-
-		//Set organized decisions to proper order
-		for(int x =0; x < finalsize; x++)
-		{
-			for(int y =0; y < organizedDecisions.size(); y++)
-			{
-				if(organizedDecisions.get(y)[0] == x)
-					finaloutput.add(organizedDecisions.get(y)[1]);
-			}
+            System.out.println("The curret key is: " + organizedDecisions.get(x)[0]);
+			preDecisions.set(((int)organizedDecisions.get(x)[0]), 0.0);
+			System.out.println("After setting the key it is equal to " + organizedDecisions.get(x)[0]);
 		}
 		
-		return finaloutput;
+		return preDecisions;
 	}
 	default double[] linearRegressionFunc (double bias, double weight, int numNuerons, double activation, double learningRate, int actual)
 	{

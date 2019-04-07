@@ -157,5 +157,6 @@ public class IntialNetwork implements DNA
         BufferedWriter writer = new BufferedWriter(new FileWriter("outputfile.dat"));
         writer.write(fileContent);
         writer.close();
+        System.out.println("File written");
     }
 }
