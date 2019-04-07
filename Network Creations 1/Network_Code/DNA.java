@@ -1,5 +1,6 @@
 import java.math.*;
 import java.util.ArrayList;
+
 public interface DNA
 {
 	
@@ -15,66 +16,76 @@ public interface DNA
 		return 1 / (Math.sqrt(1 + prediction));
 	}
 
-	default ArrayList<Double> selectDecisions(int divisor, double[] outputNodes)
+	default ArrayList<Double> selectDecisions(int divisor, double[] outputNodes, int finalsize)
 	{
 		System.out.println("outputting decisions");
-        int x = 0;
+        int index = 0;
         ArrayList<Double> preDecisions = new ArrayList<Double>();
-        ArrayList<double[]> organizedDecisions = new ArrayList<double[]>();
+		ArrayList<double[]> organizedDecisions = new ArrayList<double[]>();
+		ArrayList<Double> finaloutput = new ArrayList<Double>();
+
         
         //Getting outputs for nodes and setting size for organized list
-        for(double cur: outputNodes)
+        for(int x = 0; x < finalsize; x++)
         {
-			preDecisions.add(cur);
+			
+			preDecisions.add(outputNodes[x]);
 			double[] nullDecision = {-1, -1};
             organizedDecisions.add(nullDecision);
         }
 
 
         //Sorting node outputs from lowest to highest
-        for(double cur: preDecisions)
-        {
-            x++;
-            double[] currentDecision = new double[2];
-            currentDecision[0] = Double.valueOf(x);
-            currentDecision[1] = cur;
-
-            for(int y = 0; y < organizedDecisions.size(); y++)
-            {
-              
-                if(cur < organizedDecisions.get(y)[1] || y == organizedDecisions.size() - 1)
-                {
-                    System.out.println("Added Node with a key of: " + currentDecision[0] +"\n with a value of: " + currentDecision[1]);
-
-					for(; y > 0; y-=2)
+		do
+		{
+       		double[] currentDecision = new double[2];
+    		currentDecision[0] = Double.valueOf(index);
+    		currentDecision[1] = preDecisions.get(index);
+     		organizedDecisions.add(currentDecision);
+			for(int y =0; y <organizedDecisions.size(); y++)
+			{
+					if(organizedDecisions.get(organizedDecisions.size() -1)[1] > organizedDecisions.get(y)[1])
 					{
 						double[] next = organizedDecisions.get(y);
 						organizedDecisions.set(y, currentDecision);
-						organizedDecisions.set(y-1, next);
-						currentDecision = next;	
+						organizedDecisions.set(organizedDecisions.size() -1, next);
+						break;
 					}
+			}	
 
-                    break;
-                }
-
-            }
-        }
-
-        for(double[] cur : organizedDecisions)
-        {
-            System.out.println("The current in the organized list is: " + cur[0]);
-            if(cur[0] == 2 || cur[0] == 3 )
-                System.out.println("Found key: " + cur[0]);
-        }
+			index++;
+		}while(index <= finalsize -1);
+			
+		//remove unchanged outputs
+		for(int x =0; x < organizedDecisions.size(); x++)
+		{
+			if(organizedDecisions.get(x)[0] == -1)
+			{
+				System.out.println("Before remove key is" + organizedDecisions.get(x)[0]);
+				organizedDecisions.remove(x);
+				System.out.println("After remove key is " + organizedDecisions.get(x)[0]);
+				x-=1;
+			}
+		}
 
         //Sets lower half to outputs to zero
-        for(int y = 0; y < (organizedDecisions.size())/2; y++)
+        for(int x = 0; x < (organizedDecisions.size())/2; x++)
         {
-            System.out.println("The curret key is: " + organizedDecisions.get(y)[0] + "\n" + "The current value is: " + organizedDecisions.get(y)[1]);
-            preDecisions.set(((int)organizedDecisions.get(y)[0]) - 1, 0.0);
+            System.out.println("The curret key is: " + organizedDecisions.get(x)[0] + "\n" + "The current value is: " + organizedDecisions.get(x)[1]);
+            preDecisions.set(((int)organizedDecisions.get(x)[0]), 0.0);
+		}
+
+		//Set organized decisions to proper order
+		for(int x =0; x < finalsize; x++)
+		{
+			for(int y =0; y < organizedDecisions.size(); y++)
+			{
+				if(organizedDecisions.get(y)[0] == x)
+					finaloutput.add(organizedDecisions.get(y)[1]);
+			}
 		}
 		
-		return preDecisions;
+		return finaloutput;
 	}
 	default double[] linearRegressionFunc (double bias, double weight, int numNuerons, double activation, double learningRate, int actual)
 	{

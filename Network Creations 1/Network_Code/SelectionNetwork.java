@@ -92,7 +92,7 @@ public class SelectionNetwork implements DNA
     public void writeOutputs() throws IOException
     {
        
-        ArrayList<Double> netDecisions = this.selectDecisions(2, this.calcOutput());
+        ArrayList<Double> netDecisions = this.selectDecisions(2, this.calcOutput(), outputNodes.length);
 
         finaloutput = netDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
 
