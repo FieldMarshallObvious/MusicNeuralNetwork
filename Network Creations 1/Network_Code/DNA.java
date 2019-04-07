@@ -61,9 +61,7 @@ public interface DNA
 		{
 			if(organizedDecisions.get(x)[0] == -1)
 			{
-				System.out.println("Before remove key is" + organizedDecisions.get(x)[0]);
 				organizedDecisions.remove(x);
-				System.out.println("After remove key is " + organizedDecisions.get(x)[0]);
 				x-=1;
 			}
 		}
@@ -71,9 +69,7 @@ public interface DNA
         //Sets lower half to outputs to zero
         for(int x = 0; x < (organizedDecisions.size())/2; x++)
         {
-            System.out.println("The curret key is: " + organizedDecisions.get(x)[0]);
 			preDecisions.set(((int)organizedDecisions.get(x)[0]), 0.0);
-			System.out.println("After setting the key it is equal to " + organizedDecisions.get(x)[0]);
 		}
 		
 		return preDecisions;

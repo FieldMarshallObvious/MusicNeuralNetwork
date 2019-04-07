@@ -24,7 +24,7 @@ public class Brain
 		int epochs = 1000;
 		int dataSize = dataSize(inputfile);
 
-		IntialNetwork initNet = new IntialNetwork(dataSize, dataSize-1, learningRate);
+		InitialNetwork initNet = new InitialNetwork(dataSize, dataSize-1, learningRate);
 		ForgettingNetwork forgettingNet = new ForgettingNetwork(dataSize/2, (dataSize/2) - 1, learningRate);
 		SelectionNetwork selectNet = new SelectionNetwork(dataSize/4, (dataSize/2) - 1, learningRate);
 

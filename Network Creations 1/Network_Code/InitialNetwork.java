@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import com.sun.source.tree.BinaryTree;
 
-public class IntialNetwork implements DNA
+public class InitialNetwork implements DNA
 {
     Node[] layers = new Node[3];
     Node[] inputNodes;
@@ -25,7 +25,7 @@ public class IntialNetwork implements DNA
 
     String finaloutput;
 
-    public IntialNetwork()
+    public InitialNetwork()
     {
         numOfInputs = 0;
         numOfOutputs = 0;
@@ -36,7 +36,7 @@ public class IntialNetwork implements DNA
         makingRays(0, 0);
     }
 
-    public IntialNetwork(int newInputs, int newOutputs, double inputLearningRate)
+    public InitialNetwork(int newInputs, int newOutputs, double inputLearningRate)
     {
         this();
         learningRate = inputLearningRate;
