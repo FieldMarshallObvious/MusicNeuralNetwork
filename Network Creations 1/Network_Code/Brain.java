@@ -101,8 +101,8 @@ public class Brain
 
 		while(inputDataScanner.hasNext())
 		{
-			x++;
 			output[x] = Double.valueOf(inputDataScanner.nextLine());
+			x++;
 		}
 		inputDataScanner.close();
 

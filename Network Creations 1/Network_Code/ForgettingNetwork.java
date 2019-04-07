@@ -39,14 +39,15 @@ public class ForgettingNetwork implements DNA
         this();
         learningRate = inputLearningRate;
 
+        //creating rays
+        makingRays(newInputs, newOutputs);
+
         //assigning nodes for ray objects
         assigningNodes(inputNodes);
         assigningNodes(hiddenNodes);
         assigningNodes(outputNodes);
 
 
-    
-    
         //creating weights
         //creating hidden layer weights 
         creatingWeights(inputNodes.length, hiddenNodes);

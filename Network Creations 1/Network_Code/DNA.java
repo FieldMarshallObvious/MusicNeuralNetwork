@@ -18,7 +18,6 @@ public interface DNA
 
 	default ArrayList<Double> selectDecisions(int divisor, double[] outputNodes, int finalsize)
 	{
-		System.out.println("outputting decisions");
         int index = 0;
         ArrayList<Double> preDecisions = new ArrayList<Double>();
 		ArrayList<double[]> organizedDecisions = new ArrayList<double[]>();
