@@ -2,7 +2,6 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-//import DryWetMidi;
 import java.io.PrintWriter;
 
 
@@ -25,8 +24,8 @@ public class Brain
 		int dataSize = dataSize(inputfile);
 
 		InitialNetwork initNet = new InitialNetwork(dataSize, dataSize-1, learningRate);
-		ForgettingNetwork forgettingNet = new ForgettingNetwork(dataSize/2, (dataSize/2) - 1, learningRate);
-		SelectionNetwork selectNet = new SelectionNetwork(dataSize/4, (dataSize/2) - 1, learningRate);
+		ForgettingNetwork forgettingNet = new ForgettingNetwork(dataSize, dataSize - 1, learningRate);
+		SelectionNetwork selectNet = new SelectionNetwork(dataSize, dataSize - 1, learningRate);
 
 		
 

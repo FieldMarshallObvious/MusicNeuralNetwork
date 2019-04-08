@@ -40,7 +40,9 @@ public class ForgettingNetwork implements DNA
         learningRate = inputLearningRate;
 
         //creating rays
+        System.out.println("The number of inputs is: " + newInputs);
         makingRays(newInputs, newOutputs);
+        System.out.println("The number nodes in the input layer: " + inputNodes.length);
 
         //assigning nodes for ray objects
         assigningNodes(inputNodes);
@@ -58,27 +60,31 @@ public class ForgettingNetwork implements DNA
    
     public double[] calcOutput()
     {
-        double[] activations = new double[inputNodes.length];
+        double[] activations = new double[hiddenNodes.length];
         double[] oldactivations = activations;
 
-
+        //Creates list of input node activations
         for(int x = 0; x < inputNodes.length; x++)
         {
-            activations[x] = inputNodes[x].getActivation();
-            oldactivations[x] = activations[x];
+          activations[x] = sigmoidFunction(inputNodes[x].getActivation());
+          oldactivations[x] = activations[x];    
         }
     
+        //Creates list of hidden node activations
         for(int x = 0; x < inputNodes.length; x ++)
         {
-            double curactivation =  hiddenNodes[x].activationFunc(oldactivations); 
+            double curactivation =  sigmoidFunction(hiddenNodes[x].activationFunc(oldactivations));
             activations[x] = curactivation;
         }
     
+        //Sets input node activations to hidden node activations;
         oldactivations = activations;
+        activations = new double[outputNodes.length];
 
-        for(int x = 0; x < hiddenNodes.length; x++)
+        //Creates list of output nodes activations
+        for(int x = 0; x < outputNodes.length; x++)
         {
-            double curavtivation = outputNodes[x].activationFunc(oldactivations);
+            double curavtivation = sigmoidFunction(outputNodes[x].activationFunc(oldactivations));
             activations[x] = curavtivation;
         }
 
@@ -108,14 +114,14 @@ public class ForgettingNetwork implements DNA
         System.out.print(sigSum);
     }
 
-    private void makingRays(int newnewInputs, int newOutputs)
+    private void makingRays(int newInputs, int newOutputs)
     {
         //creating input Nodes ray
-        inputNodes = new Node[numOfInputs];
-        outputNodes = new Node[numOfOutputs];
+        inputNodes = new Node[newInputs];
+        outputNodes = new Node[newOutputs];
 
         //determining hidden Nodes based on num of outputs and inputs
-        hiddenNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
+        hiddenNodes = new Node[((newInputs + newOutputs)/2) + ((newInputs + newOutputs)/2)];
 
 
         //creating final deicisions ray
@@ -139,11 +145,11 @@ public class ForgettingNetwork implements DNA
         }
     }
 
-    private static void usingBufferedWritter() throws IOException
+    private void usingBufferedWritter() throws IOException
     {
-        String fileContent = "<output text>";
+        String fileContent = finaloutput;
      
-        BufferedWriter writer = new BufferedWriter(new FileWriter("<output file>"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("outputfile.dat"));
         writer.write(fileContent);
         writer.close();
     }

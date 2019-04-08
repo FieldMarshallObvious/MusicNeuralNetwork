@@ -37,14 +37,17 @@ public class SelectionNetwork implements DNA
         this();
         learningRate = inputLearningRate;
 
+        //creating rays
+        System.out.println("The number of inputs is: " + newInputs);
+        makingRays(newInputs, newOutputs);
+        System.out.println("The number nodes in the input layer: " + inputNodes.length);
+
         //assigning nodes for ray objects
         assigningNodes(inputNodes);
         assigningNodes(hiddenNodes);
         assigningNodes(outputNodes);
 
 
-    
-    
         //creating weights
         //creating hidden layer weights 
         creatingWeights(inputNodes.length, hiddenNodes);
@@ -62,27 +65,31 @@ public class SelectionNetwork implements DNA
 
     public double[] calcOutput()
     {
-        double[] activations = new double[inputNodes.length];
+        double[] activations = new double[hiddenNodes.length];
         double[] oldactivations = activations;
 
-
+        //Creates list of input node activations
         for(int x = 0; x < inputNodes.length; x++)
         {
-            activations[x] = inputNodes[x].getActivation();
-            oldactivations[x] = activations[x];
+          activations[x] = sigmoidFunction(inputNodes[x].getActivation());
+          oldactivations[x] = activations[x];    
         }
     
+        //Creates list of hidden node activations
         for(int x = 0; x < inputNodes.length; x ++)
         {
-            double curactivation =  hiddenNodes[x].activationFunc(oldactivations); 
+            double curactivation =  sigmoidFunction(hiddenNodes[x].activationFunc(oldactivations));
             activations[x] = curactivation;
         }
     
+        //Sets input node activations to hidden node activations;
         oldactivations = activations;
+        activations = new double[outputNodes.length];
 
-        for(int x = 0; x < hiddenNodes.length; x++)
+        //Creates list of output nodes activations
+        for(int x = 0; x < outputNodes.length; x++)
         {
-            double curavtivation = outputNodes[x].activationFunc(oldactivations);
+            double curavtivation = sigmoidFunction(outputNodes[x].activationFunc(oldactivations));
             activations[x] = curavtivation;
         }
 
@@ -91,9 +98,16 @@ public class SelectionNetwork implements DNA
 
     public void writeOutputs() throws IOException
     {
-       
+        Double max = 0.0;
+
         ArrayList<Double> netDecisions = this.selectDecisions(2, this.calcOutput(), outputNodes.length);
 
+        max = Collections.max(netDecisions);
+        for(int x = 0; x < netDecisions.size(); x++)
+        {
+            if(! netDecisions.get(x).equals(max))
+                netDecisions.set(x, 0.0);
+        }
         finaloutput = netDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
 
         usingBufferedWritter();
@@ -109,11 +123,11 @@ public class SelectionNetwork implements DNA
     private void makingRays(int newnewInputs, int newOutputs)
     {
         //creating input Nodes ray
-        inputNodes = new Node[numOfInputs];
-        outputNodes = new Node[numOfOutputs];
+        inputNodes = new Node[newnewInputs];
+        outputNodes = new Node[newOutputs];
 
         //determining hidden Nodes based on num of outputs and inputs
-        hiddenNodes = new Node[((numOfInputs + numOfOutputs)/2) + ((numOfInputs + numOfOutputs)/2)];
+        hiddenNodes = new Node[((newnewInputs + newOutputs)/2) + ((newnewInputs + newOutputs)/2)];
 
 
         //creating final deicisions ray
@@ -141,9 +155,9 @@ public class SelectionNetwork implements DNA
 
     private void usingBufferedWritter() throws IOException
     {
-        String fileContent = "";
+        String fileContent = finaloutput;
      
-        BufferedWriter writer = new BufferedWriter(new FileWriter("<output file>"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("outputfile.dat"));
         writer.write(finaloutput);
         writer.close();
     }
