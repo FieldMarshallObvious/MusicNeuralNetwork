@@ -126,7 +126,7 @@ public interface DNA
 			}
 	}
 
-	default double CalculateSignalErrors(Node[]inputLayer ,Node[] outputLayer, double[] ExpectedOutput) 
+	default double CalculateSignalErrors(Node[]hiddenLayer ,Node[] outputLayer, double[] ExpectedOutput) 
 	{
 		int i,j,k,OutputLayer;
 		OutputLayer = 2;
@@ -145,16 +145,16 @@ public interface DNA
 		for (i = 3-2; i > 0; i--) 
 		{
 			Sum = 0;
-			for (j = 0; j < inputLayer.length; j++) 
+			for (j = 0; j < hiddenLayer.length; j++) 
 			{
 				
 				for(k = 0; k < outputLayer.length; k++)
 				{
-					Sum = Sum + inputLayer[j].getWeights(k) * 
-						inputLayer[j].getSignalError();
+					Sum = Sum + hiddenLayer[j].getWeights(k) * 
+						hiddenLayer[j].getSignalError();
 
-					inputLayer[i].setSignalError(inputLayer[i].getActivation()*(1 - 
-						inputLayer[i].getActivation())*Sum);
+					hiddenLayer[i].setSignalError(hiddenLayer[i].getActivation()*(1 - 
+						hiddenLayer[i].getActivation())*Sum);
 				}
 			}
 		}
