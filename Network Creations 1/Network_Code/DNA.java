@@ -94,36 +94,44 @@ public interface DNA
 	{
 		//NOTE: Consider passing array of all layers
 		double WeightDiff = 0.0; 
+		ArrayList<Node[]> Layers = new ArrayList<Node[]>();
+		Layers.add(inputLayer);
+		Layers.add(curLayer);
+		Layers.add(nextLayer);
 
-		// Update Weights
-		
-		for (int j = 0; j < curLayer.length; j++) 
+		for(int i = Layers.size() - 1; i > 0; i--)
 		{
+			// Update Weights
+			for (int j = 0; j < Layers.get(i).length; j++) 
+			{
 				
 			// Calculate Bias weight difference to node j
-			double ThresholdDiff = LearningRate * 
-					nextLayer[j].getSignalError() + 
+			double BiasDiff = LearningRate * 
+					Layers.get(i)[j].getSignalError() + 
 					Momentum*nextLayer[j].getBias();
 
-				// Update Bias weight to node j				curLayer[j].setBias( 
-					curLayer[j].setActivation(curLayer[j].getBias() + 
-					ThresholdDiff);
+				// Update Bias weight to node j
+					curLayer[j].setBias(curLayer[j].getBias() + 
+					BiasDiff);
 
 				// Update Weights
-				for (int k = 0; k < nextLayer.length; k++) 
+				for (int k = 0; k < Layers.get(i)[j].getWeights().size(); k++) 
 				{
 					// Calculate weight difference between node j and k
 					WeightDiff = 
 						LearningRate * 
-						curLayer[k].getActivation()*curLayer[k].getActivation() + //NOTE: Logic here needs to be fixed
-						(curLayer[k].getWeights(k) - nextLayer[k].getWeights(k));
+						Layers.get(i)[j].getSignalError()*Layers.get(i-1)[k].getActivation() + 
+						Momentum * Layers.get(i)[k].getSignalError();
+
+					System.out.println("The Weight difference is: " + WeightDiff);
+
+					Layers.get(i)[k].setWeightDiff(WeightDiff);					
 
 					// Update weight between node j and k
-					curLayer[k].setWeights(k, curLayer[k].getActivation()*inputLayer[k].getActivation() + WeightDiff);
-
-					nextLayer[k].setWeights(k, curLayer[k].getWeights(k) + WeightDiff);
+					curLayer[k].setWeights(k, Layers.get(i)[j].getWeights(k) + WeightDiff);
 				}
 			}
+		}
 	}
 
 	default double CalculateSignalErrors(Node[]hiddenLayer ,Node[] outputLayer, double[] ExpectedOutput) 
