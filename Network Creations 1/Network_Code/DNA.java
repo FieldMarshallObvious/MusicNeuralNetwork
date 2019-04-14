@@ -120,15 +120,21 @@ public interface DNA
 					// Calculate weight difference between node j and k
 					WeightDiff = 
 						LearningRate * 
-						Layers.get(i)[j].getSignalError()*Layers.get(i-1)[k].getActivation() + 
+						Layers.get(i)[j].getSignalError()* sigmoidFunction(Layers.get(i-1)[k].getActivation()) + 
 						Momentum * Layers.get(i)[k].getSignalError();
-
+					
+					System.out.println("The current index is: " + k + "\n");	
 					System.out.println("The Weight difference is: " + WeightDiff);
+					System.out.println("The learning rate is: " + LearningRate);
+					System.out.println("The signal error is: " + Layers.get(i)[j].getSignalError());
+					System.out.println("The activation for the current node is: " + sigmoidFunction(Layers.get(i-1)[k].getActivation()));
+					System.out.println("The Momentum is: " + Momentum);
 
 					Layers.get(i)[k].setWeightDiff(WeightDiff);					
 
+					System.out.println("The original weight is: " + Layers.get(i)[j].getWeights(k));
 					// Update weight between node j and k
-					curLayer[k].setWeights(k, Layers.get(i)[j].getWeights(k) + WeightDiff);
+					Layers.get(i)[j].setWeights(k, Layers.get(i)[j].getWeights(k) + WeightDiff);
 				}
 			}
 		}

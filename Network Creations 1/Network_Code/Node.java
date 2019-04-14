@@ -4,7 +4,6 @@ import java.util.ArrayList;
 class Node
 {
     private ArrayList<Double> weights;
-    private ArrayList<Double> Δweights;    
 
     private double activation;
     private double bias;
@@ -56,7 +55,6 @@ class Node
 
     public void setWeights(int index, double newWeight)
     {
-        Δweights.set(index, weights.get(index) - newWeight);
         weights.set(index, newWeight);
     }
 
