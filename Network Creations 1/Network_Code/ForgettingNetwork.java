@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 public class ForgettingNetwork implements DNA
 {
-    private Node[] layers = new Node[3];
     private Node[] inputNodes;
     private Node[] hiddenNodes;
     private Node[] outputNodes;
@@ -112,7 +111,7 @@ public class ForgettingNetwork implements DNA
     public void training_Nodes(double[] ExpectedOutput, double learningRate, double Momentum)
     {
         //REALLY IN NEED OF FIXING
-        double sigSum = this.CalculateSignalErrors(layers, outputNodes, ExpectedOutput);
+        double sigSum = this.CalculateSignalErrors(hiddenNodes, outputNodes, ExpectedOutput);
         this.BackPropagateError(inputNodes,hiddenNodes, outputNodes, learningRate, Momentum);
         System.out.print(sigSum);
     }

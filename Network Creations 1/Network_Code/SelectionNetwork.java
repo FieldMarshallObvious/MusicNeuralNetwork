@@ -1,5 +1,4 @@
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,7 +7,6 @@ import java.util.stream.Collectors;
 
 public class SelectionNetwork implements DNA
 {
-    Node[] layers = new Node[3];
     Node[] inputNodes;
     Node[] hiddenNodes;
     Node[] outputNodes;
@@ -116,7 +114,7 @@ public class SelectionNetwork implements DNA
     public void training_Nodes(double[] ExpectedOutput, double learningRate, double Momentum)
     {
         //REALLY IN NEED OF FIXING
-        double sigSum = this.CalculateSignalErrors(layers, outputNodes, ExpectedOutput);
+        double sigSum = this.CalculateSignalErrors(hiddenNodes, outputNodes, ExpectedOutput);
         
         this.BackPropagateError(inputNodes,hiddenNodes, outputNodes, learningRate, Momentum);
         
