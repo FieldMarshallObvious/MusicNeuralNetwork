@@ -7,7 +7,7 @@ class Node
 
     private double activation;
     private double bias;
-    private double Δbias;
+    private double Deltabias;
     
     private double signalError;
     private double wieghtDiff;
@@ -65,8 +65,12 @@ class Node
 
     public void setBias(double newBias)
     {
-        Δbias = bias - newBias;
         bias = newBias;
+    }
+
+    public void setDeltabias(double newDelta)
+    {
+        Deltabias = newDelta;
     }
 
     public void setSignalError(double newSignalError)
@@ -86,6 +90,8 @@ class Node
      public ArrayList<Double> getWeights(){return weights;}
  
      public double getBias(){return bias;}
+
+     public double getDetlaBias(){return Deltabias;}
  
      public double getActivation(){ return activation;}
  

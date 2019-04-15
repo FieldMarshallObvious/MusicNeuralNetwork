@@ -862,11 +862,6 @@ public class Piano implements ActionListener {
 
 
        frame.setSize(900,520);
-
-
-      
-
-
     }    
 
 
@@ -948,16 +943,8 @@ public class Piano implements ActionListener {
 
 
                x += 37;
-
-
            }
-
-
        }
-
-
-      
-
 
        // Reinitialize
 

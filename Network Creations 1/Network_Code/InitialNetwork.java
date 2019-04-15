@@ -105,7 +105,6 @@ public class InitialNetwork implements DNA
     {
         //REALLY IN NEED OF FIXING
         double sigSum = this.CalculateSignalErrors(hiddenNodes, outputNodes, ExpectedOutput);
-        System.out.println("The total signal error is: " + sigSum);
         this.BackPropagateError(inputNodes,hiddenNodes, outputNodes, learningRate, Momentum);
     }
 

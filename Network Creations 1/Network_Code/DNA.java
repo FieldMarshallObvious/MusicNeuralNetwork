@@ -92,8 +92,8 @@ public interface DNA
 	
 	default void BackPropagateError(Node[] inputLayer, Node[] curLayer, Node[] nextLayer, double LearningRate, double Momentum) 
 	{
-		//NOTE: Consider passing array of all layers
 		double WeightDiff = 0.0; 
+		//Create array of layers
 		ArrayList<Node[]> Layers = new ArrayList<Node[]>();
 		Layers.add(inputLayer);
 		Layers.add(curLayer);
@@ -106,35 +106,41 @@ public interface DNA
 			{
 				
 			// Calculate Bias weight difference to node j
-			double BiasDiff = LearningRate * 
+				Layers.get(i)[j].setDeltabias(LearningRate * 
 					Layers.get(i)[j].getSignalError() + 
-					Momentum*nextLayer[j].getBias();
+					Momentum*Layers.get(i)[j].getDetlaBias());
 
 				// Update Bias weight to node j
 					curLayer[j].setBias(curLayer[j].getBias() + 
-					BiasDiff);
+					Layers.get(i)[j].getDetlaBias());
 
 				// Update Weights
 				for (int k = 0; k < Layers.get(i)[j].getWeights().size(); k++) 
 				{
+					//System.out.println("The current lenght of the array is: " + Layers.get(i)[j].getWeights().size());
+					//System.out.println("The number of nodes in the earlier array is: " + (Layers.get(i-1).length - 1));
+					
 					// Calculate weight difference between node j and k
 					WeightDiff = 
 						LearningRate * 
 						Layers.get(i)[j].getSignalError()* sigmoidFunction(Layers.get(i-1)[k].getActivation()) + 
-						Momentum * Layers.get(i)[k].getSignalError();
+						Momentum * Layers.get(i)[j].getSignalError();
 					
-					System.out.println("The current index is: " + k + "\n");	
+						/*
+					System.out.println("\n" + "The current index is: " + k);	
 					System.out.println("The Weight difference is: " + WeightDiff);
 					System.out.println("The learning rate is: " + LearningRate);
 					System.out.println("The signal error is: " + Layers.get(i)[j].getSignalError());
 					System.out.println("The activation for the current node is: " + sigmoidFunction(Layers.get(i-1)[k].getActivation()));
 					System.out.println("The Momentum is: " + Momentum);
+*/
 
-					Layers.get(i)[k].setWeightDiff(WeightDiff);					
+					Layers.get(i)[j].setWeightDiff(WeightDiff);					
 
-					System.out.println("The original weight is: " + Layers.get(i)[j].getWeights(k));
+				//	System.out.println("The original weight is: " + Layers.get(i)[j].getWeights(k));
 					// Update weight between node j and k
 					Layers.get(i)[j].setWeights(k, Layers.get(i)[j].getWeights(k) + WeightDiff);
+				//	System.out.println("The new weight is: " + Layers.get(i)[j].getWeights(k));
 				}
 			}
 		}
