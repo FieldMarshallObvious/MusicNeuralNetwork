@@ -31,9 +31,10 @@ public class SelectionNetwork implements DNA
 
         makingRays(0, 0);
     }
-
+    //Constructor for secondary use, once initial outputs are input and there are comparables
     public SelectionNetwork(int newInputs, int newOutputs, double inputLearningRate)
     {
+        //calls base constructor and resets learnign rate
         this();
         learningRate = inputLearningRate;
 
@@ -116,7 +117,9 @@ public class SelectionNetwork implements DNA
     {
         //REALLY IN NEED OF FIXING
         double sigSum = this.CalculateSignalErrors(layers, outputNodes, ExpectedOutput);
+        
         this.BackPropagateError(inputNodes,hiddenNodes, outputNodes, learningRate, Momentum);
+        
         System.out.print(sigSum);
     }
 
@@ -133,7 +136,7 @@ public class SelectionNetwork implements DNA
         //creating final deicisions ray
         decisions = new double[outputNodes.length];
     }
-
+    //assigns values to nodes
     private void assigningNodes(Node[] curLayer)
     {
         for(int x = 0; x < curLayer.length; x++)
