@@ -1,672 +1,1554 @@
-const MIN_NOTE = 48;
-const MAX_NOTE = 84;
-const DEFAULT_BPM = 120;
-const MAX_MIDI_BPM = 240;
-const TEMPO_MIDI_CONTROLLER = 20; // Control changes for tempo for this controller id
 
-let Tone = mm.Player.tone;
+package music.portfolio;
 
-let temperature = 1.1;
-let patternLength = 8;
+import java.awt.Color;
 
-let masterGain = new Tone.Gain(0.6).toMaster();
-let reverb = new Tone.Convolver(
-  'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/hm2_000_ortf_48k.mp3'
-).connect(masterGain);
-reverb.wet.value = 0.1;
-let echo = new Tone.FeedbackDelay('8n.', 0.4).connect(
-  new Tone.Gain(0.5).connect(reverb)
-);
-let lowPass = new Tone.Filter(5000).connect(echo).connect(reverb);
-new Tone.LFO('8m', 3000, 5000).connect(lowPass.frequency).start();
-let sampler = new Tone.Sampler({
-  C3: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-c3.wav',
-  'D#3': 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-ds3.wav',
-  'F#3': 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-fs3.wav',
-  A3: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-a3.wav',
-  C4: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-c4.wav',
-  'D#4': 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-ds4.wav',
-  'F#4': 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-fs4.wav',
-  A4: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-a4.wav',
-  C5: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-c5.wav',
-  'D#5': 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-ds5.wav',
-  'F#5': 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-fs5.wav',
-  A5: 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699/s11-a5.wav'
-}).connect(lowPass);
-sampler.release.value = 2;
 
-let builtInKeyboard = new AudioKeys({ rows: 2 });
-let onScreenKeyboardContainer = document.querySelector('.keyboard');
-let onScreenKeyboard = buildKeyboard(onScreenKeyboardContainer);
-let machinePlayer = buildKeyboard(
-  document.querySelector('.machine-bg .player')
-);
-let humanPlayer = buildKeyboard(document.querySelector('.human-bg .player'));
+import java.awt.Component;
 
-let currentSeed = [];
-let stopCurrentSequenceGenerator;
-let synthFilter = new Tone.Filter(300, 'lowpass').connect(
-  new Tone.Gain(0.4).connect(masterGain)
-);
-let synthConfig = {
-  oscillator: { type: 'fattriangle' },
-  envelope: { attack: 3, sustain: 1, release: 1 }
-};
-let pulsePattern = true;
-let synthsPlaying = {};
-let currentPlayFn;
-let tick = 0;
 
-let outputs = {
-  internal: {
-    play: (note, velocity, time, hold = false) => {
-      let freq = Tone.Frequency(note, 'midi');
-      if (hold) {
-        if (!synthsPlaying[note]) {
-          let synth = new Tone.Synth(synthConfig).connect(synthFilter);
-          synthsPlaying[note] = synth;
-          synth.triggerAttack(freq, time, velocity);
+import java.awt.Container;
+
+
+import java.awt.Dimension;
+
+
+import java.awt.Font;
+
+
+import java.awt.event.ActionEvent;
+
+
+import java.awt.event.ActionListener;
+
+
+
+
+
+
+
+import javax.swing.BorderFactory;
+
+
+import javax.swing.Box;
+
+
+import javax.swing.BoxLayout;
+
+
+import javax.swing.ImageIcon;
+
+
+import javax.swing.JButton;
+
+
+import javax.swing.JComboBox;
+
+
+import javax.swing.JComponent;
+
+
+import javax.swing.JEditorPane;
+
+
+import javax.swing.JFrame;
+
+
+import javax.swing.JLabel;
+
+
+import javax.swing.JLayeredPane;
+
+
+import javax.swing.JPanel;
+
+
+import javax.swing.JTextArea;
+
+
+import javax.swing.JTextField;
+
+
+import javax.swing.border.BevelBorder;
+
+
+import javax.swing.border.Border;
+
+
+import javax.swing.border.EtchedBorder;
+
+
+import org.jfugue.Pattern;
+
+
+import org.jfugue.Player;
+
+
+import org.jfugue.Rhythm;
+
+
+public class Piano implements ActionListener {
+
+
+    
+
+
+    /** GUI frame.*/
+
+
+    private JFrame frame;
+
+
+    /** Allows user to type in notes to play.*/
+
+
+    private JTextArea entryBox;
+
+
+    /** Allows entry of rhythm pattern.*/
+
+
+    private JTextArea rhythm1;
+
+
+    /** Allows entry of another rhythm pattern.*/
+
+
+    private JTextArea rhythm2;
+
+
+    /** Allows user to alter how many times the song repeats.*/
+
+
+    private JTextArea repeatNumber;
+
+
+    /** Allows selection from various instruments.*/
+
+
+    private JComboBox instrument;
+
+
+    /** Allows user to enter desired tempo.*/
+
+
+    private JTextArea tempo;
+
+
+    /** Button that launches the help window.*/
+
+
+    private JButton help;
+
+
+    /** The total number of notes.*/
+
+
+    public static final int NUM_KEYS = 7;
+
+
+    /** How many octaves should be created.*/
+
+
+    public static final int NUM_OCTAVES = 3;
+
+
+    /** Holds the possible notes.*/
+
+
+    private String[] notes = {"C","D","E","F","G","A","B"};
+
+
+    /** Holds the possible sharps.*/
+
+
+    private String[] sharps = {"C#","D#","F#","G#","A#"};
+
+
+    /** Holds the octave numbers.*/
+
+
+    private String[] octave = {"4","5","6"};
+
+
+    /** Holds the possible instruments*/
+
+
+    private String[] instruments = {"Piano", "Guitar", "Vibraphone","Violin","SCI-FI"};
+
+
+    /** Creates a new player.*/
+
+
+    private Player player = new Player();
+
+
+    /** Holds which instrument is currently selected.*/
+
+
+    private String instrumentType = "I[Piano]";
+
+
+    /** Custom color for GUI entry fields*/
+
+
+    private Color customColor = new Color(170,180,254);
+
+
+    /** Border for entry fields*/
+
+
+   private Border border = BorderFactory.createBevelBorder(BevelBorder.LOWERED);
+
+
+    
+
+
+    /** Constructs the GUI */
+
+
+    public Piano(){
+
+
+        
+
+
+        // ------------ Create GUI -----------
+
+
+        frame = new JFrame("Piano GUI");
+
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+
+        
+
+
+       // Create the mainPanel
+
+
+       Container mainPanel = frame.getContentPane();
+
+
+       mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+
+
+        mainPanel.setForeground(Color.WHITE);
+
+
+        mainPanel.setBackground(Color.BLACK);
+
+
+       mainPanel.add(Box.createRigidArea(new Dimension(0,10)));
+
+
+      
+
+
+       // ---- Instrument and tempo panel ----
+
+
+       JPanel iTpanel = new JPanel();
+
+
+       iTpanel.setLayout(new BoxLayout(iTpanel,BoxLayout.X_AXIS));
+
+
+        iTpanel.setForeground(Color.WHITE);
+
+
+        iTpanel.setBackground(Color.BLACK);
+
+
+       iTpanel.add(Box.createRigidArea(new Dimension(180,0)));
+
+
+      
+
+
+       // Title label
+
+
+       JLabel titleLabel = new JLabel("Portfolio GUI");
+
+
+        titleLabel.setFont(new Font("Verdana", Font.BOLD, 16));
+
+
+        titleLabel.setForeground(Color.WHITE);
+
+
+        titleLabel.setBackground(Color.BLACK);
+
+
+        iTpanel.add(titleLabel);
+
+
+       iTpanel.add(Box.createRigidArea(new Dimension(150,0)));
+
+
+      
+
+
+       // Instrument label
+
+
+       JLabel instrumentLabel = new JLabel("Instrument:");
+
+
+        instrumentLabel.setForeground(Color.WHITE);
+
+
+        instrumentLabel.setBackground(Color.BLACK);
+
+
+       iTpanel.add(instrumentLabel);
+
+
+       iTpanel.add(Box.createRigidArea(new Dimension(20,0)));
+
+
+
+
+
+
+
+       // Instrument combo box
+
+
+       instrument = new JComboBox(instruments);
+
+
+       instrument.setName("instrument");
+
+
+       instrument.addActionListener(this);
+
+
+        instrument.setForeground(Color.WHITE);
+
+
+        instrument.setBackground(Color.BLACK);
+
+
+       iTpanel.add(instrument);
+
+
+       iTpanel.add(Box.createRigidArea(new Dimension(20,0)));
+
+
+      
+
+
+       // Tempo label
+
+
+       JLabel tempoLabel = new JLabel("Tempo:");
+
+
+        tempoLabel.setForeground(Color.WHITE);
+
+
+        tempoLabel.setBackground(Color.BLACK);
+
+
+       iTpanel.add(tempoLabel);
+
+
+       iTpanel.add(Box.createRigidArea(new Dimension(20,0)));
+
+
+
+
+
+
+
+       // Tempo text area
+
+
+       tempo = new JTextArea();
+
+
+       tempo.setName("tempo");
+
+
+       tempo.setText("120");
+
+
+        tempo.setFont(new Font("Ariel", Font.BOLD, 14));
+
+
+       tempo.setBorder(border);
+
+
+        tempo.setForeground(Color.BLACK);
+
+
+        tempo.setBackground(customColor);
+
+
+       iTpanel.add(tempo);
+
+
+       iTpanel.add(Box.createRigidArea(new Dimension(20,0)));
+
+
+      
+
+
+       // Help button
+
+
+       help = new JButton("Help");
+
+
+       help.setForeground(Color.WHITE);
+
+
+       help.setBackground(Color.BLACK);
+
+
+       help.addActionListener(this);
+
+
+       help.setName("help");
+
+
+       iTpanel.add(help);
+
+
+       iTpanel.add(Box.createRigidArea(new Dimension(20,0)));
+
+
+
+
+
+
+
+       // Add iTpanel to mainPanel
+
+
+       mainPanel.add(iTpanel);
+
+
+       mainPanel.add(Box.createRigidArea(new Dimension(0,20)));
+
+
+
+
+
+
+
+       // -------- piano keys panel --------
+
+
+      
+
+
+       // Call the make keys method
+
+
+       JLayeredPane pianoKeyPanel = makeKeys();
+
+
+       // Add to main panel
+
+
+       mainPanel.add(pianoKeyPanel);
+
+
+      
+
+
+       // ---------- Notes Panel -----------
+
+
+      
+
+
+       // Create the notes panel
+
+
+       JPanel notesPanel = new JPanel();
+
+
+       notesPanel.setLayout(new BoxLayout(notesPanel,BoxLayout.X_AXIS));
+
+
+        notesPanel.setForeground(Color.WHITE);
+
+
+        notesPanel.setBackground(Color.BLACK);
+
+
+       notesPanel.add(Box.createRigidArea(new Dimension(100, 0)));
+
+
+      
+
+
+       // Make notes label
+
+
+       JLabel notesLabel = new JLabel("Notes:");
+
+
+        notesLabel.setForeground(Color.WHITE);
+
+
+        notesLabel.setBackground(Color.BLACK);
+
+
+       notesPanel.add(notesLabel);
+
+
+       notesPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+
+
+      
+
+
+       // Create entry box
+
+
+       entryBox = new JTextArea();
+
+
+       entryBox.setBorder(border);
+
+
+        entryBox.setFont(new Font("Ariel", Font.BOLD, 14));
+
+
+        entryBox.setForeground(Color.BLACK);
+
+
+        entryBox.setBackground(customColor);
+
+
+       notesPanel.add(entryBox);
+
+
+       notesPanel.add(Box.createRigidArea(new Dimension(100, 0)));
+
+
+      
+
+
+       // Add the top panel to the main panel
+
+
+       mainPanel.add(Box.createRigidArea(new Dimension(0,50)));
+
+
+       mainPanel.add(notesPanel);
+
+
+       mainPanel.add(Box.createRigidArea(new Dimension(0, 25)));
+
+
+      
+
+
+       // ------- Rhythm panel 1 -------
+
+
+      
+
+
+       // Create panel1
+
+
+       JPanel rhythmPanel1 = new JPanel();
+
+
+       rhythmPanel1.setLayout(new BoxLayout(rhythmPanel1,BoxLayout.X_AXIS));
+
+
+        rhythmPanel1.setForeground(Color.WHITE);
+
+
+        rhythmPanel1.setBackground(Color.BLACK);
+
+
+       rhythmPanel1.add(Box.createRigidArea(new Dimension(150,0)));
+
+
+      
+
+
+       // Rhythm 1 label
+
+
+       JLabel r1 = new JLabel("Rhythm 1: ");
+
+
+        r1.setForeground(Color.WHITE);
+
+
+        r1.setBackground(Color.BLACK);
+
+
+       rhythmPanel1.add(r1);
+
+
+       rhythmPanel1.add(Box.createRigidArea(new Dimension(10,0)));
+
+
+      
+
+
+       // Text area
+
+
+       rhythm1 = new JTextArea();
+
+
+       rhythm1.setBorder(border);
+
+
+       rhythm1.setFont(new Font("Ariel", Font.BOLD, 14));
+
+
+        rhythm1.setForeground(Color.BLACK);
+
+
+        rhythm1.setBackground(customColor);
+
+
+       rhythmPanel1.add(rhythm1);
+
+
+       rhythmPanel1.add(Box.createRigidArea(new Dimension(150,0)));
+
+
+
+
+
+
+
+       // Add to main panel
+
+
+       mainPanel.add(rhythmPanel1);
+
+
+       mainPanel.add(Box.createRigidArea(new Dimension(20,20)));
+
+
+
+
+
+
+
+       // ------- Rhythm panel 2 -------
+
+
+      
+
+
+       // Create panel 2
+
+
+       JPanel rhythmPanel2 = new JPanel();
+
+
+       rhythmPanel2.setLayout(new BoxLayout(rhythmPanel2,BoxLayout.X_AXIS));
+
+
+        rhythmPanel2.setForeground(Color.WHITE);
+
+
+        rhythmPanel2.setBackground(Color.BLACK);
+
+
+       rhythmPanel2.add(Box.createRigidArea(new Dimension(150,0)));
+
+
+      
+
+
+       // Rhythm 2 label
+
+
+       JLabel r2 = new JLabel("Rhythm 2: ");
+
+
+        r2.setForeground(Color.WHITE);
+
+
+        r2.setBackground(Color.BLACK);
+
+
+       rhythmPanel2.add(r2);
+
+
+       rhythmPanel2.add(Box.createRigidArea(new Dimension(10,0)));
+
+
+      
+
+
+       // Text area
+
+
+       rhythm2 = new JTextArea();
+
+
+       rhythm2.setBorder(border);
+
+
+        rhythm2.setFont(new Font("Ariel", Font.BOLD, 14));
+
+
+        rhythm2.setForeground(Color.BLACK);
+
+
+        rhythm2.setBackground(customColor);
+
+
+       rhythmPanel2.add(rhythm2);
+
+
+       rhythmPanel2.add(Box.createRigidArea(new Dimension(150,0)));
+
+
+
+
+
+
+
+       // Add to main panel
+
+
+       mainPanel.add(rhythmPanel2);
+
+
+       mainPanel.add(Box.createRigidArea(new Dimension(20,20)));
+
+
+      
+
+
+       // ---- Repeat rhythm panel ---
+
+
+      
+
+
+       // Create repeat rhythm panel
+
+
+       JPanel repeatPanel = new JPanel();
+
+
+       repeatPanel.setLayout(new BoxLayout(repeatPanel,BoxLayout.X_AXIS));
+
+
+        repeatPanel.setForeground(Color.WHITE);
+
+
+        repeatPanel.setBackground(Color.BLACK);
+
+
+       repeatPanel.add(Box.createRigidArea(new Dimension(380,0)));
+
+
+      
+
+
+       // Repeat rhythm label
+
+
+       JLabel repeatRhythmLabel = new JLabel("Repeat Rhythm: ");
+
+
+        repeatRhythmLabel.setForeground(Color.WHITE);
+
+
+        repeatRhythmLabel.setBackground(Color.BLACK);
+
+
+       repeatPanel.add(repeatRhythmLabel);
+
+
+       repeatPanel.add(Box.createRigidArea(new Dimension(10,0)));
+
+
+      
+
+
+       // Text area
+
+
+       repeatNumber = new JTextArea();
+
+
+       repeatNumber.setText("1");
+
+
+       repeatNumber.setFont(new Font("Ariel", Font.BOLD, 14));
+
+
+       repeatNumber.setBorder(border);
+
+
+        repeatNumber.setForeground(Color.BLACK);
+
+
+        repeatNumber.setBackground(customColor);
+
+
+       repeatPanel.add(repeatNumber);
+
+
+       repeatPanel.add(Box.createRigidArea(new Dimension(380,0)));
+
+
+      
+
+
+       // Add to main panel
+
+
+       mainPanel.add(repeatPanel);
+
+
+       mainPanel.add(Box.createRigidArea(new Dimension(20,20)));
+
+       // Create the play notes button
+
+
+       JButton playButton = new JButton("Play Notes");
+
+
+       playButton.setName("play");
+
+
+       playButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+
+        playButton.setForeground(Color.WHITE);
+
+
+        playButton.setBackground(Color.BLACK);
+
+
+       // Add the action listener
+
+
+       playButton.addActionListener(this);
+
+       // Add Play notes button to the mainPanel
+
+
+       mainPanel.add(playButton);
+
+
+       mainPanel.add(Box.createRigidArea(new Dimension(50, 20)));
+
+
+      
+
+
+       // Show the window
+
+
+       frame.setVisible(true);
+
+
+       frame.setResizable(false);
+
+
+       frame.setSize(900,520);
+
+
+      
+
+
+    }    
+
+
+    /** Creates the panel containing all of the piano keys.
+
+
+     * @return the panel containing the keys. */
+
+
+    public JLayeredPane makeKeys(){
+
+
+        // Initialize
+
+
+        String name = "";
+
+
+        int x = 55;
+
+
+        int y = 0;
+
+
+        
+
+
+        // Create layerPane
+
+
+        JLayeredPane keyBoard = new JLayeredPane();
+
+
+        keyBoard.setPreferredSize(new Dimension(900,162));
+
+
+        keyBoard.add(Box.createRigidArea(new Dimension(x, 0)));
+
+
+
+
+
+
+
+       // Add the white key buttons
+
+
+       for(int i=0; i< NUM_OCTAVES; i++){
+
+
+           for(int j=0; j<NUM_KEYS; j++){
+
+
+               ImageIcon img = new ImageIcon("images/"+notes[j]+".png");
+
+
+               JButton jb = new JButton(img);
+
+
+               name = notes[j]+octave[i];
+
+
+               jb.setName(name);
+
+
+               jb.setActionCommand(name);
+
+
+               jb.addActionListener(this);
+
+
+               jb.setBounds(x,y,35,162);
+
+
+               keyBoard.add(jb,new Integer(1));
+
+
+               keyBoard.add(Box.createRigidArea(new Dimension(2, 0)));
+
+
+               x += 37;
+
+
+           }
+
+
+       }
+
+
+      
+
+
+       // Reinitialize
+
+
+       x = 0;
+
+
+      
+
+
+       // Add the black keys
+
+
+       for(int i=0; i< NUM_OCTAVES; i++){
+
+
+           
+
+
+           ImageIcon img = new ImageIcon("images/blackKey.png");
+
+
+           
+
+
+           // Make 5 "keys"
+
+
+           
+
+
+           JButton jb0 = new JButton(img);
+
+
+           name = sharps[0]+octave[i];
+
+
+           jb0.setName(name);
+
+
+           jb0.setActionCommand(name);
+
+
+           jb0.addActionListener(this);
+
+
+           
+
+
+           JButton jb1 = new JButton(img);
+
+
+           name = sharps[1]+octave[i];
+
+
+           jb1.setName(name);
+
+
+           jb1.setActionCommand(name);
+
+
+           jb1.addActionListener(this);
+
+
+           
+
+
+           JButton jb2 = new JButton(img);
+
+
+           name = sharps[2]+octave[i];
+
+
+           jb2.setName(name);
+
+
+           jb2.setActionCommand(name);
+
+
+           jb2.addActionListener(this);
+
+
+           
+
+
+           JButton jb3 = new JButton(img);
+
+
+           name = sharps[3]+octave[i];
+
+
+           jb3.setName(name);
+
+
+           jb3.setActionCommand(name);
+
+
+           jb3.addActionListener(this);
+
+
+           
+
+
+           JButton jb4 = new JButton(img);
+
+
+           name = sharps[4]+octave[i];
+
+
+           jb4.setName(name);
+
+
+           jb4.setActionCommand(name);
+
+
+           jb4.addActionListener(this);
+
+
+           
+
+
+           // Place the 5 keys
+
+
+           jb0.setBounds(77+(260*i),y,25,95);
+
+
+           keyBoard.add(jb0,new Integer(2));
+
+
+           
+
+
+           jb1.setBounds(115+(260*i),y,25,95);
+
+
+           keyBoard.add(jb1,new Integer(2));
+
+
+           
+
+
+           jb2.setBounds(188+(260*i),y,25,95);
+
+
+           keyBoard.add(jb2,new Integer(2));
+
+
+           
+
+
+           jb3.setBounds(226+(260*i),y,25,95);
+
+
+           keyBoard.add(jb3,new Integer(2));
+
+
+ 
+
+
+           jb4.setBounds(264+(260*i),y,25,95);
+
+
+           keyBoard.add(jb4,new Integer(2));
+
+
+       }
+
+
+        // Return the keyboard
+
+
+       return keyBoard;
+
+
+    }
+
+
+    
+
+
+    /** Plays the song, consisting of notes and rhythms.*/
+
+
+    public void playSong(){
+
+
+        // Initialize
+
+
+        int num = 1;
+
+
+       // Get the notes to be played from the entryBox
+
+
+       String notesString = "V0 "+instrumentType+" "+entryBox.getText();
+
+
+
+       // Create a new rhythm object
+
+
+       Rhythm rhythm = new Rhythm();
+
+
+      
+
+
+       // Get the rhythm strings from the rhythm entry boxes
+
+
+       String rhythmLayer1 = "V1 "+rhythm1.getText();
+
+
+       String rhythmLayer2 = "V2 "+rhythm2.getText();
+
+       // Set the strings to layers
+
+
+       rhythm.setLayer(1, rhythmLayer1);
+
+
+       rhythm.setLayer(2, rhythmLayer2);
+
+
+       // Add the appropriate substitutions
+
+
+       rhythm.addSubstitution('O', "[BASS_DRUM]i");
+
+
+       rhythm.addSubstitution('o', "Rs [BASS_DRUM]s");
+
+
+       rhythm.addSubstitution('*', "[ACOUSTIC_SNARE]i");
+
+
+       rhythm.addSubstitution('^', "[PEDAL_HI_HAT]s Rs");
+
+
+       rhythm.addSubstitution('!', "[CRASH_CYMBAL_1]s Rs");
+
+
+       rhythm.addSubstitution('.', "Ri");
+
+       // Get the rhythm pattern
+
+
+       Pattern rhythmPattern = rhythm.getPattern();
+
+
+       // Get how many times the song should repeat
+
+
+       String repeatNum = repeatNumber.getText();
+
+
+       num = Integer.parseInt(repeatNum);
+
+
+       // Get the playback tempo
+
+
+        String playTempo = "T["+tempo.getText()+"] ";
+
+       // Create the song
+
+
+       Pattern song = new Pattern();
+
+
+       song.add(rhythmPattern);
+
+
+       song.add(notesString);
+
+
+       song.repeat(num);
+  
+       // Play the song
+
+
+       player.play(playTempo+song);
+
+
+    }
+
+
+    /** Opens a new help window.*/
+
+
+    private void helpWindow(){
+
+
+    
+
+
+        // Open a new window
+
+
+        JFrame frame2 = new JFrame("Help");
+
+
+
+
+
+
+
+       // Create mainPanel2
+
+
+       Container mainPanel2 = frame2.getContentPane();
+
+
+       mainPanel2.setLayout(new BoxLayout(mainPanel2, BoxLayout.Y_AXIS));
+
+
+        mainPanel2.setForeground(Color.WHITE);
+
+
+        mainPanel2.setBackground(Color.BLACK);
+
+
+        
+
+
+        // Add a jeditorpane
+
+
+        JEditorPane instructions= new JEditorPane();
+
+
+        instructions.setText("TO PLAY NOTES:\n " +
+
+
+                "Click a key or use the following format: \n " +
+
+
+                "    A B B A --> Basic musical notes \n" +
+
+
+                "    D# --> Make a note sharp \n" +
+
+
+                "    A R C --> R adds a rest \n" +
+
+
+                "    E5 --> Play E in 5th octave \n" +
+
+
+                "    C5q+E5q+G5q A+G A+G --> Play chord using +\n\n" +
+
+
+                "To change note lengths the following characters can be used:\n" +
+
+
+                "    w  whole\n" +
+
+
+                "    h  half\n" +
+
+
+                "    q  quarter\n" +
+
+
+                "    i  eighth\n" +
+
+
+                "    s  sixteenth\n\n"+
+
+
+                "TO PLAY RHYTHMS:\n" +
+
+
+                "The following drum sounds are available:\n" +
+
+
+                "    O  bass drum\n" +
+
+
+                "    o  bass drum 2\n" +
+
+
+                "    ^  hi hat\n" +
+
+
+                "    *  snare drum\n" +
+
+
+                "    !  crash cymbal\n" +
+
+
+                "    .  ride cymbal");
+
+
+        instructions.setForeground(Color.WHITE);
+
+
+        instructions.setBackground(Color.BLACK);
+
+
+        instructions.setFont(new Font("Ariel", Font.PLAIN, 16));
+
+        // Add instructions to the mainPanel
+
+        mainPanel2.add(instructions);
+
+        // Set the frame size and visible
+        frame2.setSize(500,550);
+
+
+        frame2.setVisible(true);
+
+    }
+    /** Creates a piano object. */
+
+
+    public static void main(String[] args) {
+
+
+        // TODO Auto-generated method stub
+
+        new Piano();
+
+
+    }
+
+
+    @Override
+
+    public void actionPerformed(ActionEvent e) {
+
+
+        // Initialize
+
+
+        String command = "";
+
+
+        JButton jb = null;
+
+
+        String name = "";
+
+        // Get which object was clicked
+
+
+        Object obj = e.getSource();
+
+        // If the object was a JComboBox
+
+
+        if (obj instanceof JComboBox){
+
+
+            // Get which instrument the user selected
+
+
+            Object instrumentObj = instrument.getSelectedItem();
+
+
+            // Add formatting so the instrument can be used in playback
+
+
+            instrumentType = "I["+(String)instrumentObj+"]";
+
+
         }
-      } else {
-        sampler.triggerAttack(freq, time);
-      }
-    },
-    stop: (note, time) => {
-      if (synthsPlaying[note]) {
-        let synth = synthsPlaying[note];
-        synth.triggerRelease(time);
-        setTimeout(() => synth.dispose(), 2000);
-        synthsPlaying[note] = null;
-      }
-    }
-  }
-};
-let activeOutput = 'internal';
 
-function isAccidental(note) {
-  let pc = note % 12;
-  return pc === 1 || pc === 3 || pc === 6 || pc === 8 || pc === 10;
-}
 
-function buildKeyboard(container) {
-  let nAccidentals = _.range(MIN_NOTE, MAX_NOTE + 1).filter(isAccidental)
-    .length;
-  let keyWidthPercent = 100 / (MAX_NOTE - MIN_NOTE - nAccidentals + 1);
-  let keyInnerWidthPercent =
-    100 / (MAX_NOTE - MIN_NOTE - nAccidentals + 1) - 0.5;
-  let gapPercent = keyWidthPercent - keyInnerWidthPercent;
-  let accumulatedWidth = 0;
-  return _.range(MIN_NOTE, MAX_NOTE + 1).map(note => {
-    let accidental = isAccidental(note);
-    let key = document.createElement('div');
-    key.classList.add('key');
-    if (accidental) {
-      key.classList.add('accidental');
-      key.style.left = `${accumulatedWidth -
-        gapPercent -
-        (keyWidthPercent / 2 - gapPercent) / 2}%`;
-      key.style.width = `${keyWidthPercent / 2}%`;
-    } else {
-      key.style.left = `${accumulatedWidth}%`;
-      key.style.width = `${keyInnerWidthPercent}%`;
-    }
-    container.appendChild(key);
-    if (!accidental) accumulatedWidth += keyWidthPercent;
-    return key;
-  });
-}
+        // Else the object is a JButton
 
-function detectChord(notes) {
-  notes = notes.map(n => Tonal.Note.pc(Tonal.Note.fromMidi(n.note))).sort();
-  return Tonal.PcSet.modes(notes)
-    .map((mode, i) => {
-      const tonic = Tonal.Note.name(notes[i]);
-      const names = Tonal.Dictionary.chord.names(mode);
-      return names.length ? tonic + names[0] : null;
-    })
-    .filter(x => x);
-}
 
-function buildNoteSequence(seed) {
-  let step = 0;
-  let delayProb = pulsePattern ? 0 : 0.3;
-  let notes = seed.map(n => {
-    let dur = 1 + (Math.random() < delayProb ? 1 : 0);
-    let note = {
-      pitch: n.note,
-      quantizedStartStep: step,
-      quantizedEndStep: step + dur
-    };
-    step += dur;
-    return note;
-  });
-  return {
-    totalQuantizedSteps: _.last(notes).quantizedEndStep,
-    quantizationInfo: {
-      stepsPerQuarter: 1
-    },
-    notes
-  };
-}
+        else{
 
-function seqToTickArray(seq) {
-  return _.flatMap(seq.notes, n =>
-    [n.pitch].concat(
-      pulsePattern
-        ? []
-        : _.times(n.quantizedEndStep - n.quantizedStartStep - 1, () => null)
-    )
-  );
-}
 
-function doTick(time = Tone.now() - Tone.context.lookAhead) {
-  applyHumanKeyChanges(time);
-  if (currentPlayFn) currentPlayFn(time);
-}
+            // Cast the object to a JButton
 
-function startSequenceGenerator(seed) {
-  let running = true,
-    thisPatternLength = patternLength;
 
-  let chords = detectChord(seed);
-  let chord =
-    _.first(chords) ||
-    Tonal.Note.pc(Tonal.Note.fromMidi(_.first(seed).note)) + 'M';
-  let seedSeq = buildNoteSequence(seed);
-  let generatedSequence = seqToTickArray(seedSeq);
-  let playIntervalTime = Tone.Time('8n').toSeconds();
-  let generationIntervalTime = playIntervalTime / 2;
-  function generateNext() {
-    if (!running) return;
-    if (generatedSequence.length < thisPatternLength) {
-      rnn.continueSequence(seedSeq, 20, temperature, [chord]).then(genSeq => {
-        generatedSequence = generatedSequence.concat(seqToTickArray(genSeq));
-        setTimeout(generateNext, generationIntervalTime * 1000);
-      });
-    }
-  }
+            jb = (JButton)obj;
 
-  tick = 0;
-  currentPlayFn = function playNext(time) {
-    let tickInSeq = tick % thisPatternLength;
-    if (tickInSeq < generatedSequence.length) {
-      let note = generatedSequence[tickInSeq];
-      if (note) machineKeyDown(note, time);
-    }
-    tick++;
-  };
 
-  setTimeout(generateNext, 0);
+            // Get the name of the JButton
 
-  return () => {
-    running = false;
-    currentPlayFn = null;
-  };
-}
 
-function updateChord({ add = [], remove = [] }) {
-  for (let note of add) {
-    currentSeed.push({ note, time: Tone.now() });
-  }
-  for (let note of remove) {
-    _.remove(currentSeed, { note });
-  }
+            name = jb.getName();
 
-  if (stopCurrentSequenceGenerator) {
-    stopCurrentSequenceGenerator();
-    stopCurrentSequenceGenerator = null;
-  }
-  if (currentSeed.length) {
-    stopCurrentSequenceGenerator = startSequenceGenerator(
-      _.cloneDeep(currentSeed)
-    );
-  }
-}
 
-let humanKeyAdds = [],
-  humanKeyRemovals = [];
-function humanKeyDown(note, velocity = 0.7) {
-  if (note < MIN_NOTE || note > MAX_NOTE) return;
-  humanKeyAdds.push({ note, velocity });
-}
-function humanKeyUp(note) {
-  if (note < MIN_NOTE || note > MAX_NOTE) return;
-  humanKeyRemovals.push({ note });
-}
-function applyHumanKeyChanges(time = Tone.now()) {
-  if (humanKeyAdds.length == 0 && humanKeyRemovals.length == 0) return;
-  for (let { note, velocity } of humanKeyAdds) {
-    outputs[activeOutput].play(note, velocity, time, true);
-    humanPlayer[note - MIN_NOTE].classList.add('down');
-    animatePlay(onScreenKeyboard[note - MIN_NOTE], note, true);
-  }
-  for (let { note } of humanKeyRemovals) {
-    outputs[activeOutput].stop(note, time);
-    humanPlayer[note - MIN_NOTE].classList.remove('down');
-  }
-  updateChord({
-    add: humanKeyAdds.map(n => n.note),
-    remove: humanKeyRemovals.map(n => n.note)
-  });
-  humanKeyAdds.length = 0;
-  humanKeyRemovals.length = 0;
-}
-
-function machineKeyDown(note, time) {
-  if (note < MIN_NOTE || note > MAX_NOTE) return;
-  outputs[activeOutput].play(note, 0.7, time);
-  animatePlay(onScreenKeyboard[note - MIN_NOTE], note, false);
-  animateMachine(machinePlayer[note - MIN_NOTE]);
-}
-
-function animatePlay(keyEl, note, isHuman) {
-  let sourceColor = isHuman ? '#1E88E5' : '#E91E63';
-  let targetColor = isAccidental(note) ? 'black' : 'white';
-  keyEl.animate(
-    [{ backgroundColor: sourceColor }, { backgroundColor: targetColor }],
-    { duration: 700, easing: 'ease-out' }
-  );
-}
-function animateMachine(keyEl) {
-  keyEl.animate([{ opacity: 0.9 }, { opacity: 0 }], {
-    duration: Tone.Time('2n').toMilliseconds(),
-    easing: 'ease-out'
-  });
-}
-
-// Computer keyboard controls
-
-builtInKeyboard.down(note => {
-  humanKeyDown(note.note);
-  hideUI();
-});
-builtInKeyboard.up(note => humanKeyUp(note.note));
-
-// MIDI Controls
-
-WebMidi.enable(err => {
-  if (err) {
-    console.error('WebMidi could not be enabled', err);
-    return;
-  }
-  document.querySelector('.midi-not-supported').style.display = 'none';
-
-  let withInputsMsg = document.querySelector('.midi-supported-with-inputs');
-  let noInputsMsg = document.querySelector('.midi-supported-no-inputs');
-  let inputSelector = document.querySelector('#midi-inputs');
-  let outputSelector = document.querySelector('#outputs');
-  let clockInputSelector = document.querySelector('#midi-clock-inputs');
-  let clockOutputSelector = document.querySelector('#midi-clock-outputs');
-  let activeInput,
-    activeClockInputId,
-    activeClockOutputId,
-    transportTickerId,
-    clockOutputTickerId,
-    midiTickCount,
-    lastBeatAt;
-
-  function onInputsChange() {
-    if (WebMidi.inputs.length === 0) {
-      withInputsMsg.style.display = 'none';
-      noInputsMsg.style.display = 'block';
-      onActiveInputChange(null);
-    } else {
-      noInputsMsg.style.display = 'none';
-      withInputsMsg.style.display = 'block';
-      while (inputSelector.firstChild) {
-        inputSelector.firstChild.remove();
-      }
-      for (let input of WebMidi.inputs) {
-        let option = document.createElement('option');
-        option.value = input.id;
-        option.innerText = input.name;
-        inputSelector.appendChild(option);
-      }
-      onActiveInputChange(WebMidi.inputs[0].id);
-    }
-  }
-
-  function onOutputsChange() {
-    while (outputSelector.firstChild) {
-      outputSelector.firstChild.remove();
-    }
-    let internalOption = document.createElement('option');
-    internalOption.value = 'internal';
-    internalOption.innerText = 'Internal synth';
-    outputSelector.appendChild(internalOption);
-    for (let output of WebMidi.outputs) {
-      let option = document.createElement('option');
-      option.value = output.id;
-      option.innerText = output.name;
-      outputSelector.appendChild(option);
-    }
-    onActiveOutputChange('internal');
-  }
-
-  function onClockInputsChange() {
-    if (WebMidi.inputs.length === 0) {
-      onActiveClockInputChange('none');
-    } else {
-      while (clockInputSelector.firstChild) {
-        clockInputSelector.firstChild.remove();
-      }
-      let option = document.createElement('option');
-      option.value = 'none';
-      option.innerText = 'None (internal clock)';
-      clockInputSelector.appendChild(option);
-
-      for (let input of WebMidi.inputs) {
-        option = document.createElement('option');
-        option.value = input.id;
-        option.innerText = input.name;
-        clockInputSelector.appendChild(option);
-      }
-      onActiveClockInputChange('none');
-    }
-  }
-
-  function onClockOutputsChange() {
-    while (clockOutputSelector.firstChild) {
-      clockOutputSelector.firstChild.remove();
-    }
-    let noneOption = document.createElement('option');
-    noneOption.value = 'none';
-    noneOption.innerText = 'Not sending';
-    clockOutputSelector.appendChild(noneOption);
-    for (let output of WebMidi.outputs) {
-      let option = document.createElement('option');
-      option.value = output.id;
-      option.innerText = output.name;
-      clockOutputSelector.appendChild(option);
-    }
-    onActiveClockOutputChange('none');
-  }
-
-  function onActiveInputChange(id) {
-    if (activeInput) {
-      activeInput.removeListener();
-    }
-    let input = WebMidi.getInputById(id);
-    if (input) {
-      input.addListener('noteon', 1, e => {
-        humanKeyDown(e.note.number, e.velocity);
-        hideUI();
-      });
-      input.addListener('controlchange', 1, e => {
-        if (e.controller.number === TEMPO_MIDI_CONTROLLER) {
-          Tone.Transport.bpm.value = (e.value / 128) * MAX_MIDI_BPM;
-          echo.delayTime.value = Tone.Time('8n.').toSeconds();
         }
-      });
-      input.addListener('noteoff', 1, e => humanKeyUp(e.note.number));
-      for (let option of Array.from(inputSelector.children)) {
-        option.selected = option.value === id;
-      }
-      activeInput = input;
-    }
-  }
 
-  function onActiveOutputChange(id) {
-    if (activeOutput !== 'internal') {
-      outputs[activeOutput] = null;
-    }
-    activeOutput = id;
-    if (activeOutput !== 'internal') {
-      let output = WebMidi.getOutputById(id);
-      outputs[id] = {
-        play: (note, velocity = 1, time, hold = false) => {
-          if (!hold) {
-            let delay = (time - Tone.now()) * 1000;
-            let duration = Tone.Time('16n').toMilliseconds();
-            output.playNote(note, 'all', {
-              time: delay > 0 ? `+${delay}` : WebMidi.now,
-              velocity,
-              duration
-            });
-          }
-        },
-        stop: (note, time) => {
-          let delay = (time - Tone.now()) * 1000;
-          output.stopNote(note, 2, {
-            time: delay > 0 ? `+${delay}` : WebMidi.now
-          });
+
+        // If the JButton is the play notes button:
+
+
+        if (name.equals("play")){
+
+
+             // Create a new Runnable object
+
+
+             Runnable playNotes = new Runnable(){
+
+
+                 // Create a subclass
+
+
+                 public void run() {
+
+
+                     // Call the playSong method to play the song
+
+
+                     playSong();
+
+
+                 }
+
+
+                 };
+
+
+                 // Tell the new thread to start
+
+
+                 (new Thread(playNotes)).start();
+
+
+
+
+
+
+
         }
-      };
-    }
-    for (let option of Array.from(outputSelector.children)) {
-      option.selected = option.value === id;
-    }
-  }
 
-  function startClockOutput() {
-    let output = WebMidi.getOutputById(activeClockOutputId);
-    clockOutputTickerId = Tone.Transport.scheduleRepeat(time => {
-      let startDelay = time - Tone.context.currentTime;
-      let quarter = Tone.Time('4n').toSeconds();
-      for (let i = 0; i < 24; i++) {
-        let tickDelay = startDelay + (quarter / 24) * i;
-        output.sendClock({ time: `+${tickDelay * 1000}` });
-      }
-    }, '4n');
-  }
 
-  function stopClockOutput() {
-    Tone.Transport.clear(clockOutputTickerId);
-  }
+        // If the JButton is the help button
 
-  function onActiveClockOutputChange(id) {
-    if (activeClockOutputId !== 'none') {
-      stopClockOutput();
-    }
-    activeClockOutputId = id;
-    if (activeClockOutputId !== 'none') {
-      startClockOutput();
-    }
-    for (let option of Array.from(clockOutputSelector.children)) {
-      option.selected = option.value === id;
-    }
-  }
 
-  function incomingMidiClockStart() {
-    midiTickCount = 0;
-    tick = 0;
-  }
+        else if (name.equals("help")){
 
-  function incomingMidiClockStop() {
-    midiTickCount = 0;
-    applyHumanKeyChanges();
-  }
 
-  function incomingMidiClockTick(evt) {
-    if (midiTickCount % 24 === 0) {
-      if (lastBeatAt) {
-        let beatDur = evt.timestamp - lastBeatAt;
-        Tone.Transport.bpm.value = Math.round(60000 / beatDur);
-        // Not sure why this doesn't sync through the BPM automatically. But it doesn't.
-        echo.delayTime.value = Tone.Time('8n.').toSeconds();
-      }
-      lastBeatAt = evt.timestamp;
-    }
-    if (midiTickCount % 12 === 0) {
-      doTick();
-    }
-    midiTickCount++;
-  }
+            // Call the helpWindow method to open the help window
 
-  function onActiveClockInputChange(id) {
-    if (activeClockInputId === 'none') {
-      Tone.Transport.clear(transportTickerId);
-      transportTickerId = null;
-    } else if (activeClockInputId) {
-      let input = WebMidi.getInputById(activeClockInputId);
-      input.removeListener('start', 'all', incomingMidiClockStart);
-      input.removeListener('stop', 'all', incomingMidiClockStop);
-      input.removeListener('clock', 'all', incomingMidiClockTick);
-    }
-    activeClockInputId = id;
-    if (activeClockInputId === 'none') {
-      transportTickerId = Tone.Transport.scheduleRepeat(doTick, '8n');
-      Tone.Transport.bpm.value = DEFAULT_BPM;
-      echo.delayTime.value = Tone.Time('8n.').toSeconds();
-    } else {
-      let input = WebMidi.getInputById(id);
-      input.addListener('start', 'all', incomingMidiClockStart);
-      input.addListener('stop', 'all', incomingMidiClockStop);
-      input.addListener('clock', 'all', incomingMidiClockTick);
-      midiTickCount = 0;
-    }
-    for (let option of Array.from(clockInputSelector.children)) {
-      option.selected = option.value === id;
-    }
-  }
 
-  onInputsChange();
-  onOutputsChange();
-  onClockInputsChange();
-  onClockOutputsChange();
+            helpWindow();
 
-  WebMidi.addListener(
-    'connected',
-    () => (
-      onInputsChange(),
-      onOutputsChange(),
-      onClockInputsChange(),
-      onClockOutputsChange()
-    )
-  );
-  WebMidi.addListener(
-    'disconnected',
-    () => (
-      onInputsChange(),
-      onOutputsChange(),
-      onClockInputsChange(),
-      onClockOutputsChange()
-    )
-  );
-  inputSelector.addEventListener('change', evt =>
-    onActiveInputChange(evt.target.value)
-  );
-  outputSelector.addEventListener('change', evt =>
-    onActiveOutputChange(evt.target.value)
-  );
-  clockInputSelector.addEventListener('change', evt =>
-    onActiveClockInputChange(evt.target.value)
-  );
-  clockOutputSelector.addEventListener('change', evt =>
-    onActiveClockOutputChange(evt.target.value)
-  );
-});
 
-// Mouse & touch Controls
+        }
 
-let pointedNotes = new Set();
 
-function updateTouchedNotes(evt) {
-  let touchedNotes = new Set();
-  for (let touch of Array.from(evt.touches)) {
-    let element = document.elementFromPoint(touch.clientX, touch.clientY);
-    let keyIndex = onScreenKeyboard.indexOf(element);
-    if (keyIndex >= 0) {
-      touchedNotes.add(MIN_NOTE + keyIndex);
-      if (!evt.defaultPrevented) {
-        evt.preventDefault();
-      }
+        // If the JComboBox was what the user clicked
+
+
+        else if(obj instanceof JComboBox){
+
+
+            // Do nothing
+
+
+        }
+
+
+        // Else a key was clicked
+
+
+        else{
+
+
+            // Get the action command
+
+
+            command = jb.getActionCommand();
+
+
+            // Add that string to the text field
+
+
+            entryBox.append(command+" ");
+
+
+            // Play that note using the player
+
+
+            player.play(instrumentType+" "+command);
+
+
+        }
+
     }
-  }
-  for (let note of pointedNotes) {
-    if (!touchedNotes.has(note)) {
-      humanKeyUp(note);
-      pointedNotes.delete(note);
-    }
-  }
-  for (let note of touchedNotes) {
-    if (!pointedNotes.has(note)) {
-      humanKeyDown(note);
-      pointedNotes.add(note);
-    }
-  }
+
+
 }
-
-onScreenKeyboard.forEach((noteEl, index) => {
-  noteEl.addEventListener('mousedown', evt => {
-    humanKeyDown(MIN_NOTE + index);
-    pointedNotes.add(MIN_NOTE + index);
-    evt.preventDefault();
-  });
-  noteEl.addEventListener('mouseover', () => {
-    if (pointedNotes.size && !pointedNotes.has(MIN_NOTE + index)) {
-      humanKeyDown(MIN_NOTE + index);
-      pointedNotes.add(MIN_NOTE + index);
-    }
-  });
-});
-document.documentElement.addEventListener('mouseup', () => {
-  pointedNotes.forEach(n => humanKeyUp(n));
-  pointedNotes.clear();
-});
-document.documentElement.addEventListener('touchstart', updateTouchedNotes);
-document.documentElement.addEventListener('touchmove', updateTouchedNotes);
-document.documentElement.addEventListener('touchend', updateTouchedNotes);
-
-// Temperature control
-
-let tempSlider = new mdc.slider.MDCSlider(
-  document.querySelector('#temperature')
-);
-tempSlider.listen('MDCSlider:change', () => (temperature = tempSlider.value));
-document
-  .querySelector('#pattern-length')
-  .addEventListener('change', evt => (patternLength = evt.target.value));
-
-// Pulse pattern switch
-
-let pulsePatternControl = new mdc.switchControl.MDCSwitch(
-  document.querySelector('.mdc-switch')
-);
-document
-  .querySelector('#pulse-switch')
-  .addEventListener('change', evt => (pulsePattern = evt.target.checked));
-
-// Controls hiding
-
-let container = document.querySelector('.container');
-
-function hideUI() {
-  container.classList.add('ui-hidden');
-}
-let scheduleHideUI = _.debounce(hideUI, 5000);
-container.addEventListener('mousemove', () => {
-  container.classList.remove('ui-hidden');
-  scheduleHideUI();
-});
-container.addEventListener('touchstart', () => {
-  container.classList.remove('ui-hidden');
-  scheduleHideUI();
-});
-
-// Startup
-
-function generateDummySequence() {
-  // Generate a throwaway sequence to get the RNN loaded so it doesn't
-  // cause jank later.
-  return rnn.continueSequence(
-    buildNoteSequence([{ note: 60, time: Tone.now() }]),
-    20,
-    temperature,
-    ['Cm']
-  );
-}
-
-let bufferLoadPromise = new Promise(res => Tone.Buffer.on('load', res));
-Promise.all([bufferLoadPromise, rnn.initialize()])
-  .then(generateDummySequence)
-  .then(() => {
-    Tone.Transport.start();
-    Tone.Transport.bpm.value = DEFAULT_BPM;
-    onScreenKeyboardContainer.classList.add('loaded');
-    document.querySelector('.loading').remove();
-  });
-
-StartAudioContext(Tone.context, document.documentElement);
-
 
