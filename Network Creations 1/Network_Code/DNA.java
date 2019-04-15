@@ -6,9 +6,9 @@ public interface DNA
 	
 	default double cost_Func(double prediction, int actual)
 	{
-			double output = 0.0;
-			output = Math.pow(Math.E, (prediction - actual));
-			return output;
+		double output = 0.0;
+		output = Math.pow(Math.E, (prediction - actual));
+		return output;
 	}
 
 	default double sigmoidFunction(double prediction)
@@ -18,42 +18,44 @@ public interface DNA
 
 	default ArrayList<Double> selectDecisions(int divisor, double[] outputNodes, int finalsize)
 	{
-        int index = 0;
-        ArrayList<Double> preDecisions = new ArrayList<Double>();
-		ArrayList<double[]> organizedDecisions = new ArrayList<double[]>();
-		ArrayList<Double> finaloutput = new ArrayList<Double>();
-
-        
-        //Getting outputs for nodes and setting size for organized list
-        for(int x = 0; x < finalsize; x++)
-        {
-			
-			preDecisions.add(outputNodes[x]);
-			double[] nullDecision = {-1, -1};
-            organizedDecisions.add(nullDecision);
-        }
+		int index = 0;
+		ArrayList<Double> preDecisions = new ArrayList<Double>();
+			ArrayList<double[]> organizedDecisions = new ArrayList<double[]>();
+			ArrayList<Double> finaloutput = new ArrayList<Double>();
 
 
-        //Sorting node outputs from lowest to highest
+		//Getting outputs for nodes and setting size for organized list
+		for(int x = 0; x < finalsize; x++)
+		{
+
+				preDecisions.add(outputNodes[x]);
+				double[] nullDecision = {-1, -1};
+		    organizedDecisions.add(nullDecision);
+		}
+
+
+       		 //Sorting node outputs from lowest to highest
 		do
 		{
-       		double[] currentDecision = new double[2];
-    		currentDecision[0] = Double.valueOf(index);
-    		currentDecision[1] = preDecisions.get(index);
-     		organizedDecisions.add(currentDecision);
+			double[] currentDecision = new double[2];
+			currentDecision[0] = Double.valueOf(index);
+			currentDecision[1] = preDecisions.get(index);
+			organizedDecisions.add(currentDecision);
+			
 			for(int y =0; y <organizedDecisions.size(); y++)
 			{
-					if(organizedDecisions.get(organizedDecisions.size() -1)[1] > organizedDecisions.get(y)[1])
-					{
-						double[] next = organizedDecisions.get(y);
-						organizedDecisions.set(y, currentDecision);
-						organizedDecisions.set(organizedDecisions.size() -1, next);
-						break;
-					}
+				if(organizedDecisions.get(organizedDecisions.size() -1)[1] > organizedDecisions.get(y)[1])
+				{
+					double[] next = organizedDecisions.get(y);
+					organizedDecisions.set(y, currentDecision);
+					organizedDecisions.set(organizedDecisions.size() -1, next);
+					break;
+				}
 			}	
 
 			index++;
-		}while(index <= finalsize -1);
+		}
+		while(index <= finalsize -1); //post check statement
 			
 		//remove unchanged outputs
 		for(int x =0; x < organizedDecisions.size(); x++)
@@ -65,14 +67,16 @@ public interface DNA
 			}
 		}
 
-        //Sets lower half to outputs to zero
+        //Sets lower half to outputs of zero
         for(int x = 0; x < (organizedDecisions.size())/2; x++)
         {
-			preDecisions.set(((int)organizedDecisions.get(x)[0]), 0.0);
-		}
+		preDecisions.set(((int)organizedDecisions.get(x)[0]), 0.0);
+	}
 		
 		return preDecisions;
 	}
+	//end of selectDecisions method
+	
 	default double[] linearRegressionFunc (double bias, double weight, int numNuerons, double activation, double learningRate, int actual)
 	{
 		double[] output = new double[2];
@@ -89,6 +93,7 @@ public interface DNA
 		
 		return output;
 	}
+	//end of linearRegressionFunc method
 	
 	default void BackPropagateError(Node[] inputLayer, Node[] curLayer, Node[] nextLayer, double LearningRate, double Momentum) 
 	{
@@ -98,7 +103,8 @@ public interface DNA
 		Layers.add(inputLayer);
 		Layers.add(curLayer);
 		Layers.add(nextLayer);
-
+		
+		//nested fors to set weights properly for back prop
 		for(int i = Layers.size() - 1; i > 0; i--)
 		{
 			// Update Weights
@@ -145,7 +151,8 @@ public interface DNA
 			}
 		}
 	}
-
+	//end of backPropogateError method
+	
 	default double CalculateSignalErrors(Node[]hiddenLayer ,Node[] outputLayer, double[] ExpectedOutput) 
 	{
 		int i,j,k,OutputLayer;
@@ -156,8 +163,8 @@ public interface DNA
 		for (i = 0; i < outputLayer.length; i++) 
 		{
 			outputLayer[i].setSignalError(ExpectedOutput[i] - 
-					Math.pow(outputLayer[i].getActivation(), 2) * 
-					(1-outputLayer[i].getActivation()));
+			Math.pow(outputLayer[i].getActivation(), 2) * 
+			(1-outputLayer[i].getActivation()));
 		}
 
 	       	// Calculate signal error for all nodes in the hidden layer
@@ -171,10 +178,11 @@ public interface DNA
 				for(k = 0; k < outputLayer.length; k++)
 				{
 					Sum = Sum + hiddenLayer[j].getWeights(k) * 
-						hiddenLayer[j].getSignalError();
-
+						hiddenLayer[j].getSignalError(); //one expression
+					
 					hiddenLayer[i].setSignalError(hiddenLayer[i].getActivation()*(1 - 
-						hiddenLayer[i].getActivation())*Sum);
+						hiddenLayer[i].getActivation())*Sum); //one expression
+					
 				}
 			}
 		}
@@ -221,11 +229,13 @@ public interface DNA
        	
 		for (i = 0; i < NumberOfSamples; i++)
 		{
-			for (j = 0; j < layersNodes[NumberOfLayers-1].Node.length; j++) {
+			for (j = 0; j < layersNodes[NumberOfLayers-1].Node.length; j++) 
+			{
            			OverallError = 
 					OverallError + 
 					0.5*( Math.pow(layersNodes[i][j].getActivation() - 
 						ActualOutput[i][j],2) );
+			}
 		}
 
 		return OverallError;
