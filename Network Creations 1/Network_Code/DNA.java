@@ -37,10 +37,11 @@ public interface DNA
        		 //Sorting node outputs from lowest to highest
 		do
 		{
-       		double[] currentDecision = new double[2];
-    		currentDecision[0] = Double.valueOf(index);
-    		currentDecision[1] = preDecisions.get(index);
-     		organizedDecisions.add(currentDecision);
+			double[] currentDecision = new double[2];
+			currentDecision[0] = Double.valueOf(index);
+			currentDecision[1] = preDecisions.get(index);
+			organizedDecisions.add(currentDecision);
+			
 			for(int y =0; y <organizedDecisions.size(); y++)
 			{
 				if(organizedDecisions.get(organizedDecisions.size() -1)[1] > organizedDecisions.get(y)[1])
