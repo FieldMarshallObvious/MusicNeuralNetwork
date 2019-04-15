@@ -25,6 +25,7 @@ public class ForgettingNetwork implements DNA
 
     public ForgettingNetwork()
     {
+        //set default values
         numOfInputs = 0;
         numOfOutputs = 0;
         learningRate = 0.0;    
@@ -39,7 +40,7 @@ public class ForgettingNetwork implements DNA
         this();
         learningRate = inputLearningRate;
 
-        //creating rays
+        //creating rays with input values
         System.out.println("The number of inputs is: " + newInputs);
         makingRays(newInputs, newOutputs);
         System.out.println("The number nodes in the input layer: " + inputNodes.length);
@@ -60,14 +61,15 @@ public class ForgettingNetwork implements DNA
    
     public double[] calcOutput()
     {
+        //structures to hold values for calculations
         double[] activations = new double[hiddenNodes.length];
         double[] oldactivations = activations;
 
         //Creates list of input node activations
         for(int x = 0; x < inputNodes.length; x++)
         {
-          activations[x] = sigmoidFunction(inputNodes[x].getActivation());
-          oldactivations[x] = activations[x];    
+            activations[x] = sigmoidFunction(inputNodes[x].getActivation());
+             oldactivations[x] = activations[x];    
         }
     
         //Creates list of hidden node activations
@@ -97,7 +99,8 @@ public class ForgettingNetwork implements DNA
             inputNodes[x].setActivation(inputs[x]);
         }
     }
-
+    
+    //writes combined calculations to a place in memory with reference "finaloutput"
     public void writeOutputs() throws IOException
     {
         ArrayList<Double> netDecisions = this.selectDecisions(2, this.calcOutput(), outputNodes.length);
