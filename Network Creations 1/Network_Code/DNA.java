@@ -1,5 +1,6 @@
 import java.math.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public interface DNA
 {
@@ -132,14 +133,14 @@ public interface DNA
 						Layers.get(i)[j].getSignalError()* sigmoidFunction(Layers.get(i-1)[k].getActivation()) + 
 						Momentum * Layers.get(i)[j].getSignalError();
 					
-						/*
-					System.out.println("\n" + "The current index is: " + k);	
+						
+					//System.out.println("\n" + "The current index is: " + k);	
 					System.out.println("The Weight difference is: " + WeightDiff);
-					System.out.println("The learning rate is: " + LearningRate);
-					System.out.println("The signal error is: " + Layers.get(i)[j].getSignalError());
-					System.out.println("The activation for the current node is: " + sigmoidFunction(Layers.get(i-1)[k].getActivation()));
-					System.out.println("The Momentum is: " + Momentum);
-*/
+					//System.out.println("The learning rate is: " + LearningRate);
+					//System.out.println("The signal error is: " + Layers.get(i)[j].getSignalError());
+					//System.out.println("The activation for the current node is: " + sigmoidFunction(Layers.get(i-1)[k].getActivation()));
+					//System.out.println("The Momentum is: " + Momentum);
+
 
 					Layers.get(i)[j].setWeightDiff(WeightDiff);					
 
@@ -153,16 +154,18 @@ public interface DNA
 	}
 	//end of backPropogateError method
 	
-	default double CalculateSignalErrors(Node[]hiddenLayer ,Node[] outputLayer, double[] ExpectedOutput) 
+	default void CalculateSignalErrors(Node[]hiddenLayer ,Node[] outputLayer, double[] ExpectedOutput) 
 	{
-		int i,j,k,OutputLayer;
-		OutputLayer = 2;
+		int i,j,k;
 		double Sum = 0.0;
 
 	       	// Calculate all output signal error
 		for (i = 0; i < outputLayer.length; i++) 
 		{
-			outputLayer[i].setSignalError(ExpectedOutput[i] - 
+			Random r = new Random();
+			double randomValue = 0.1 + (0.8 - 0.1) * r.nextDouble();
+
+			outputLayer[i].setSignalError((ExpectedOutput[i] * randomValue) - 
 			Math.pow(outputLayer[i].getActivation(), 2) * 
 			(1-outputLayer[i].getActivation()));
 		}
@@ -186,8 +189,6 @@ public interface DNA
 				}
 			}
 		}
-
-		return Sum;
 	}
 
 	//Consider removing

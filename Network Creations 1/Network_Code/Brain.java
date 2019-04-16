@@ -30,7 +30,7 @@ public class Brain
 		
 
 
-		for(int e = 0; e <= epochs; e++)
+		for(int e = 0; e <= 1; e++)
 		{
 			System.out.println("Entering Input Network");
 			initNet.settingInputs((setInputs(inputfile, 89)));
@@ -65,6 +65,8 @@ public class Brain
 			System.out.println();
 			System.out.print("Selection Network Error: ");
 			selectNet.training_Nodes(getExpectedOutput(expectedfile, dataSize), learningRate, Momentum);
+
+			inputfile = outputfile;
 
 			System.out.println();
 		}
