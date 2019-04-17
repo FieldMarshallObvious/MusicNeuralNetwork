@@ -152,7 +152,7 @@ public class InitialNetwork implements DNA
     {
         String fileContent = finaloutput;
      
-        BufferedWriter writer = new BufferedWriter(new FileWriter("outputfile.dat"));
+        BufferedWriter writer = new BufferedWriter(new FileWriter("/Users/noahdelangel/Desktop/School/Portfolio Project/MusicNeuralNetwork/Network Creations 1/Network_Code/outputfile.dat"));
         writer.write(fileContent);
         writer.close();
     }
