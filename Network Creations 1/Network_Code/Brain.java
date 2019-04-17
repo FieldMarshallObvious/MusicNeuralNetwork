@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 
-//currently not quite sure how to work with midi files in this so this is essentially just the psuedo code
-
 public class Brain
 {
 	//Note: need to write handeling logic for Exception  
