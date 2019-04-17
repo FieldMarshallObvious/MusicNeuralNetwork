@@ -105,7 +105,7 @@ public interface DNA
 		Layers.add(curLayer);
 		Layers.add(nextLayer);
 		
-		//nested fors to set weights properly for back prop
+		//Nested fors to set weights properly for back prop
 		for(int i = Layers.size() - 1; i > 0; i--)
 		{
 			// Update Weights
@@ -127,27 +127,19 @@ public interface DNA
 					//System.out.println("The current lenght of the array is: " + Layers.get(i)[j].getWeights().size());
 					//System.out.println("The number of nodes in the earlier array is: " + (Layers.get(i-1).length - 1));
 					
-					// Calculate weight difference between node j and k
+				// Calculate weight difference between node j and k
 					WeightDiff = 
 						LearningRate * 
 						Layers.get(i)[j].getSignalError()* sigmoidFunction(Layers.get(i-1)[k].getActivation()) + 
 						Momentum * Layers.get(i)[j].getSignalError();
-					
-						
-					//System.out.println("\n" + "The current index is: " + k);	
+				
 					System.out.println("The Weight difference is: " + WeightDiff);
-					//System.out.println("The learning rate is: " + LearningRate);
-					//System.out.println("The signal error is: " + Layers.get(i)[j].getSignalError());
-					//System.out.println("The activation for the current node is: " + sigmoidFunction(Layers.get(i-1)[k].getActivation()));
-					//System.out.println("The Momentum is: " + Momentum);
-
-
+				//Set the difference between weights
 					Layers.get(i)[j].setWeightDiff(WeightDiff);					
 
-				//	System.out.println("The original weight is: " + Layers.get(i)[j].getWeights(k));
 					// Update weight between node j and k
 					Layers.get(i)[j].setWeights(k, Layers.get(i)[j].getWeights(k) + WeightDiff);
-				//	System.out.println("The new weight is: " + Layers.get(i)[j].getWeights(k));
+				
 				}
 			}
 		}
@@ -190,62 +182,6 @@ public interface DNA
 			}
 		}
 	}
-
-	//Consider removing
-	/*
-	 // Calculate the node activations
-	 default void FeedForward(Node[] Layers)
-	 {
-
-		// Since no weights contribute to the output 
-		// vector from the input layer,
-		// assign the input vector from the input layer 
-		// to all the node in the first hidden layer
-		for (int i = 0; i < Layers[0].getNumNeurons; i++)
-		{
-			Layers[0].Node[i].Output = Layers[0].Input[i];
-		}
-
-		Layers[1].Input = Layers[0].Input;
-		for (int i = 1; i < NumberOfLayers; i++) 
-		{
-			Layers[i].FeedForward();
-
-			// Unless we have reached the last layer, assign the layer i's output vector
-			// to the (i+1) layer's input vector
-			if (i != NumberOfLayers-1)
-				Layers[i+1].Input = Layers[i].OutputVector();
-		}
-
-	} */
-
-
-	/*
-	default double CalculateOverallError(Node[][] layersNodes ,double[][] actual) 
-	{
-
-		int i,j;
-
-		double OverallError = 0;
-       	
-		for (i = 0; i < NumberOfSamples; i++)
-		{
-			for (j = 0; j < layersNodes[NumberOfLayers-1].Node.length; j++) 
-			{
-           			OverallError = 
-					OverallError + 
-					0.5*( Math.pow(layersNodes[i][j].getActivation() - 
-						ActualOutput[i][j],2) );
-			}
-		}
-
-		return OverallError;
-	}
-
-	}
-*/
-
-
 
 }
 
