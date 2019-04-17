@@ -65,7 +65,7 @@ public class InitialNetwork implements DNA
         //Creates list of input node activations
         for(int x = 0; x < inputNodes.length; x++)
         {
-          activations[x] = sigmoidFunction(inputNodes[x].getActivation());
+          activations[x] = inputNodes[x].getActivation();
           oldactivations[x] = activations[x];    
         }
     

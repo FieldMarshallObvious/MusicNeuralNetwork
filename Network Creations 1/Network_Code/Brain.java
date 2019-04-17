@@ -40,7 +40,6 @@ public class Brain
 			//clearing old outputs
 			//pwOut.close();
 
-			forgettingNet.writeOutputs();
 
 			System.out.println("Entering Selection Network");
 			selectNet.settingInputs((setInputs(outputfile, 89)));
@@ -64,7 +63,7 @@ public class Brain
 			System.out.print("Selection Network Error: ");
 			selectNet.training_Nodes(getExpectedOutput(expectedfile, dataSize), learningRate, Momentum);
 
-			inputfile = outputfile;
+			//inputfile = outputfile;
 
 			System.out.println();
 		}
