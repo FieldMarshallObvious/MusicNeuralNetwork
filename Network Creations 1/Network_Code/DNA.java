@@ -133,7 +133,7 @@ public interface DNA
 						Layers.get(i)[j].getSignalError()* sigmoidFunction(Layers.get(i-1)[k].getActivation()) + 
 						Momentum * Layers.get(i)[j].getSignalError();
 				
-					System.out.println("The Weight difference is: " + WeightDiff);
+					//System.out.println("The Weight difference is: " + WeightDiff);
 				//Set the difference between weights
 					Layers.get(i)[j].setWeightDiff(WeightDiff);					
 
@@ -154,10 +154,10 @@ public interface DNA
 	       	// Calculate all output signal error
 		for (i = 0; i < outputLayer.length; i++) 
 		{
-			Random r = new Random();
-			double randomValue = 0.1 + (0.8 - 0.1) * r.nextDouble();
+			//Random r = new Random();
+			//double randomValue = 0.1 + (0.8 - 0.1) * r.nextDouble();
 
-			outputLayer[i].setSignalError((ExpectedOutput[i] * randomValue) - 
+			outputLayer[i].setSignalError((ExpectedOutput[i]) - 
 			Math.pow(outputLayer[i].getActivation(), 2) * 
 			(1-outputLayer[i].getActivation()));
 		}
@@ -170,15 +170,15 @@ public interface DNA
 			for (j = 0; j < hiddenLayer.length; j++) 
 			{
 				
-				for(k = 0; k < outputLayer.length; k++)
-				{
-					Sum = Sum + hiddenLayer[j].getWeights(k) * 
-						hiddenLayer[j].getSignalError(); //one expression
-					
+					for(k = 0; k < outputLayer.length; k++)
+					{
+						Sum = Sum + outputLayer[k].getWeights(j) * 
+							outputLayer[k].getSignalError(); //one expression
+					}
 					hiddenLayer[i].setSignalError(hiddenLayer[i].getActivation()*(1 - 
 						hiddenLayer[i].getActivation())*Sum); //one expression
 					
-				}
+				
 			}
 		}
 	}

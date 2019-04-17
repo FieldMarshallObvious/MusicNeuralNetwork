@@ -70,9 +70,9 @@ public class ForgettingNetwork implements DNA
             activations[x] = inputNodes[x].getActivation();
              oldactivations[x] = activations[x];    
         }
-    
+
         //Creates list of hidden node activations
-        for(int x = 0; x < inputNodes.length; x ++)
+        for(int x = 0; x < hiddenNodes.length; x ++)
         {
             double curactivation =  sigmoidFunction(hiddenNodes[x].activationFunc(oldactivations));
             activations[x] = curactivation;
