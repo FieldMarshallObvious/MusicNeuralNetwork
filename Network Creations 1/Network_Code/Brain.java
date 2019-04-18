@@ -25,14 +25,9 @@ public class Brain
 		ForgettingNetwork forgettingNet = new ForgettingNetwork(dataSize, dataSize - 1, learningRate);
 		SelectionNetwork selectNet = new SelectionNetwork(dataSize, dataSize - 1, learningRate);
 		
-<<<<<<< HEAD
 
 
 		for(int e = 0; e <= epochs; e++)
-=======
-		
-		for(int e = 0; e <= 1; e++)
->>>>>>> fad5c0990bab4355b39e7bf02325c1f31b93c697
 		{
 			System.out.println("Entering Input Network");
 			initNet.settingInputs((setInputs(inputfile, 89)));
