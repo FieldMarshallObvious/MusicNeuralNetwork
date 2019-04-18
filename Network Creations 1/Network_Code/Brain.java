@@ -15,8 +15,8 @@ public class Brain
 		String outputfile = "/Users/noahdelangel/Desktop/School/Portfolio Project/MusicNeuralNetwork/Network Creations 1/Network_Code/outputfile.dat";
 		String expectedfile = "/Users/noahdelangel/Desktop/School/Portfolio Project/MusicNeuralNetwork/Network Creations 1/Network_Code/excpected.dat";
 
-		double learningRate = 0.3;
-		double Momentum = 0.5;
+		double learningRate = 0.05;
+		double Momentum = 0.25;
 
 		int epochs = 1000;
 		int dataSize = dataSize(inputfile);
@@ -28,7 +28,7 @@ public class Brain
 		
 
 
-		for(int e = 0; e <= 1; e++)
+		for(int e = 0; e <= epochs; e++)
 		{
 			System.out.println("Entering Input Network");
 			initNet.settingInputs((setInputs(inputfile, 89)));
@@ -45,7 +45,6 @@ public class Brain
 			selectNet.settingInputs((setInputs(outputfile, 89)));
 			//clearing old outputs
 			//pwOut.close();
-			selectNet.calcOutput();
 			selectNet.writeOutputs();
 
 
@@ -63,7 +62,7 @@ public class Brain
 			System.out.print("Selection Network Error: ");
 			selectNet.training_Nodes(getExpectedOutput(expectedfile, dataSize), learningRate, Momentum);
 
-			//inputfile = outputfile;
+			inputfile = outputfile;
 
 			System.out.println();
 		}
@@ -83,8 +82,8 @@ public class Brain
 		
 		while(expectedDataScanner.hasNext())
 		{
-			x++;
 			output[x] = Double.valueOf(expectedDataScanner.nextLine());
+			x++;
 		}
 
 		return output;

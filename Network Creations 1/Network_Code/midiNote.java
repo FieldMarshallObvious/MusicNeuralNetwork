@@ -1,4 +1,6 @@
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -155,8 +157,6 @@ public class midiNote
     Integer bflat7 = asharp7;
     Integer b7 = 108;
 
-    note = 0.0;
-    note2 = 0.0;
     
     
  //Methods used to input, manipulate, and analyze midiNote values
@@ -165,12 +165,12 @@ public class midiNote
     {
         File textNoteFile = new File("midiNotes.dat");
         ArrayList listOfNotes = new ArrayList();
-        Iterator iter = new Iterator<Double>();
+      //  Iterator iter = new Iterator<Double>();
         
-        while(iter.hasNext())
-        {
-            listOfNotes.add(iter.next());
-        }
+        //while(iter.hasNext())
+       // {
+         //   listOfNotes.add(iter.next());
+        //}
       
     }
 

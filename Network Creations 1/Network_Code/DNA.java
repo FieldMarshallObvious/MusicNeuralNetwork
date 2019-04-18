@@ -14,7 +14,18 @@ public interface DNA
 
 	default double sigmoidFunction(double prediction)
 	{
-		return 1 / (Math.sqrt(1 + prediction));
+		if(prediction <= -1)
+		{
+			System.out.println("This is negaitve");
+			System.out.println("The predicition is: " + prediction);
+			return 0.0;
+		}
+		else
+		{
+			System.out.println("The predictions is: " + prediction);
+			System.out.println("The sigmoid output is: " + (1/Math.sqrt(1 + prediction)));
+			return 1 / (Math.sqrt(1 + prediction));
+		}
 	}
 
 	default ArrayList<Double> selectDecisions(int divisor, double[] outputNodes, int finalsize)
@@ -174,7 +185,12 @@ public interface DNA
 					{
 						Sum = Sum + outputLayer[k].getWeights(j) * 
 							outputLayer[k].getSignalError(); //one expression
+						//System.out.println("Output node " + k +  " has a weight of: " + outputLayer[k].getWeights(j));
+						//System.out.println("The signal error for that node is: " + outputLayer[k].getSignalError());
+						//System.out.println("\n");
 					}
+					//System.out.println("The sum is: " + Sum);
+					//System.out.println("The signal error is: " + (hiddenLayer[i].getActivation()*(1-hiddenLayer[i].getActivation())*Sum));
 					hiddenLayer[i].setSignalError(hiddenLayer[i].getActivation()*(1 - 
 						hiddenLayer[i].getActivation())*Sum); //one expression
 					
