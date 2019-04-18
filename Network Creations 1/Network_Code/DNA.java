@@ -14,18 +14,12 @@ public interface DNA
 
 	default double sigmoidFunction(double prediction)
 	{
-		if(prediction <= -1)
-		{
-			System.out.println("This is negaitve");
-			System.out.println("The predicition is: " + prediction);
+		if(prediction == 0)
 			return 0.0;
-		}
+		if(prediction <= -1)
+			return 0.0;
 		else
-		{
-			System.out.println("The predictions is: " + prediction);
-			System.out.println("The sigmoid output is: " + (1/Math.sqrt(1 + prediction)));
 			return 1 / (Math.sqrt(1 + prediction));
-		}
 	}
 
 	default ArrayList<Double> selectDecisions(int divisor, double[] outputNodes, int finalsize)
@@ -135,16 +129,12 @@ public interface DNA
 				// Update Weights
 				for (int k = 0; k < Layers.get(i)[j].getWeights().size(); k++) 
 				{
-					//System.out.println("The current lenght of the array is: " + Layers.get(i)[j].getWeights().size());
-					//System.out.println("The number of nodes in the earlier array is: " + (Layers.get(i-1).length - 1));
-					
 				// Calculate weight difference between node j and k
 					WeightDiff = 
 						LearningRate * 
 						Layers.get(i)[j].getSignalError()* sigmoidFunction(Layers.get(i-1)[k].getActivation()) + 
 						Momentum * Layers.get(i)[j].getSignalError();
 				
-					//System.out.println("The Weight difference is: " + WeightDiff);
 				//Set the difference between weights
 					Layers.get(i)[j].setWeightDiff(WeightDiff);					
 
@@ -169,8 +159,8 @@ public interface DNA
 			//double randomValue = 0.1 + (0.8 - 0.1) * r.nextDouble();
 
 			outputLayer[i].setSignalError((ExpectedOutput[i]) - 
-			Math.pow(outputLayer[i].getActivation(), 2) * 
-			(1-outputLayer[i].getActivation()));
+			Math.pow(sigmoidFunction((outputLayer[i].getActivation())), 2) * 
+			(1-sigmoidFunction(outputLayer[i].getActivation())));
 		}
 
 	       	// Calculate signal error for all nodes in the hidden layer
@@ -185,14 +175,9 @@ public interface DNA
 					{
 						Sum = Sum + outputLayer[k].getWeights(j) * 
 							outputLayer[k].getSignalError(); //one expression
-						//System.out.println("Output node " + k +  " has a weight of: " + outputLayer[k].getWeights(j));
-						//System.out.println("The signal error for that node is: " + outputLayer[k].getSignalError());
-						//System.out.println("\n");
 					}
-					//System.out.println("The sum is: " + Sum);
-					//System.out.println("The signal error is: " + (hiddenLayer[i].getActivation()*(1-hiddenLayer[i].getActivation())*Sum));
 					hiddenLayer[i].setSignalError(hiddenLayer[i].getActivation()*(1 - 
-						hiddenLayer[i].getActivation())*Sum); //one expression
+						sigmoidFunction(hiddenLayer[i].getActivation()))*Sum); //one expression
 					
 				
 			}
