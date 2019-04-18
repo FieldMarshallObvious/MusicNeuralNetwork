@@ -24,11 +24,15 @@ public class Brain
 		InitialNetwork initNet = new InitialNetwork(dataSize, dataSize-1, learningRate);
 		ForgettingNetwork forgettingNet = new ForgettingNetwork(dataSize, dataSize - 1, learningRate);
 		SelectionNetwork selectNet = new SelectionNetwork(dataSize, dataSize - 1, learningRate);
-
 		
+<<<<<<< HEAD
 
 
 		for(int e = 0; e <= epochs; e++)
+=======
+		
+		for(int e = 0; e <= 1; e++)
+>>>>>>> fad5c0990bab4355b39e7bf02325c1f31b93c697
 		{
 			System.out.println("Entering Input Network");
 			initNet.settingInputs((setInputs(inputfile, 89)));
@@ -88,7 +92,8 @@ public class Brain
 
 		return output;
 	}
-
+	
+	//sets inputs of specific data size and at a specific location in the array
 	private static double[] setInputs(String filelocation, int dataSize) throws FileNotFoundException
 	{
 		int x = 0;
@@ -105,6 +110,8 @@ public class Brain
 
 		return output;
 	}
+	
+	//gives size of data, makes cheeky NASA reference
 	private static int dataSize(String fileLocation) throws FileNotFoundException
 	{
 		int output = 0;
