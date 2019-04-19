@@ -1,30 +1,26 @@
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
-
-
-public class ForgettingNetwork implements DNA
+public class SelectionNetwork implements DNA
 {
-    private Node[] inputNodes;
-    private Node[] hiddenNodes;
-    private Node[] outputNodes;
+    Node[] inputNodes;
+    Node[] hiddenNodes;
+    Node[] outputNodes;
 
-    private double[] decisions;
+    double[] decisions;
 
-    private int numOfInputs;
-    private int numOfOutputs;  
-    private double learningRate;  
+    int numOfInputs;
+    int numOfOutputs;  
+    double learningRate;  
 
-    private String finaloutput;
+    String finaloutput;
 
-    public ForgettingNetwork()
+    public SelectionNetwork()
     {
-        //set default values
         numOfInputs = 0;
         numOfOutputs = 0;
         learningRate = 0.0;    
@@ -33,13 +29,14 @@ public class ForgettingNetwork implements DNA
 
         makingRays(0, 0);
     }
-
-    public ForgettingNetwork(int newInputs, int newOutputs, double inputLearningRate)
+    //Constructor for secondary use, once initial outputs are input and there are comparables
+    public SelectionNetwork(int newInputs, int newOutputs, double inputLearningRate)
     {
+        //calls base constructor and resets learnign rate
         this();
         learningRate = inputLearningRate;
 
-        //creating rays with input values
+        //creating rays
         System.out.println("The number of inputs is: " + newInputs);
         makingRays(newInputs, newOutputs);
         System.out.println("The number nodes in the input layer: " + inputNodes.length);
@@ -57,22 +54,28 @@ public class ForgettingNetwork implements DNA
         creatingWeights(hiddenNodes.length, outputNodes);
     }
 
-   
+    public void settingInputs(double[] inputs)
+    {
+        for(int x = 0; x < inputNodes.length; x++)
+        {
+            inputNodes[x].setActivation(inputs[x]);
+        }
+    }
+
     public double[] calcOutput()
     {
-        //structures to hold values for calculations
         double[] activations = new double[hiddenNodes.length];
         double[] oldactivations = activations;
 
         //Creates list of input node activations
         for(int x = 0; x < inputNodes.length; x++)
         {
-            activations[x] = inputNodes[x].getActivation();
-             oldactivations[x] = activations[x];    
+          activations[x] = inputNodes[x].getActivation();
+          oldactivations[x] = activations[x];    
         }
-
+    
         //Creates list of hidden node activations
-        for(int x = 0; x < hiddenNodes.length; x ++)
+        for(int x = 0; x < inputNodes.length; x ++)
         {
             double curactivation =  sigmoidFunction(hiddenNodes[x].activationFunc(oldactivations));
             activations[x] = curactivation;
@@ -91,19 +94,19 @@ public class ForgettingNetwork implements DNA
 
         return activations;
     }
-    public void settingInputs(double[] inputs)
-    {
-        for(int x = 0; x < inputNodes.length; x++)
-        {
-            inputNodes[x].setActivation(inputs[x]);
-        }
-    }
-    
-    //writes combined calculations to a place in memory with reference "finaloutput"
+
     public void writeOutputs() throws IOException
     {
+        Double max = 0.0;
+
         ArrayList<Double> netDecisions = this.selectDecisions(2, this.calcOutput(), outputNodes.length);
 
+        max = Collections.max(netDecisions);
+        for(int x = 0; x < netDecisions.size(); x++)
+        {
+            if(! netDecisions.get(x).equals(max))
+                netDecisions.set(x, 0.0);
+        }
         finaloutput = netDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
 
         usingBufferedWritter();
@@ -112,23 +115,25 @@ public class ForgettingNetwork implements DNA
     {
         //REALLY IN NEED OF FIXING
         this.CalculateSignalErrors(inputNodes, hiddenNodes, outputNodes, ExpectedOutput);
+        
         this.BackPropagateError(inputNodes,hiddenNodes, outputNodes, learningRate, Momentum);
+        
     }
 
-    private void makingRays(int newInputs, int newOutputs)
+    private void makingRays(int newnewInputs, int newOutputs)
     {
         //creating input Nodes ray
-        inputNodes = new Node[newInputs];
+        inputNodes = new Node[newnewInputs];
         outputNodes = new Node[newOutputs];
 
         //determining hidden Nodes based on num of outputs and inputs
-        hiddenNodes = new Node[((newInputs + newOutputs)/2) + ((newInputs + newOutputs)/2)];
+        hiddenNodes = new Node[((newnewInputs + newOutputs)/2) + ((newnewInputs + newOutputs)/2)];
 
 
         //creating final deicisions ray
         decisions = new double[outputNodes.length];
     }
-
+    //assigns values to nodes
     private void assigningNodes(Node[] curLayer)
     {
         for(int x = 0; x < curLayer.length; x++)
@@ -143,16 +148,15 @@ public class ForgettingNetwork implements DNA
         for(Node curNode : curLayer)
         {
             curNode.setWeights(previousLayerSize);
-        }
+        }   
     }
 
+    
+
     private void usingBufferedWritter() throws IOException
-    {
-        String fileContent = finaloutput;
-     
+    {     
         BufferedWriter writer = new BufferedWriter(new FileWriter("/Users/noahdelangel/Desktop/School/Portfolio Project/MusicNeuralNetwork/Network Creations 1/Network_Code/outputfile.dat"));
-        writer.write(fileContent);
+        writer.write(finaloutput);
         writer.close();
     }
-    
 }
