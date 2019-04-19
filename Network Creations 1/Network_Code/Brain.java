@@ -18,7 +18,7 @@ public class Brain
 		double learningRate = 0.05;
 		double Momentum = 0.25;
 
-		int epochs = 1000;
+		int epochs = 10000;
 		int dataSize = dataSize(inputfile);
 
 		InitialNetwork initNet = new InitialNetwork(dataSize, dataSize-1, learningRate);

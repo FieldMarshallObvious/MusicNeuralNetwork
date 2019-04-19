@@ -147,10 +147,15 @@ public interface DNA
 	}
 	//end of backPropogateError method
 	
-	default void CalculateSignalErrors(Node[]hiddenLayer ,Node[] outputLayer, double[] ExpectedOutput) 
+	default void CalculateSignalErrors(Node[] inputLayer,Node[]hiddenLayer ,Node[] outputLayer, double[] ExpectedOutput) 
 	{
 		int i,j,k;
 		double Sum = 0.0;
+
+		ArrayList<Node[]> arrayOfLayers = new ArrayList<Node[]>();
+		arrayOfLayers.add(inputLayer);
+		arrayOfLayers.add(hiddenLayer);
+		arrayOfLayers.add(outputLayer);
 
 	       	// Calculate all output signal error
 		for (i = 0; i < outputLayer.length; i++) 
@@ -158,26 +163,26 @@ public interface DNA
 			//Random r = new Random();
 			//double randomValue = 0.1 + (0.8 - 0.1) * r.nextDouble();
 
-			outputLayer[i].setSignalError((ExpectedOutput[i]) - 
-			Math.pow(sigmoidFunction((outputLayer[i].getActivation())), 2) * 
+			outputLayer[i].setSignalError(((ExpectedOutput[i]) - 
+			sigmoidFunction((outputLayer[i].getActivation())))* sigmoidFunction(outputLayer[i].getActivation()) * 
 			(1-sigmoidFunction(outputLayer[i].getActivation())));
 		}
 
 	       	// Calculate signal error for all nodes in the hidden layer
 		// (back propagate the errors)
-		for (i = 3-2; i > 0; i--) 
+		for (i = arrayOfLayers.size()-2; i > 0; i--) 
 		{
 			Sum = 0;
 			for (j = 0; j < hiddenLayer.length; j++) 
 			{
 				
-					for(k = 0; k < outputLayer.length; k++)
+					for(k = 0; k < arrayOfLayers.get(i+1).length; k++)
 					{
-						Sum = Sum + outputLayer[k].getWeights(j) * 
-							outputLayer[k].getSignalError(); //one expression
+						Sum = Sum + arrayOfLayers.get(i+1)[k].getWeights(j) * 
+							arrayOfLayers.get(1+i)[k].getSignalError(); //one expression
 					}
-					hiddenLayer[i].setSignalError(hiddenLayer[i].getActivation()*(1 - 
-						sigmoidFunction(hiddenLayer[i].getActivation()))*Sum); //one expression
+					arrayOfLayers.get(i)[k].setSignalError(arrayOfLayers.get(i)[k].getActivation()*( 
+						sigmoidFunction(arrayOfLayers.get(i)[k].getActivation()))*Sum); //one expression
 					
 				
 			}
