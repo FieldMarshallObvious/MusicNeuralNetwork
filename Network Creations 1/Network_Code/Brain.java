@@ -12,7 +12,7 @@ public class Brain {
 		String outputfile = "outputfile.dat";
 		String expectedfile = "excpected.dat";
 
-		double learningRate = 0.1;
+		double learningRate = 0.05;
 		double Momentum = 0.25;
 
 		int epochs = 100000;
