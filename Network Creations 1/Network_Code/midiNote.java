@@ -4,11 +4,13 @@ import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class midiNote {
 
     // Init class members
     private ArrayList<Object> NotesList = new ArrayList<Object>();
+    private ArrayList<String> NotesName = new ArrayList<String>();
 
     String finalOutput;
     String fileLocation;
@@ -85,79 +87,116 @@ public class midiNote {
         Integer cflat4 = new Integer(b3);
         Integer c4 = new Integer(60);
         NotesList.add(c4);
+        NotesName.add("c4");
         Integer csharp4 = new Integer(61);
         NotesList.add(csharp4);
+        NotesName.add("csharp4");
         Integer dflat4 = new Integer(csharp4);
         NotesList.add(dflat4);
+        NotesName.add("dflat4");
         Integer d4 = new Integer(62);
         NotesList.add(d4);
+        NotesName.add("d4");
         Integer dsharp4 = new Integer(63);
         NotesList.add(dsharp4);
+        NotesName.add("dsharp4");
         Integer eflat4 = new Integer(dsharp4);
         NotesList.add(eflat4);
+        NotesName.add("eflat4");
         Integer e4 = new Integer(64);
         NotesList.add(e4);
+        NotesName.add("e4");
         Integer fflat4 = new Integer(e4);
         NotesList.add(fflat4);
+        NotesName.add("fflat4");
         Integer f4 = new Integer(65);
         NotesList.add(f4);
+        NotesName.add("f4");
         Integer fsharp4 = new Integer(66);
         NotesList.add(fsharp4);
+        NotesName.add("fsharp4");
         Integer gflat4 = new Integer(fsharp4);
         NotesList.add(gflat4);
+        NotesName.add("gflat4");
         Integer g4 = new Integer(67);
         NotesList.add(g4);
+        NotesName.add("g4");
         Integer gsharp4 = new Integer(68);
         NotesList.add(gsharp4);
+        NotesName.add("gsharp4");
         Integer aflat4 = new Integer(gsharp4);
         NotesList.add(aflat4);
+        NotesName.add("aflat4");
         Integer a4 = new Integer(69);
         NotesList.add(a4);
+        NotesName.add("a4");
         Integer asharp4 = new Integer(70);
         NotesList.add(asharp4);
+        NotesName.add("asharp4");
         Integer bflat4 = new Integer(asharp4);
         NotesList.add(bflat4);
+        NotesName.add("blfat4");
         Integer b4 = new Integer(71);
         NotesList.add(b4);
+        NotesName.add("b4");
         // 5th octave
         Integer cflat5 = new Integer(b4);
         NotesList.add(cflat5);
+        NotesName.add("cl");
         Integer c5 = new Integer(72);
         NotesList.add(c5);
+        NotesName.add("c5");
         Integer csharp5 = new Integer(73);
         NotesList.add(csharp5);
+        NotesName.add("csharp5");
         Integer dflat5 = new Integer(csharp5);
         NotesList.add(dflat5);
+        NotesName.add("dflat5");
         Integer d5 = new Integer(74);
         NotesList.add(d5);
+        NotesName.add("d5");
         Integer dsharp5 = new Integer(75);
         NotesList.add(dsharp5);
+        NotesName.add("dsharp5");
         Integer eflat5 = new Integer(dsharp5);
         NotesList.add(eflat5);
+        NotesName.add("eflat5");
         Integer e5 = new Integer(76);
         NotesList.add(e5);
+        NotesName.add("e5");
         Integer fflat5 = new Integer(e5);
         NotesList.add(fflat5);
+        NotesName.add("fflat5");
         Integer f5 = new Integer(77);
         NotesList.add(f5);
+        NotesName.add("f5");
         Integer fsharp5 = new Integer(78);
         NotesList.add(fsharp5);
+        NotesName.add("fsharp5");
         Integer gflat5 = new Integer(fsharp5);
         NotesList.add(gflat5);
+        NotesName.add("gflat5");
         Integer g5 = new Integer(79);
         NotesList.add(g5);
+        NotesName.add("g5");
         Integer gsharp5 = new Integer(80);
         NotesList.add(gsharp5);
+        NotesName.add("gsharp5");
         Integer aflat5 = new Integer(gsharp5);
         NotesList.add(aflat5);
+        NotesName.add("aflat5");
         Integer a5 = new Integer(81);
         NotesList.add(a5);
+        NotesName.add("a5");
         Integer asharp5 = new Integer(82);
         NotesList.add(asharp5);
+        NotesName.add("asharp5");
         Integer bflat5 = new Integer(asharp5);
         NotesList.add(bflat5);
+        NotesName.add("bflat5");
         Integer b5 = new Integer(83);
         NotesList.add(b5);
+        NotesName.add("b5");
         // 6th octave
         Integer cflat6 = new Integer(b5);
         Integer c6 = new Integer(84);
@@ -202,18 +241,20 @@ public class midiNote {
         // Methods used to input, manipulate, and analyze midiNote values
     }
 
-    public void noteToNetConverter(String input, int size, String file) {
+    public void noteToNetConverter(String input, int size, String file) throws IOException {
 
         String[] inputString = input.split(" ");
         fileLocation = file;
 
-        int line;
+        int line = 0;
 
         // Determine the line location
         for (String cur : inputString) {
-            for (Object curObject : NotesList) {
-                if (cur.equals(curObject.getName())) {
-                    line = curObject;
+            int x = 0;
+            for (String curObject : NotesName) {
+                x++;
+                if (cur.equals(curObject)) {
+                    line = x;
                     break;
                 }
             }
@@ -221,7 +262,7 @@ public class midiNote {
         setFinalOutputString(line, size);
     }
 
-    private void setFinalOutputString(int line, int size) {
+    private void setFinalOutputString(int line, int size) throws IOException {
 
         ArrayList<Double> newDat = new ArrayList<Double>();
 
@@ -233,16 +274,15 @@ public class midiNote {
                 newDat.add((double) line);
         }
 
-        finalOutput = netDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
+        finalOutput = newDat.stream().map(Object::toString).collect(Collectors.joining("\n"));
         // write file
         usingBufferedWritter();
     }
 
     private void usingBufferedWritter() throws IOException {
-        String fileContent = finaloutput;
 
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileLocation));
-        writer.write(fileContent);
+        writer.write(finalOutput);
         writer.close();
     }
 }
