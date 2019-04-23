@@ -125,10 +125,9 @@ public class InitialNetwork implements DNA {
     }
 
     private void usingBufferedWritter() throws IOException {
-        String fileContent = finaloutput;
 
         BufferedWriter writer = new BufferedWriter(new FileWriter("outputfile.dat"));
-        writer.write(fileContent);
+        writer.write(finaloutput);
         writer.close();
     }
 }

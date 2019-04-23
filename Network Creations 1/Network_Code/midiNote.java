@@ -1,12 +1,18 @@
 import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Scanner;
 
 public class midiNote {
+
+    // Init class members
     private ArrayList<Object> NotesList = new ArrayList<Object>();
+
+    String finalOutput;
+    String fileLocation;
+
     private double note;
     private double note2;
 
@@ -110,7 +116,7 @@ public class midiNote {
         Integer asharp4 = new Integer(70);
         NotesList.add(asharp4);
         Integer bflat4 = new Integer(asharp4);
-        NotesList.add(blfat4);
+        NotesList.add(bflat4);
         Integer b4 = new Integer(71);
         NotesList.add(b4);
         // 5th octave
@@ -137,7 +143,7 @@ public class midiNote {
         Integer fsharp5 = new Integer(78);
         NotesList.add(fsharp5);
         Integer gflat5 = new Integer(fsharp5);
-        NotesList.add(glfat5);
+        NotesList.add(gflat5);
         Integer g5 = new Integer(79);
         NotesList.add(g5);
         Integer gsharp5 = new Integer(80);
@@ -196,4 +202,47 @@ public class midiNote {
         // Methods used to input, manipulate, and analyze midiNote values
     }
 
+    public void noteToNetConverter(String input, int size, String file) {
+
+        String[] inputString = input.split(" ");
+        fileLocation = file;
+
+        int line;
+
+        // Determine the line location
+        for (String cur : inputString) {
+            for (Object curObject : NotesList) {
+                if (cur.equals(curObject.getName())) {
+                    line = curObject;
+                    break;
+                }
+            }
+        }
+        setFinalOutputString(line, size);
+    }
+
+    private void setFinalOutputString(int line, int size) {
+
+        ArrayList<Double> newDat = new ArrayList<Double>();
+
+        // Set all lines that are not the specified line to 0.0
+        for (int x = 0; x < size; x++) {
+            if (x == line)
+                newDat.add(0.0);
+            else
+                newDat.add((double) line);
+        }
+
+        finalOutput = netDecisions.stream().map(Object::toString).collect(Collectors.joining("\n"));
+        // write file
+        usingBufferedWritter();
+    }
+
+    private void usingBufferedWritter() throws IOException {
+        String fileContent = finaloutput;
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileLocation));
+        writer.write(fileContent);
+        writer.close();
+    }
 }
