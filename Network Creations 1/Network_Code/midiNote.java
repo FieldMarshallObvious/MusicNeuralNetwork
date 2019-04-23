@@ -19,7 +19,7 @@ public class midiNote {
     private double note;
     private double note2;
 
-    public void midiNote() {
+    public midiNote() {
         // bank of all note values and their inharmonics
         // (inharmonics are because I am not sure exactly how our implemantation is
         // going to use these values)
@@ -292,10 +292,10 @@ public class midiNote {
 
         // Set all lines that are not the specified line to 0.0
         for (int x = 0; x < size; x++) {
-            if (x == line)
+            if (x != line)
                 newDat.add(0.0);
             else
-                newDat.add((double) line);
+                newDat.add(1.0);
         }
 
         finalOutput = newDat.stream().map(Object::toString).collect(Collectors.joining("\n"));
