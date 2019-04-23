@@ -11,18 +11,29 @@ public class Brain {
 		String inputfile = "inputfile.dat";
 		String outputfile = "outputfile.dat";
 		String expectedfile = "excpected.dat";
+		String midiFile = "midifile.dat";
 
 		double learningRate = 0.05;
 		double Momentum = 0.25;
 
 		int epochs = 100000;
 		int dataSize = dataSize(inputfile);
+		int noteLocation = 0;
+
 
 		InitialNetwork initNet = new InitialNetwork(dataSize, dataSize - 1, learningRate);
 		ForgettingNetwork forgettingNet = new ForgettingNetwork(dataSize, dataSize - 1, learningRate);
 		SelectionNetwork selectNet = new SelectionNetwork(dataSize, dataSize - 1, learningRate);
+		midiNote midiNoteSelecter = new midiNote();
+
 
 		for (int e = 0; e <= epochs; e++) {
+			//Determine location in midiFile
+			if(noteLocation >= noteSize(midiFile))
+				noteLocation = 0;
+			else
+				noteLocation++;
+
 			System.out.println("Entering Input Network");
 			initNet.settingInputs((setInputs(inputfile, 89)));
 			initNet.writeOutputs();
@@ -38,6 +49,8 @@ public class Brain {
 			// clearing old outputs
 			// pwOut.close();
 			selectNet.writeOutputs();
+
+			midiNoteSelecter.noteToNetConverter(nextNote(midiFile, noteLocation), noteSize(midiFile), expectedfile);
 
 			System.out.print("Epoch: " + e);
 
@@ -111,5 +124,39 @@ public class Brain {
 			System.out.println("We have a failure due to " + e.getClass().getSimpleName());
 			return 0;
 		}
+	}
+
+	private static String nextNote(String fileLocation, int times) throws FileNotFoundException
+	{
+		String output = new String();
+		Scanner inputDataScanner = new Scanner(new File(fileLocation));
+		int x = 0;
+		inputDataScanner.useDelimiter(" ");
+		while(inputDataScanner.hasNext())
+		{
+			x++;
+			String cur = inputDataScanner.next();
+			if(x == times)
+			{
+				output = cur; 
+				break;
+			}
+
+		}
+		return output;
+	}
+
+	private static int noteSize(String fileLocation) throws FileNotFoundException
+	{
+		String output = new String();
+		Scanner inputDataScanner = new Scanner(new File(fileLocation));
+		int x = 0;
+		inputDataScanner.useDelimiter(" ");
+		while(inputDataScanner.hasNext())
+		{
+			x++;
+			inputDataScanner.next();
+		}
+		return x;
 	}
 }

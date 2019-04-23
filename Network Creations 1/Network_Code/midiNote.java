@@ -4,12 +4,13 @@ import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class midiNote {
 
     // Init class members
-    private ArrayList<Object> NotesList = new ArrayList<Object>();
+    private ArrayList<Integer> NotesList = new ArrayList<Integer>();
     private ArrayList<String> NotesName = new ArrayList<String>();
 
     String finalOutput;
@@ -262,6 +263,29 @@ public class midiNote {
         setFinalOutputString(line, size);
     }
 
+    public void netToNoteConvereter(String inputFile, int size, String outputFile) throws IOException
+    {
+        String noteSelection = selectedNotes(inputFile);
+
+        String[] arrayofSelectedNodes = noteSelection.split(" ");
+
+        for(String cur : arrayofSelectedNodes)
+        {
+            int x = 0;
+            int curInt = Integer.valueOf(cur);
+            for(int noteInt : NotesList)
+            {
+                x++;
+                if(noteInt == curInt)
+                {
+                    finalOutput += NotesName.get(x) + " ";
+                }
+            }
+        }
+
+       usingBufferedWritter();
+    }
+
     private void setFinalOutputString(int line, int size) throws IOException {
 
         ArrayList<Double> newDat = new ArrayList<Double>();
@@ -277,6 +301,17 @@ public class midiNote {
         finalOutput = newDat.stream().map(Object::toString).collect(Collectors.joining("\n"));
         // write file
         usingBufferedWritter();
+    }
+
+    private String selectedNotes(String inputFile) throws FileNotFoundException
+    {
+        String outputFile = "";
+        Scanner inputReader = new Scanner(new File(inputFile));
+        while(inputReader.hasNext())
+        {
+           outputFile += inputReader.nextLine() + " "; 
+        }
+        return outputFile;
     }
 
     private void usingBufferedWritter() throws IOException {
