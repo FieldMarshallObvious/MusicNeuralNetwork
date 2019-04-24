@@ -27,81 +27,81 @@ public class midiNote {
 
         Integer cflat1 = new Integer(23);
         Integer c1 = new Integer(24);
-        Integer csharp1 = new Integer(25);
-        Integer dflat1 = new Integer(csharp1);
+        Integer c#1 = new Integer(25);
+        Integer dflat1 = new Integer(c#1);
         Integer d1 = new Integer(26);
-        Integer dsharp1 = new Integer(27);
-        Integer eflat1 = new Integer(dsharp1);
+        Integer d#1 = new Integer(27);
+        Integer eflat1 = new Integer(d#1);
         Integer e1 = new Integer(28);
         Integer fflat1 = new Integer(e1);
         Integer f1 = new Integer(29);
-        Integer fsharp1 = new Integer(30);
-        Integer gflat1 = new Integer(fsharp1);
+        Integer f#1 = new Integer(30);
+        Integer gflat1 = new Integer(f#1);
         Integer g1 = new Integer(31);
-        Integer gsharp1 = new Integer(32);
-        Integer aflat1 = new Integer(gsharp1);
+        Integer g#1 = new Integer(32);
+        Integer aflat1 = new Integer(g#1);
         Integer a1 = new Integer(33);
-        Integer asharp1 = new Integer(34);
-        Integer bflat1 = new Integer(asharp1);
+        Integer a#1 = new Integer(34);
+        Integer bflat1 = new Integer(a#1);
         Integer b1 = new Integer(35);
         // 2nd octave
         Integer cflat2 = new Integer(b1);
         Integer c2 = new Integer(36);
-        Integer csharp2 = new Integer(37);
-        Integer dflat2 = new Integer(csharp2);
+        Integer c#2 = new Integer(37);
+        Integer dflat2 = new Integer(c#2);
         Integer d2 = new Integer(38);
-        Integer dsharp2 = new Integer(39);
-        Integer eflat2 = new Integer(dsharp2);
+        Integer d#2 = new Integer(39);
+        Integer eflat2 = new Integer(d#2);
         Integer e2 = new Integer(40);
         Integer fflat2 = new Integer(e2);
         Integer f2 = new Integer(41);
-        Integer fsharp2 = new Integer(42);
-        Integer gflat2 = new Integer(fsharp2);
+        Integer f#2 = new Integer(42);
+        Integer gflat2 = new Integer(f#2);
         Integer g2 = new Integer(43);
-        Integer gsharp2 = new Integer(44);
-        Integer aflat2 = new Integer(gsharp2);
+        Integer g#2 = new Integer(44);
+        Integer aflat2 = new Integer(g#2);
         Integer a2 = new Integer(45);
-        Integer asharp2 = new Integer(46);
-        Integer bflat2 = new Integer(asharp2);
+        Integer a#2 = new Integer(46);
+        Integer bflat2 = new Integer(a#2);
         Integer b2 = new Integer(47);
         // 2rd octave
         Integer cflat3 = new Integer(b2);
         Integer c3 = new Integer(48);
-        Integer csharp3 = new Integer(49);
-        Integer dflat3 = new Integer(csharp3);
+        Integer c#3 = new Integer(49);
+        Integer dflat3 = new Integer(c#3);
         Integer d3 = new Integer(50);
-        Integer dsharp3 = new Integer(51);
-        Integer eflat3 = new Integer(dsharp3);
+        Integer d#3 = new Integer(51);
+        Integer eflat3 = new Integer(d#3);
         Integer e3 = new Integer(52);
         Integer fflat3 = new Integer(e3);
         Integer f3 = new Integer(53);
-        Integer fsharp3 = new Integer(54);
-        Integer gflat3 = new Integer(fsharp3);
+        Integer f#3 = new Integer(54);
+        Integer gflat3 = new Integer(f#3);
         Integer g3 = new Integer(55);
-        Integer gsharp3 = new Integer(56);
-        Integer aflat3 = new Integer(gsharp3);
+        Integer g#3 = new Integer(56);
+        Integer aflat3 = new Integer(g#3);
         Integer a3 = new Integer(57);
-        Integer asharp3 = new Integer(58);
-        Integer bflat3 = new Integer(asharp3);
+        Integer a#3 = new Integer(58);
+        Integer bflat3 = new Integer(a#3);
         Integer b3 = new Integer(59);
         // 4th octave
         Integer cflat4 = new Integer(b3);
         Integer c4 = new Integer(60);
         NotesList.add(c4);
         NotesName.add("c4");
-        Integer csharp4 = new Integer(61);
-        NotesList.add(csharp4);
-        NotesName.add("csharp4");
-        Integer dflat4 = new Integer(csharp4);
+        Integer c#4 = new Integer(61);
+        NotesList.add(c#4);
+        NotesName.add("c#4");
+        Integer dflat4 = new Integer(c#4);
         NotesList.add(dflat4);
         NotesName.add("dflat4");
         Integer d4 = new Integer(62);
         NotesList.add(d4);
         NotesName.add("d4");
-        Integer dsharp4 = new Integer(63);
-        NotesList.add(dsharp4);
-        NotesName.add("dsharp4");
-        Integer eflat4 = new Integer(dsharp4);
+        Integer d#4 = new Integer(63);
+        NotesList.add(d#4);
+        NotesName.add("d#4");
+        Integer eflat4 = new Integer(d#4);
         NotesList.add(eflat4);
         NotesName.add("eflat4");
         Integer e4 = new Integer(64);
@@ -113,28 +113,28 @@ public class midiNote {
         Integer f4 = new Integer(65);
         NotesList.add(f4);
         NotesName.add("f4");
-        Integer fsharp4 = new Integer(66);
-        NotesList.add(fsharp4);
-        NotesName.add("fsharp4");
-        Integer gflat4 = new Integer(fsharp4);
+        Integer f#4 = new Integer(66);
+        NotesList.add(f#4);
+        NotesName.add("f#4");
+        Integer gflat4 = new Integer(f#4);
         NotesList.add(gflat4);
         NotesName.add("gflat4");
         Integer g4 = new Integer(67);
         NotesList.add(g4);
         NotesName.add("g4");
-        Integer gsharp4 = new Integer(68);
-        NotesList.add(gsharp4);
-        NotesName.add("gsharp4");
-        Integer aflat4 = new Integer(gsharp4);
+        Integer g#4 = new Integer(68);
+        NotesList.add(g#4);
+        NotesName.add("g#4");
+        Integer aflat4 = new Integer(g#4);
         NotesList.add(aflat4);
         NotesName.add("aflat4");
         Integer a4 = new Integer(69);
         NotesList.add(a4);
         NotesName.add("a4");
-        Integer asharp4 = new Integer(70);
-        NotesList.add(asharp4);
-        NotesName.add("asharp4");
-        Integer bflat4 = new Integer(asharp4);
+        Integer a#4 = new Integer(70);
+        NotesList.add(a#4);
+        NotesName.add("a#4");
+        Integer bflat4 = new Integer(a#4);
         NotesList.add(bflat4);
         NotesName.add("blfat4");
         Integer b4 = new Integer(71);
@@ -147,19 +147,19 @@ public class midiNote {
         Integer c5 = new Integer(72);
         NotesList.add(c5);
         NotesName.add("c5");
-        Integer csharp5 = new Integer(73);
-        NotesList.add(csharp5);
-        NotesName.add("csharp5");
-        Integer dflat5 = new Integer(csharp5);
+        Integer c#5 = new Integer(73);
+        NotesList.add(c#5);
+        NotesName.add("c#5");
+        Integer dflat5 = new Integer(c#5);
         NotesList.add(dflat5);
         NotesName.add("dflat5");
         Integer d5 = new Integer(74);
         NotesList.add(d5);
         NotesName.add("d5");
-        Integer dsharp5 = new Integer(75);
-        NotesList.add(dsharp5);
-        NotesName.add("dsharp5");
-        Integer eflat5 = new Integer(dsharp5);
+        Integer d#5 = new Integer(75);
+        NotesList.add(d#5);
+        NotesName.add("d#5");
+        Integer eflat5 = new Integer(d#5);
         NotesList.add(eflat5);
         NotesName.add("eflat5");
         Integer e5 = new Integer(76);
@@ -171,28 +171,28 @@ public class midiNote {
         Integer f5 = new Integer(77);
         NotesList.add(f5);
         NotesName.add("f5");
-        Integer fsharp5 = new Integer(78);
-        NotesList.add(fsharp5);
-        NotesName.add("fsharp5");
-        Integer gflat5 = new Integer(fsharp5);
+        Integer f#5 = new Integer(78);
+        NotesList.add(f#5);
+        NotesName.add("f#5");
+        Integer gflat5 = new Integer(f#5);
         NotesList.add(gflat5);
         NotesName.add("gflat5");
         Integer g5 = new Integer(79);
         NotesList.add(g5);
         NotesName.add("g5");
-        Integer gsharp5 = new Integer(80);
-        NotesList.add(gsharp5);
-        NotesName.add("gsharp5");
-        Integer aflat5 = new Integer(gsharp5);
+        Integer g#5 = new Integer(80);
+        NotesList.add(g#5);
+        NotesName.add("g#5");
+        Integer aflat5 = new Integer(g#5);
         NotesList.add(aflat5);
         NotesName.add("aflat5");
         Integer a5 = new Integer(81);
         NotesList.add(a5);
         NotesName.add("a5");
-        Integer asharp5 = new Integer(82);
-        NotesList.add(asharp5);
-        NotesName.add("asharp5");
-        Integer bflat5 = new Integer(asharp5);
+        Integer a#5 = new Integer(82);
+        NotesList.add(a#5);
+        NotesName.add("a#5");
+        Integer bflat5 = new Integer(a#5);
         NotesList.add(bflat5);
         NotesName.add("bflat5");
         Integer b5 = new Integer(83);
@@ -201,42 +201,42 @@ public class midiNote {
         // 6th octave
         Integer cflat6 = new Integer(b5);
         Integer c6 = new Integer(84);
-        Integer csharp6 = new Integer(85);
-        Integer dflat6 = new Integer(csharp6);
+        Integer c#6 = new Integer(85);
+        Integer dflat6 = new Integer(c#6);
         Integer d6 = new Integer(86);
-        Integer dsharp6 = new Integer(87);
-        Integer eflat6 = new Integer(dsharp6);
+        Integer d#6 = new Integer(87);
+        Integer eflat6 = new Integer(d#6);
         Integer e6 = new Integer(88);
         Integer fflat6 = new Integer(e6);
         Integer f6 = new Integer(89);
-        Integer fsharp6 = new Integer(90);
-        Integer gflat6 = new Integer(fsharp6);
+        Integer f#6 = new Integer(90);
+        Integer gflat6 = new Integer(f#6);
         Integer g6 = new Integer(91);
-        Integer gsharp6 = new Integer(92);
-        Integer aflat6 = new Integer(gsharp6);
+        Integer g#6 = new Integer(92);
+        Integer aflat6 = new Integer(g#6);
         Integer a6 = new Integer(93);
-        Integer asharp6 = new Integer(94);
-        Integer bflat6 = new Integer(asharp6);
+        Integer a#6 = new Integer(94);
+        Integer bflat6 = new Integer(a#6);
         Integer b6 = new Integer(95);
         // 7th octave
         Integer cflat7 = new Integer(b6);
         Integer c7 = new Integer(96);
-        Integer csharp7 = new Integer(97);
-        Integer dflat7 = new Integer(csharp7);
+        Integer c#7 = new Integer(97);
+        Integer dflat7 = new Integer(c#7);
         Integer d7 = new Integer(98);
-        Integer dsharp7 = new Integer(99);
-        Integer eflat7 = new Integer(dsharp7);
+        Integer d#7 = new Integer(99);
+        Integer eflat7 = new Integer(d#7);
         Integer e7 = new Integer(100);
         Integer fflat7 = new Integer(e7);
         Integer f7 = new Integer(101);
-        Integer fsharp7 = new Integer(102);
-        Integer gflat7 = new Integer(fsharp7);
+        Integer f#7 = new Integer(102);
+        Integer gflat7 = new Integer(f#7);
         Integer g7 = new Integer(103);
-        Integer gsharp7 = new Integer(104);
-        Integer aflat7 = new Integer(gsharp7);
+        Integer g#7 = new Integer(104);
+        Integer aflat7 = new Integer(g#7);
         Integer a7 = new Integer(106);
-        Integer asharp7 = new Integer(107);
-        Integer bflat7 = new Integer(asharp7);
+        Integer a#7 = new Integer(107);
+        Integer bflat7 = new Integer(a#7);
         Integer b7 = new Integer(108);
 
         // Methods used to input, manipulate, and analyze midiNote values
@@ -321,3 +321,18 @@ public class midiNote {
         writer.close();
     }
 }
+
+    © 2019 GitHub, Inc.
+    Terms
+    Privacy
+    Security
+    Status
+    Help
+
+    Contact GitHub
+    Pricing
+    API
+    Training
+    Blog
+    About
+
