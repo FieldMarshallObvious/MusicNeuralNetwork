@@ -1,17 +1,26 @@
+package src.Network_Code;
+
 import java.util.Scanner;
+
+import Network_Code.ForgettingNetwork;
+import Network_Code.InitialNetwork;
+import Network_Code.SelectionNetwork;
+import Network_Code.midiNote;
+import portfolio.project.Piano;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 public class Brain {
 	// Note: need to write handeling logic for Exception
 	public static void main(String[] args) throws IOException {
 
-		String inputfile = "inputfile.dat";
-		String outputfile = "outputfile.dat";
-		String expectedfile = "excpected.dat";
-		String midiFile = "midifile.dat";
+		String inputfile = "src/Network_Code/inputfile.dat";
+		String outputfile = "src/Network_Code/outputfile.dat";
+		String midioutput = "src/Network_Code/midioutput.dat";
+		String expectedfile = "src/Network_Code/excpected.dat";
+		String midiFile = "dflat5 csharp5 blfat4 gsharp4";
 
 		double learningRate = 0.05;
 		double Momentum = 0.25;
@@ -25,12 +34,16 @@ public class Brain {
 		ForgettingNetwork forgettingNet = new ForgettingNetwork(dataSize, dataSize - 1, learningRate);
 		SelectionNetwork selectNet = new SelectionNetwork(dataSize, dataSize - 1, learningRate);
 		midiNote midiNoteSelecter = new midiNote();
+		Piano newPiano = new Piano();
 
-
-		for (int e = 0; e <= epochs; e++) {
+	
+	for (int e = 0; e <= epochs; e++) {
 			//Determine location in midiFile
-			if(noteLocation >= noteSize(midiFile))
+			if(noteLocation >= noteSize(midiFile) && noteLocation != 0)
+			{
 				noteLocation = 0;
+				midiNoteSelecter.clearFile(midioutput);
+			}
 			else
 				noteLocation++;
 
@@ -51,7 +64,8 @@ public class Brain {
 			selectNet.writeOutputs();
 
 			midiNoteSelecter.noteToNetConverter(nextNote(midiFile, noteLocation), noteSize(midiFile), expectedfile);
-
+			midiNoteSelecter.netToNoteConvereter(outputfile, midioutput);
+			
 			System.out.print("Epoch: " + e);
 
 			System.out.println();
@@ -70,9 +84,8 @@ public class Brain {
 
 			System.out.println();
 		}
-
-		// Once reachers final itteration implement piano use
-
+	
+		
 	}
 
 	private static double[] getExpectedOutput(String fileLocation, int dataSize) throws FileNotFoundException {
@@ -109,14 +122,14 @@ public class Brain {
 	// gives size of data, makes cheeky NASA reference
 	private static int dataSize(String fileLocation) throws FileNotFoundException {
 		int output = 0;
-		Scanner inputDataReadScanner = new Scanner(new File(fileLocation));
+		Scanner dataSizeScanner = new Scanner(new File(fileLocation));
 		try {
 			// System.out.println("First line in data " + inputDataReadScanner.nextLine());
-			while (inputDataReadScanner.hasNext()) {
-				inputDataReadScanner.nextLine();
+			while (dataSizeScanner.hasNext()) {
+				dataSizeScanner.nextLine();
 				output += 1;
 			}
-			inputDataReadScanner.close();
+			dataSizeScanner.close();
 
 			return output;
 		} catch (Exception e) {
@@ -128,14 +141,14 @@ public class Brain {
 
 	private static String nextNote(String fileLocation, int times) throws FileNotFoundException
 	{
-		String output = new String();
-		Scanner inputDataScanner = new Scanner(new File(fileLocation));
+		String output = new String(" ");
+		Scanner nextNoteScanner = new Scanner(fileLocation);
 		int x = 0;
-		inputDataScanner.useDelimiter(" ");
-		while(inputDataScanner.hasNext())
+		nextNoteScanner.useDelimiter(" ");
+		while(nextNoteScanner.hasNext())
 		{
 			x++;
-			String cur = inputDataScanner.next();
+			String cur = nextNoteScanner.next();
 			if(x == times)
 			{
 				output = cur; 
@@ -143,20 +156,23 @@ public class Brain {
 			}
 
 		}
+		nextNoteScanner.close();
 		return output;
 	}
 
 	private static int noteSize(String fileLocation) throws FileNotFoundException
 	{
 		String output = new String();
-		Scanner inputDataScanner = new Scanner(new File(fileLocation));
+		Scanner noteSizeScanner = new Scanner(fileLocation);
 		int x = 0;
-		inputDataScanner.useDelimiter(" ");
-		while(inputDataScanner.hasNext())
+		noteSizeScanner.useDelimiter(" ");
+		while(noteSizeScanner.hasNext())
 		{
 			x++;
-			inputDataScanner.next();
+			noteSizeScanner.next();
 		}
+		noteSizeScanner.close();
 		return x;
 	}
+	
 }
